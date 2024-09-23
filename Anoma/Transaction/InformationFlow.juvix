@@ -3,26 +3,17 @@ module Anoma.Transaction.InformationFlow;
 import Stdlib.Prelude open using {Bool; List; true; false; all; any; not};
 import Data.Set as Set open using {Set; toList; member?};
 import Anoma.Identity open using {ExternalIdentity};
-import Anoma.Transaction.Types as Transaction open using {Transaction};
+import Anoma.Transaction.Types as Transaction open using {Transaction; commitmentSet; nullifierSet};
+import Anoma.Resource.Logic open;
 
 --- The information flow predicate function type definition.
 InformationFlowControlPredicate : Type := (tx : Transaction) -> (id : ExternalIdentity) -> Bool;
-
---- A placeholder for an unspecified hash type.
---- NOTE: this will be concretized in an upcoming RM specs version.
-axiom HashPlaceholder : Type;
-
---- A placeholder for a function checking if a ;Transaction; does not include ;HashPlaceholder; ;Set;.
---- NOTE: this will be concretized in an upcoming RM specs version.
-axiom requireShieldedCheckPlaceholder : (tx : Transaction)
-  -> (hashes : Set HashPlaceholder)
-  -> Bool;
 
 --- The input data of the basePredicate function.
 type BaseData :=
   | AllowAny
   | AllowOnly (Set ExternalIdentity)
-  | RequireShielded (Set HashPlaceholder)
+  | RequireShielded (Set Tag)
   -- TODO Use ;Set; instead of ;List; once https://github.com/anoma/juvix/issues/3048 is resolved.
   | And (List BaseData)
   | Or (List BaseData);
@@ -33,6 +24,16 @@ basePredicate (baseData : BaseData) : InformationFlowControlPredicate :=
   case baseData of
     | AllowAny := \ {_ _ := true}
     | AllowOnly identites := \ {_ self := member? self identites}
-    | RequireShielded hashes := \ {tx _ := requireShieldedCheckPlaceholder tx hashes}
+    | RequireShielded tags :=
+      \ {tx _ :=
+        let
+          cms := commitmentSet tx;
+          nfs := nullifierSet tx;
+        in not
+          (any (tag in Set.toList tags)
+            case tag of {
+              | Created cm := member? cm cms
+              | Consumed nf := member? nf nfs
+            })}
     | And predicates := \ {tx id := all (p in predicates) basePredicate p tx id}
     | Or predicates := \ {tx id := any (p in predicates) basePredicate p tx id};
