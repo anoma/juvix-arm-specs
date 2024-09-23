@@ -4,29 +4,30 @@ import Stdlib.Prelude open using {Bool} public;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LogicRef; to be dynamically-sized.
-axiom LogicRef : Type;
+axiom LogicRef : Type; -- cf. [l: 𝔽ₗ](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L13)
+
 
 --- A fixed-size data type encoding the reference to the resource label field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LabelRef; to be dynamically-sized.
-axiom LabelRef : Type;
+axiom LabelRef : Type; -- cf. [label: 𝔽_{label}](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L14)
 
 --- A fixed-size data type encoding the reference to the resource value field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;ValueRef; to be dynamically-sized.
-axiom ValueRef : Type;
+axiom ValueRef : Type; -- cf. [v: 𝔽ᵥ](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L16)
 
 --- A fixed-size data type encoding the quantity of a resource.
-axiom Quantity : Type;
+axiom Quantity : Type;  -- [q: 𝔽_Q](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L15)
 
 --- A fixed-size data type encoding the public commitment to the private nullifier key.
-axiom NullifierKeyCommitment : Type;
+axiom NullifierKeyCommitment : Type; -- [cnk: 𝔽_{cnk}](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L19)
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
-axiom Nonce : Type;
+axiom Nonce : Type; -- cf. [nonce: 𝔽_{nonce}](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L18)
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
-axiom RandSeed : Type;
+axiom RandSeed : Type; -- cf. [rseed: 𝔽_{rseed}](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L20)
 
 --- A record describing a resource, the atomic unit of state in the Anoma state model.
 type Resource :=
@@ -35,7 +36,7 @@ type Resource :=
     labelRef : LabelRef;
     valueRef : ValueRef;
     quantity : Quantity;
-    ephemerality : Bool;
+    ephemerality : Bool; -- cf. [eph: 𝔽_{b}](https://github.com/anoma/nspec/blob/64f4def718acd62f9557715ab5fba1bff1109f07/docs/system_architecture/state/resource_machine/resource/definition.md?plain=1#L17)
     nullifierKeyCommitment : NullifierKeyCommitment;
     nonce : Nonce;
     randSeed : RandSeed
