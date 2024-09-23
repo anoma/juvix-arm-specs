@@ -41,7 +41,9 @@ type Resource :=
     randSeed : RandSeed
   };
 
---- Provides a function calculating a fixed-size ;RefType; from a dynamically sized ;DataType;.
---- For the private testnet, the requirement can be relaxed by allowing ;RefType; to be dynamically-sized.
+--- A trait for transforming values of a `DataType` into values of its
+--- corresponding `RefType`. Values of `RefType` must have fixed size. For the
+--- private testnet, the requirement can be relaxed by allowing ;RefType; to be
+--- dynamically-sized.
 trait
 type Ref DataType RefType := mkRef {ref : DataType -> RefType};
