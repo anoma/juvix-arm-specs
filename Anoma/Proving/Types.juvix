@@ -3,22 +3,24 @@ module Anoma.Proving.Types;
 import Stdlib.Prelude open using {Pair};
 import Anoma.Resource.Index as Resource open using {Witness};
 
---- A fixed-size data type encoding a proof.
-axiom Proof : Type;
-
---- A fixed-size data type encoding a verifying key containing the data,
---- along with a ;Resource.Witness;, to verify a proof.
-axiom VerifyingKey : Type;
-
---- A fixed-size data type encoding a proving key containing the data,
---- along with a ;Resource.Instance; and ;Resource.Witness;, to produce a proof.
-axiom ProvingKey : Type;
-
---- A record describing a proof record, a map entry constituted by a ;VerifyingKey; as the lookup-key
---- and a ;Proof; and associated ;Resource.Witness; as the value.
-ProofRecord : Type := Pair VerifyingKey (Pair Proof Resource.Witness);
+--- A record describing a proof record, a map entry constituted by a VerifyingKey as the lookup-key
+--- and a Proof and associated Witness as the value.
+ProofRecord (Proof VerifyingKey Witness : Type) : Type := Pair VerifyingKey (Pair Proof Resource.Witness);
 
 module DeltaProof;
   --- Aggregates two delta ;ProofRecord;s.
-  axiom aggregate : (p1 p2 : ProofRecord) -> ProofRecord;
+  axiom aggregate : (Proof VerifyingKey Witness : Type) -> (p1 p2 : ProofRecord Proof VerifyingKey Witness) -> ProofRecord Proof VerifyingKey Witness;
+end;
+
+--- A set of ProofRecords.
+---
+--- Each ProofRecord in the set may be parameterized with different types for
+--- Proof, VerifyingKey and Witness, allowing for heterogeneous ProofRecords
+--- within the set. It's not currently possible to represent such a set in Juvix.
+axiom ProofRecordSet : Type;
+
+module ProofRecordSet;
+
+  axiom empty : ProofRecordSet;
+
 end;

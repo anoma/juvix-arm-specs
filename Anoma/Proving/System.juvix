@@ -1,20 +1,57 @@
 module Anoma.Proving.System;
 
 import Stdlib.Prelude open using {Bool};
-import Anoma.Proving.Types open using {ProvingKey; Proof; ProofRecord};
+import Anoma.Proving.Types open using {ProofRecord};
 import Anoma.Resource.Index as Resource open using {Instance; Witness};
 
 --- The interface of the resource machine proving system.
+--- Proof : A fixed-size data type encoding a proof.
+--- VerifyingKey : A fixed-size data type encoding a verifying key containing the data.
+--- ProvingKey : A fixed-size data type encoding a proving key containing the data.
+--- Witness : The subset of inputs used to produce but not verify a proof.
+--- Instance : The subset of inputs required to both create and verify a proof.
 trait
-type ProvingSystem :=
+type ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
   mkProvingSystem {
-    --- Creates a ;Proof; given a ;ProvingKey;, public inputs (;Resource.Instance;), and
-    --- private inputs (;Resource.Witness;).
+    --- Creates a Proof given a ProvingKey, public inputs (Instance), and
+    --- private inputs (Witness).
     prove : (provingKey : ProvingKey)
-      -> (publicInputs : Resource.Instance)
-      -> (privateInputs : Resource.Witness)
+      -> (publicInputs : Instance)
+      -> (privateInputs : Witness)
       -> Proof;
 
     --- Verfies a ;ProofRecord;.
-    verify : (proofRecord : ProofRecord) -> Bool
+    verify : (proofRecord : ProofRecord Proof VerifyingKey Witness) -> Bool
   };
+
+--- An instantiation of a Proving System for Delta proofs.
+module Delta;
+  import Anoma.Proving.Types as T;
+
+  axiom Proof : Type;
+
+  axiom VerifyingKey : Type;
+
+  axiom ProvingKey : Type;
+
+  axiom Witness : Type;
+
+  axiom Instance : Type;
+
+  ProofRecord : Type := T.ProofRecord Proof VerifyingKey Witness;
+
+  axiom prove : (provingKey : ProvingKey)
+    -> (publicInputs : Instance)
+    -> (privateInputs : Witness)
+    -> Proof;
+
+  axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+  instance
+  DeltaProvingSystem : ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
+    mkProvingSystem@{
+      prove;
+      verify
+    };
+
+end;

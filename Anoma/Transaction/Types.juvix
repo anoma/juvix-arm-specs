@@ -9,6 +9,7 @@ import Anoma.Transaction.Action as Action open;
 import Anoma.Delta as Delta open using {Delta};
 import Anoma.MathProperty open;
 import Anoma.Proving.Types open;
+import Anoma.Proving.System open;
 
 --- A record describing a transaction object, the entity constituting a state transition in Anoma.
 positive
@@ -17,7 +18,7 @@ type Transaction :=
     roots : Set CommitmentTree.Root;
     actions : Set Action;
     delta : Delta;
-    deltaProof : ProofRecord
+    deltaProof : Delta.ProofRecord;
   };
 
 --- The ;Transaction; object constructor signature.
@@ -25,7 +26,7 @@ Constructor : Type :=
   (roots : Set CommitmentTree.Root)
     -> (actions : Set Action)
     -> (delta : Delta)
-    -> (deltaProof : ProofRecord)
+    -> (deltaProof : Delta.ProofRecord)
     -> Transaction;
 
 --- Compses two ;Transaction; objects.
@@ -49,6 +50,9 @@ compose (tx1 tx2 : Transaction) : Transaction :=
     -- };
     deltaProof :=
       DeltaProof.aggregate@{
+        Witness := Delta.Witness;
+        Proof := Delta.Proof;
+        VerifyingKey := Delta.VerifyingKey;
         p1 := Transaction.deltaProof tx1;
         p2 := Transaction.deltaProof tx2
       }

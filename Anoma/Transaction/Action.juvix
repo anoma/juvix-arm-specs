@@ -4,7 +4,7 @@ import Stdlib.Prelude open using {Pair; Eq; Ord; Ordering; mkOrd};
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set; union};
 import Anoma.Resource.Index as Resource open using {Resource};
-import Anoma.Proving.Types open using {ProofRecord};
+import Anoma.Proving.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
 
 module AppDataInternal;
   --- A fixed-size data type encoding the lookup key of application data being part of an action.
@@ -57,7 +57,7 @@ type Action :=
   mkAction {
     commitments : Set Resource.Commitment;
     nullifiers : Set Resource.Nullifier;
-    proofs : Set ProofRecord;
+    proofs : ProofRecordSet;
     appData : AppData
   };
 
@@ -80,7 +80,7 @@ compose (a1 a2 : Action) : Action :=
         s2 := Action.appData a2
       };
     -- TODO Proofs must be recomputed. Should this happen as part of `compose`?
-    proofs := Set.empty
+    proofs := ProofRecordSet.empty
   };
 
 module ActionInternal;
