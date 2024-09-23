@@ -26,7 +26,6 @@ axiom ProofRecordSet :
   (Proof : Type)
   -> (VerifyingKey : Type)
   -> (ProvingKey : Type)
-  -> (Instance : Type)
   -> (Witness : Type) -> Type;
 
 trait
