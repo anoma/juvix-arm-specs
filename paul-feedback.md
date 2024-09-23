@@ -14,3 +14,33 @@ https://github.com/anoma/juvix-arm-specs/blob/71c673348175ab76f5368802e2a38bb893
 
 I don't follow the definition of `ProvingSystem` but is likely my misunderstaning. Why do the `Instance` and the `Witness` depend on the `Resource`? Action validity will depend on several `ProvingSystem`s that will each have their own `Instance` and `Witness` types (e.g a proof of membership of a commitment accumulator vs a proof associated to an application).
 
+Perhaps this is an option to define the proving system:
+
+```
+--- A record describing a proof record, a map entry constituted by a ;VerifyingKey; as the lookup-key
+--- and a ;Proof; and associated ;Resource.Witness; as the value.
+ProofRecord (Proof VerifyingKey Witness : Type) : Type := Pair VerifyingKey (Pair Proof Witness);
+
+--- A set containing ;ProofRecord;s
+axiom ProofRecordSet :
+  (Proof : Type)
+  -> (VerifyingKey : Type)
+  -> (ProvingKey : Type)
+  -> (Instance : Type)
+  -> (Witness : Type) -> Type;
+
+trait
+type ProvingSystem Proof VerifyingKey ProvingKey Instance Witness :=
+  mkProvingSystem {
+    --- Creates a ;Proof; given a ;ProvingKey;, public inputs (;Instance;), and
+    --- private inputs (;Witness;).
+    prove : (provingKey : ProvingKey)
+      -> (publicInputs : Instance)
+      -> (privateInputs : Witness)
+      -> Proof;
+
+    --- Verfies a ;ProofRecord;.
+    verify : (proofRecord : ProofRecord Proof VerifyingKey Witness) -> Bool
+  };
+
+```
