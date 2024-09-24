@@ -1,4 +1,4 @@
---- An instantiation of a Proving System for Delta proofs.
+--- An instantiation of a proving System for compliance proofs.
 module Anoma.ProvingSystem.ComplianceProof;
 
 import Stdlib.Prelude open using {Bool};
