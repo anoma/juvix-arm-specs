@@ -98,17 +98,17 @@ compose (a1 a2 : Action) : Result DuplicateError Action :=
                  s1 := Action.appData a1;
                  s2 := Action.appData a2
                };
-             -- TODO Proofs must be recomputed. Should this happen as part of `compose`?
              proofs := ProofRecordSet.empty
            };
 
-{-
+-- TODO We might need to introduce a `prove(actions : Set Action)` function that can be triggered from the proving system.
+
+{- TODO add judoc for verify
 Action validity:
 - action input resources have valid resource logic proofs associated with them
 - action output resources have valid resource logic proofs associated with them
 - all compliance proofs are valid
 - transaction's  field contains valid roots used to prove the existence of consumed resources in the compliance proofs.
-  -- TODO Ask Yulia: What does it mean for a root to be valid?
 -}
 
 verify (a : Action) : Bool := ProofRecordSet.verify (Action.proofs a);

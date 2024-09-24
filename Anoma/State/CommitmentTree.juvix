@@ -1,3 +1,5 @@
+--- NOTE: The ;CommitmentTree; is not part of the resource machine.
+--- However, the resource machine will interact with the ;CommitmentTree; and assumes certain formats.
 module Anoma.State.CommitmentTree;
 
 import Stdlib.Prelude open using {Maybe; Bool; Eq; Ord; Ordering; mkOrd};
@@ -5,13 +7,13 @@ import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set};
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
 
---- A state root of the resource machine commitment tree.
+--- A state root of the commitment tree.
 axiom Root : Type;
 
---- A path in the resource machine commitment tree.
+--- A path in the commitment tree.
 axiom Path : Type;
 
---- The interface of the resource machine commitment tree.
+--- The interface of the commitment tree.
 positive
 trait
 type CommitmentTree :=

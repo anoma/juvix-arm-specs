@@ -5,9 +5,11 @@ import Data.Set as Set open using {Set};
 import Anoma.Resource.Types open using {Resource; Ref; mkRef; LogicRef} public;
 import Anoma.Resource.Computable.Commitment open using {Commitment};
 import Anoma.Resource.Computable.Nullifier open using {Nullifier};
+import Anoma.ProvingSystem.ResourceLogicProof as ResourceLogicProvingSystem;
 
 --- The resource logic function signature.
-Logic : Type := Tag -> Instance -> Witness -> Bool;
+--- NOTE: Logic as a program is not defined in the spec.
+Logic : Type := ResourceLogicProvingSystem.Instance -> ResourceLogicProvingSystem.Witness -> Bool;
 
 --- Computes the ;LogicRef; from the ;Logic; function.
 --- NOTE: For the private testnet, this is allowed to be the identity function.
@@ -19,29 +21,3 @@ Logic-Ref : Ref Logic LogicRef :=
   mkRef@{
     ref (logic : Logic) : LogicRef := logicRef logic
   };
-
---- The reference to the ;Resource; carrying the ;Logic; function.
-type Tag :=
-  | Created Commitment
-  | Consumed Nullifier;
-
---- The public inputs to the ;Logic; function.
-type Instance :=
-  mkInstance {
-    commitments : Set Commitment;
-    nullifiers : Set Nullifier;
-    tag : Tag;
-    custom : CustomInstance
-  };
-
-axiom CustomInstance : Type;
-
---- The private inputs to the ;Logic; function.
-type Witness :=
-  mkWitness {
-    created : Set Resource;
-    consumed : Set Resource;
-    custom : CustomWitness
-  };
-
-axiom CustomWitness : Type;

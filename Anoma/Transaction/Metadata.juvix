@@ -47,3 +47,5 @@ compose (txwm1 txwm2 : TransactionWithMetadata) : TransactionWithMetadata :=
               && Metadata.informationFlowControlPredicate meta2 tx id}
       }
   };
+
+-- TODO: Add `verify(TransactionWithMetadata)` which just verifies the underlying `Transaction`.

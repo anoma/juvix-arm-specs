@@ -5,7 +5,7 @@ import Stdlib.Prelude open using {for; all; &&; just; nothing; Result; error; ok
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
-import Anoma.Transaction.Action as Action open using {Action; module Action; DuplicatedCommitment; DuplicatedNullifier; mkDuplicatedCommitment; mkDuplicatedNullifier; disjointUnion};
+import Anoma.Transaction.Action as Action open using {Action; module Action; DuplicatedCommitment; DuplicatedNullifier; mkDuplicatedCommitment; mkDuplicatedNullifier};
 import Anoma.Delta as Delta open using {Delta};
 import Anoma.MathProperty open;
 import Anoma.ProvingSystem.Types open;

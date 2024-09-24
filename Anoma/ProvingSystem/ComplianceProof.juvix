@@ -4,23 +4,15 @@ module Anoma.ProvingSystem.ComplianceProof;
 import Stdlib.Prelude open using {Bool};
 import Anoma.ProvingSystem.Types as Parametrized;
 
---- TODO Ask Yulia to concretize this more. Since we explicitly talk about CMTree in the report currently, we should also be more concrete here and generalize later.
 axiom Proof : Type;
 
---- TODO: Ask yulia to explain how this is used.
 axiom VerifyingKey : Type;
 
---- TODO: Ask yulia to explain how this is used.
 axiom ProvingKey : Type;
 
---- TODO Can this types be replaced with definitions from `Anoma.State.CommitmentTree` and `Anoma.State.NullifierSet`?
+--- NOTE: CommitmentTree.Root will be contained in the instance.
 axiom Instance : Type;
--- NOTE: Commitment
 
---- TODO Can this types be replaced with definitions from `Anoma.State.CommitmentTree` and `Anoma.State.NullifierSet`?
---- NOTE: Dependent on wheter a resource is created or consumed, the compliance proof is either
---- - a MerkleProof or
---- - a SetMembershipProof
 axiom Witness : Type;
 
 ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey Witness;

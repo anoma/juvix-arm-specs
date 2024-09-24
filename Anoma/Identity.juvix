@@ -13,7 +13,6 @@ axiom ExternalIdentity : Type;
 axiom self : ExternalIdentity;
 
 module ExternalIdentityInternal;
-
   --- Compares two ;ExternalIdentity; objects.
   axiom compare : (extid1 extid2 : ExternalIdentity) -> Ordering;
 

@@ -1,9 +1,11 @@
+--- NOTE: The ;NullifierSet; is not part of the resource machine.
+--- However, the resource machine will interact with the ;NullifierSet; and assumes certain formats.
 module Anoma.State.NullifierSet;
 
 import Stdlib.Prelude open using {Bool};
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 
---- The interface of the resource machine nullifier set.
+--- The interface of the nullifier set.
 trait
 type NullifierSet :=
   mkNullifierSet {

@@ -1,6 +1,6 @@
 module Anoma.Transaction.Delta;
 
-import Stdlib.Prelude open using {Bool; List; for; ||; ,; Result; error; ok};
+import Stdlib.Prelude open using {Bool; List; Pair; Maybe; nothing; just; for; listFor; ||; ,; Result; error; ok};
 import Data.Set as Set open using {Set; union; member?};
 import Anoma.Delta as Delta open using {Delta; zero};
 import Anoma.Transaction.Types open using {Transaction; commitmentSet; nullifierSet};
@@ -10,19 +10,22 @@ import Anoma.MathProperty as MathProperty open;
 
 --- Computes the ;Delta; of a ;Resource; ;Set; being part of a ;Transaction;.
 delta
-  (resources : Set Resource)
-  (nullifierKey : Resource.NullifierKey)
+  (resourcesAndMaybeNullifierKeys : Set (Pair Resource (Maybe Resource.NullifierKey)))
   (transaction : Transaction)
   : Result DuplicateError Delta :=
   case commitmentSet transaction, nullifierSet transaction of
     | error err, _ := error (DuplicatedCommitmentError err)
     | _, error err := error (DuplicatedNullifierError err)
-    | ok cms, ok nfs :=
-      ok
-        for (acc := zero) (r in resources)
-          {if
-            | member? (Resource.commitment r) cms
-              || member? (Resource.nullifier r nullifierKey) nfs :=
-              AdditivelyHomomorphic.add acc (Resource.delta r)
-            -- TODO: Ask Yulia how this should be handled. Should we throw an error here?
-            | else := acc};
+    | _, _ := ok zero;
+-- TODO FIX THIS. Throw an error, if the resource in question is neither part of cms nor nfs.
+--| ok cms, ok nfs :=
+--  ok
+--    listFor (acc := zero) ( (r, nk?) in Set.toList resourcesAndMaybeNullifierKeys)
+--      {
+--      case nk? of
+--        | nothing := member? (Resource.commitment r) cms
+--        | just nk := member? (Resource.nullifier r nk) nfs :=
+--
+--          AdditivelyHomomorphic.add acc (Resource.delta r)
+--        | else := acc};
+-- What should happen when the resource is not in the cms or nfs?

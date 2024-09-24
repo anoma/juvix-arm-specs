@@ -1,7 +1,7 @@
 module Anoma.Resource.Index;
 
 import Anoma.Resource.Types open using {Resource} public;
-import Anoma.Resource.Logic open using {Tag; Instance; Witness} public;
+import Anoma.Resource.Logic open using {Logic} public;
 import Anoma.Resource.Computable.Commitment open using {Commitment; commitment} public;
 import Anoma.Resource.Computable.Nullifier open using {Nullifier; NullifierKey; nullifier} public;
 import Anoma.Resource.Computable.Delta open using {delta} public;
