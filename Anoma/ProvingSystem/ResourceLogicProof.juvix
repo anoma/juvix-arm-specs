@@ -8,11 +8,11 @@ import Anoma.Resource.Logic as ResourceLogic;
 --- A fixed-size data type encoding the resource logic proof.
 axiom Proof : Type;
 
---- A fixed-size data type encoding the verifying key of the resource logic proof.
-axiom VerifyingKey : Type;
+--- TODO: Ask Yulia if is this unused in this ProvingSystem?
+VerifyingKey : Type := Parametrized.Unused;
 
---- A fixed-size data type encoding the proving key of the resource logic proof.
-axiom ProvingKey : Type;
+--- TODO: Ask Yulia if is this unused in this ProvingSystem?
+ProvingKey : Type := Parametrized.Unused;
 
 ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey ResourceLogic.Witness;
 

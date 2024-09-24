@@ -1,8 +1,8 @@
 module Anoma.Transaction.Action;
 
-import Stdlib.Prelude open using {Pair; Eq; Ord; Ordering; mkOrd};
+import Stdlib.Prelude open using {Bool; Pair; Eq; ==; Ord; Ordering; mkOrd; Maybe; ,; fromMaybe; maybe; just; nothing; Result; error; ok};
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Data.Set as Set open using {Set; union};
+import Data.Set as Set open using {Set; union; intersection};
 import Anoma.Resource.Index as Resource open using {Resource};
 import Anoma.ProvingSystem.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
 
@@ -61,27 +61,61 @@ type Action :=
     appData : AppData
   };
 
+type DuplicatedCommitment := mkDuplicatedCommitment;
+-- Resource.Commitment
+
+type DuplicatedNullifier := mkDuplicatedNullifier;
+-- Resource.Nullifier;
+
+type DuplicateError :=
+  | DuplicatedCommitmentError DuplicatedCommitment
+  | DuplicatedNullifierError DuplicatedNullifier;
+
+disjointUnion {T} {{Eq T}} {{Ord T}} (s1 s2 : Set T) : Maybe (Set T) :=
+  if
+    | intersection s1 s2 == Set.empty := just (union s1 s2)
+    | else := nothing;
+
 --- Composes two ;Action; objects.
-compose (a1 a2 : Action) : Action :=
-  mkAction@{
-    commitments :=
-      union@{
+compose (a1 a2 : Action) : Result DuplicateError Action :=
+  let
+    cms :=
+      disjointUnion@{
         s1 := Action.commitments a1;
         s2 := Action.commitments a2
       };
-    nullifiers :=
-      union@{
+    nfs :=
+      disjointUnion@{
         s1 := Action.nullifiers a1;
         s2 := Action.nullifiers a2
       };
-    appData :=
-      union@{
-        s1 := Action.appData a1;
-        s2 := Action.appData a2
-      };
-    -- TODO Proofs must be recomputed. Should this happen as part of `compose`?
-    proofs := ProofRecordSet.empty
-  };
+  in case cms, nfs of
+       | nothing, _ := error (DuplicatedCommitmentError mkDuplicatedCommitment)
+       | _, nothing := error (DuplicatedNullifierError mkDuplicatedNullifier)
+       | just commitments, just nullifiers :=
+         ok
+           mkAction@{
+             commitments;
+             nullifiers;
+             appData :=
+               union@{
+                 s1 := Action.appData a1;
+                 s2 := Action.appData a2
+               };
+             -- TODO Proofs must be recomputed. Should this happen as part of `compose`?
+             proofs := ProofRecordSet.empty
+           };
+
+{-
+Action validity:
+- action input resources have valid resource logic proofs associated with them
+- action output resources have valid resource logic proofs associated with them
+- all compliance proofs are valid
+- transaction's  field contains valid roots used to prove the existence of consumed resources in the compliance proofs.
+  -- TODO Ask Yulia: What does it mean for a root to be valid?
+-}
+
+verify (a : Action) : Bool := ProofRecordSet.verify (Action.proofs a);
 
 module ActionInternal;
   --- Compares two ;Action; objects.

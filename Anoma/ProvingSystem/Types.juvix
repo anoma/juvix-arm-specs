@@ -1,6 +1,6 @@
 module Anoma.ProvingSystem.Types;
 
-import Stdlib.Prelude open using {Pair; Bool};
+import Stdlib.Prelude open using {Pair; Bool; Unit};
 
 --- A record describing a proof record, a map entry constituted by a VerifyingKey as the lookup-key
 --- and a Proof and associated Witness as the value.
@@ -15,6 +15,8 @@ axiom ProofRecordSet : Type;
 
 module ProofRecordSet;
   axiom empty : ProofRecordSet;
+
+  axiom verify : ProofRecordSet -> Bool;
 end;
 
 --- The interface of the resource machine proving system.
@@ -36,3 +38,5 @@ type ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
     --- Verfies a ;ProofRecord;.
     verify : (proofRecord : ProofRecord Proof VerifyingKey Witness) -> Bool
   };
+
+Unused : Type := Unit;

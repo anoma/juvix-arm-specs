@@ -6,7 +6,7 @@ import Anoma.Transaction.Preference as Preference open using {Preference; compos
 import Anoma.Transaction.InformationFlow open using {InformationFlowControlPredicate};
 
 --- The metadata that can be associated with a ;Transaction;.
---- The metadata that can used by actors to identify preferrable ;Transaction;s and specify information flow controll properties.
+--- The metadata that can used by actors to identify preferrable ;Transaction;s and specify information flow control properties.
 --- NOTE: For the private testnet, this is not required yet.
 type Metadata :=
   mkMetadata {

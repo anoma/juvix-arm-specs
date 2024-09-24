@@ -6,14 +6,16 @@ import Anoma.ProvingSystem.Types as Parametrized;
 
 axiom Proof : Type;
 
-axiom VerifyingKey : Type;
+--- TODO: Ask Yulia if is this unused in this ProvingSystem?
+VerifyingKey : Type := Parametrized.Unused;
 
-axiom ProvingKey : Type;
+--- TODO: Ask Yulia if is this unused in this ProvingSystem?
+ProvingKey : Type := Parametrized.Unused;
 
---- TODO Can this types be replaced with definitions from `Anoma.Transaction.Delta`?
+--- TODO Ask Yulia if this type be replaced with definitions from `Anoma.Transaction.Delta`?
 axiom Instance : Type;
 
---- TODO Can this types be replaced with definitions from `Anoma.Transaction.Delta`?
+--- TODO Ask Yulia if this type be replaced with definitions from `Anoma.Transaction.Delta`?
 axiom Witness : Type;
 
 ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey Witness;
