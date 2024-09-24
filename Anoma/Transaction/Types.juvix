@@ -50,9 +50,6 @@ compose (tx1 tx2 : Transaction) : Transaction :=
     -- };
     deltaProof :=
       DeltaProof.aggregate@{
-        Witness := DeltaProof.Witness;
-        Proof := DeltaProof.Proof;
-        VerifyingKey := DeltaProof.VerifyingKey;
         p1 := Transaction.deltaProof tx1;
         p2 := Transaction.deltaProof tx2
       }
