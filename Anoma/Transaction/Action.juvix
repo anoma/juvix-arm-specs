@@ -4,7 +4,7 @@ import Stdlib.Prelude open using {Pair; Eq; Ord; Ordering; mkOrd};
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set; union};
 import Anoma.Resource.Index as Resource open using {Resource};
-import Anoma.Proving.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
+import Anoma.ProvingSystem.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
 
 module AppDataInternal;
   --- A fixed-size data type encoding the lookup key of application data being part of an action.

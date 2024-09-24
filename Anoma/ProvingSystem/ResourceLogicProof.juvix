@@ -1,0 +1,36 @@
+module Anoma.ProvingSystem.ResourceLogicProof;
+
+import Stdlib.Prelude open using {Bool};
+import Anoma.ProvingSystem.Types as Parametrized;
+import Anoma.Resource.Logic as ResourceLogic;
+
+--- A fixed-size data type encoding the resource logic proof.
+axiom Proof : Type;
+
+--- A fixed-size data type encoding the verifying key of the resource logic proof.
+axiom VerifyingKey : Type;
+
+--- A fixed-size data type encoding the proving key of the resource logic proof.
+axiom ProvingKey : Type;
+
+ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey ResourceLogic.Witness;
+
+axiom prove : (provingKey : ProvingKey)
+  -> (publicInputs : ResourceLogic.Instance)
+  -> (privateInputs : ResourceLogic.Witness)
+  -> Proof;
+
+axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+instance
+ResourceLogic-ProvingSystem
+  : Parametrized.ProvingSystem
+    Proof
+    VerifyingKey
+    ProvingKey
+    ResourceLogic.Witness
+    ResourceLogic.Instance :=
+  Parametrized.mkProvingSystem@{
+    prove;
+    verify
+  };

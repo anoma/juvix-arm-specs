@@ -1,8 +1,21 @@
-module Anoma.Proving.System;
+module Anoma.ProvingSystem.Types;
 
-import Stdlib.Prelude open using {Bool};
-import Anoma.Proving.Types open using {ProofRecord};
-import Anoma.Resource.Index as Resource open using {Instance; Witness};
+import Stdlib.Prelude open using {Pair; Bool};
+
+--- A record describing a proof record, a map entry constituted by a VerifyingKey as the lookup-key
+--- and a Proof and associated Witness as the value.
+ProofRecord (Proof VerifyingKey Witness : Type) : Type := Pair VerifyingKey (Pair Proof Witness);
+
+--- A set of ProofRecords.
+---
+--- Each ProofRecord in the set may be parameterized with different types for
+--- Proof, VerifyingKey and Witness, allowing for heterogeneous ProofRecords
+--- within the set. It's not currently possible to represent such a set in Juvix.
+axiom ProofRecordSet : Type;
+
+module ProofRecordSet;
+  axiom empty : ProofRecordSet;
+end;
 
 --- The interface of the resource machine proving system.
 --- Proof : A fixed-size data type encoding a proof.
@@ -23,35 +36,3 @@ type ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
     --- Verfies a ;ProofRecord;.
     verify : (proofRecord : ProofRecord Proof VerifyingKey Witness) -> Bool
   };
-
---- An instantiation of a Proving System for Delta proofs.
-module Delta;
-  import Anoma.Proving.Types as T;
-
-  axiom Proof : Type;
-
-  axiom VerifyingKey : Type;
-
-  axiom ProvingKey : Type;
-
-  axiom Witness : Type;
-
-  axiom Instance : Type;
-
-  ProofRecord : Type := T.ProofRecord Proof VerifyingKey Witness;
-
-  axiom prove : (provingKey : ProvingKey)
-    -> (publicInputs : Instance)
-    -> (privateInputs : Witness)
-    -> Proof;
-
-  axiom verify : (proofRecord : ProofRecord) -> Bool;
-
-  instance
-  DeltaProvingSystem : ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
-    mkProvingSystem@{
-      prove;
-      verify
-    };
-
-end;

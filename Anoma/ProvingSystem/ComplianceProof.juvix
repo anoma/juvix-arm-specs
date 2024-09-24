@@ -1,0 +1,34 @@
+--- An instantiation of a Proving System for Delta proofs.
+module Anoma.ProvingSystem.ComplianceProof;
+
+import Stdlib.Prelude open using {Bool};
+import Anoma.ProvingSystem.Types as Parametrized;
+
+axiom Proof : Type;
+
+axiom VerifyingKey : Type;
+
+axiom ProvingKey : Type;
+
+--- TODO Can this types be replaced with definitions from `Anoma.State.CommitmentTree` and `Anoma.State.NullifierSet`?
+axiom Instance : Type;
+
+--- TODO Can this types be replaced with definitions from `Anoma.State.CommitmentTree` and `Anoma.State.NullifierSet`?
+axiom Witness : Type;
+
+ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey Witness;
+
+axiom prove : (provingKey : ProvingKey)
+  -> (publicInputs : Instance)
+  -> (privateInputs : Witness)
+  -> Proof;
+
+axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+instance
+Compliance-ProvingSystem
+  : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
+  Parametrized.mkProvingSystem@{
+    prove;
+    verify
+  };
