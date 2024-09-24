@@ -5,7 +5,7 @@ import Stdlib.Prelude open using {for; all; &&; just; nothing; Result; error; ok
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
-import Anoma.Transaction.Action as Action open;
+import Anoma.Transaction.Action as Action open using {Action; module Action; DuplicatedCommitment; DuplicatedNullifier; mkDuplicatedCommitment; mkDuplicatedNullifier; disjointUnion};
 import Anoma.Delta as Delta open using {Delta};
 import Anoma.MathProperty open;
 import Anoma.ProvingSystem.Types open;
@@ -14,7 +14,7 @@ import Anoma.ProvingSystem.DeltaProof as DeltaProof;
 --- A record describing a transaction object, the entity constituting a state transition in Anoma.
 positive
 type Transaction :=
-  mkTransaction {
+  create {
     roots : Set CommitmentTree.Root;
     actions : Set Action;
     delta : Delta;
@@ -23,7 +23,7 @@ type Transaction :=
 
 --- Composes two ;Transaction; objects.
 compose (tx1 tx2 : Transaction) : Transaction :=
-  mkTransaction@{
+  create@{
     roots := union (Transaction.roots tx1) (Transaction.roots tx2);
     actions := union (Transaction.actions tx1) (Transaction.actions tx2);
     delta := AdditivelyHomomorphic.add (Transaction.delta tx1) (Transaction.delta tx2);

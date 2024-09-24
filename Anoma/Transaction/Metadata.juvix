@@ -17,7 +17,7 @@ type Metadata :=
 --- A composite structure containing a ;Transaction; with ;Metadata;
 --- NOTE: For the private testnet, this is not required yet.
 type TransactionWithMetadata :=
-  mkTransactionWithMetadata {
+  createWithMetadata {
     transaction : Transaction;
     metadata : Metadata
   };
@@ -28,7 +28,7 @@ compose (txwm1 txwm2 : TransactionWithMetadata) : TransactionWithMetadata :=
   let
     meta1 := TransactionWithMetadata.metadata txwm1;
     meta2 := TransactionWithMetadata.metadata txwm2;
-  in mkTransactionWithMetadata@{
+  in createWithMetadata@{
     transaction :=
       Transaction.compose@{
         tx1 := TransactionWithMetadata.transaction txwm1;

@@ -5,6 +5,7 @@ import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set; union; intersection};
 import Anoma.Resource.Index as Resource open using {Resource};
 import Anoma.ProvingSystem.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
+import Anoma.MathProperty open using {disjointUnion};
 
 module AppDataInternal;
   --- A fixed-size data type encoding the lookup key of application data being part of an action.
@@ -14,10 +15,10 @@ module AppDataInternal;
   axiom AppDataValue : Type;
 
   --- Compares two ;AppDataKey;s.
-  axiom compareAppDataKey : AppDataKey -> AppDataKey -> Ordering;
+  axiom compareAppDataKey : (k1 k2 : AppDataKey) -> Ordering;
 
   --- Compares two ;AppDataValue;s.
-  axiom compareAppDataValue : AppDataValue -> AppDataValue -> Ordering;
+  axiom compareAppDataValue : (v1 v2 : AppDataValue) -> Ordering;
 
   --- Implements the ;Ord; trait for ;AppDataKey;.
   instance
@@ -54,7 +55,7 @@ open AppDataInternal using {AppData} public;
 --- A proof created in the context of an action is assumed to have guaranteed
 --- access only to the resources associated with the action.
 type Action :=
-  mkAction {
+  create {
     commitments : Set Resource.Commitment;
     nullifiers : Set Resource.Nullifier;
     proofs : ProofRecordSet;
@@ -70,11 +71,6 @@ type DuplicatedNullifier := mkDuplicatedNullifier;
 type DuplicateError :=
   | DuplicatedCommitmentError DuplicatedCommitment
   | DuplicatedNullifierError DuplicatedNullifier;
-
-disjointUnion {T} {{Eq T}} {{Ord T}} (s1 s2 : Set T) : Maybe (Set T) :=
-  if
-    | intersection s1 s2 == Set.empty := just (union s1 s2)
-    | else := nothing;
 
 --- Composes two ;Action; objects.
 compose (a1 a2 : Action) : Result DuplicateError Action :=
@@ -94,7 +90,7 @@ compose (a1 a2 : Action) : Result DuplicateError Action :=
        | _, nothing := error (DuplicatedNullifierError mkDuplicatedNullifier)
        | just commitments, just nullifiers :=
          ok
-           mkAction@{
+           create@{
              commitments;
              nullifiers;
              appData :=

@@ -2,7 +2,7 @@ module Anoma.State.ResourceMachine;
 
 import Stdlib.Prelude open using {Bool};
 import Data.Set as Set open using {Set};
-import Anoma.Transaction.Types as Transaction open using {Transaction; mkTransaction; compose; verify};
+import Anoma.Transaction.Types as Transaction open using {Transaction; create; compose; verify};
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
@@ -34,7 +34,7 @@ type ResourceMachine :=
 instance
 Concrete-ResourceMachine : ResourceMachine :=
   mkResourceMachine@{
-    create := Transaction.mkTransaction;
+    create := Transaction.create;
     compose := Transaction.compose;
     verify := Transaction.verify
   };

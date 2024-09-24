@@ -1,6 +1,7 @@
 module Anoma.MathProperty;
 
-import Stdlib.Prelude open using {Bool; Eq; ==};
+import Stdlib.Prelude open using {Bool; Eq; Ord; ==; Maybe; just; nothing};
+import Data.Set as Set open using {Set; union; intersection};
 
 --- A trait describing additive homomorphicity.
 trait
@@ -18,3 +19,10 @@ trait
 type KindDistinct T :=
   mkKindDistinct {--- Adds two types implementing the ;KindDistinct; trait.
   add : (v1 v2 : T) -> T};
+
+--- Computes the disjoint union of two ;Set;s.
+--- TODO return error here already.
+disjointUnion {T} {{Eq T}} {{Ord T}} (s1 s2 : Set T) : Maybe (Set T) :=
+  if
+    | intersection s1 s2 == Set.empty := just (union s1 s2)
+    | else := nothing;
