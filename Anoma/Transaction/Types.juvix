@@ -29,30 +29,13 @@ Constructor : Type :=
     -> (deltaProof : DeltaProof.ProofRecord)
     -> Transaction;
 
---- Compses two ;Transaction; objects.
+--- Composes two ;Transaction; objects.
 compose (tx1 tx2 : Transaction) : Transaction :=
   mkTransaction@{
-    roots :=
-      union@{
-        s1 := Transaction.roots tx1;
-        s2 := Transaction.roots tx2
-      };
-    actions :=
-      union@{
-        s1 := Transaction.actions tx1;
-        s2 := Transaction.actions tx2
-      };
+    roots := union (Transaction.roots tx1) (Transaction.roots tx2);
+    actions := union (Transaction.actions tx1) (Transaction.actions tx2);
     delta := AdditivelyHomomorphic.add (Transaction.delta tx1) (Transaction.delta tx2);
-    -- TODO Use named syntax once fixed
-    -- AdditivelyHomomorphic.add@{
-    --   v1 := Transaction.delta tx1;
-    --   v2 := Transaction.delta tx2
-    -- };
-    deltaProof :=
-      DeltaProof.aggregate@{
-        p1 := Transaction.deltaProof tx1;
-        p2 := Transaction.deltaProof tx2
-      }
+    deltaProof := DeltaProof.aggregate (Transaction.deltaProof tx1) (Transaction.deltaProof tx2)
   };
 
 --- Returns the ;Resource.Commitment; ;Set; of a ;Transaction;.
