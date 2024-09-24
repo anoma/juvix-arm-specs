@@ -21,14 +21,6 @@ type Transaction :=
     deltaProof : DeltaProof.ProofRecord
   };
 
---- The ;Transaction; object constructor signature.
-Constructor : Type :=
-  (roots : Set CommitmentTree.Root)
-    -> (actions : Set Action)
-    -> (delta : Delta)
-    -> (deltaProof : DeltaProof.ProofRecord)
-    -> Transaction;
-
 --- Composes two ;Transaction; objects.
 compose (tx1 tx2 : Transaction) : Transaction :=
   mkTransaction@{

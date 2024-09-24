@@ -1,6 +1,6 @@
 module Anoma.Transaction.Index;
 
-import Anoma.Transaction.Types open using {Transaction; Constructor} public;
+import Anoma.Transaction.Types open using {Transaction} public;
 import Anoma.Transaction.Preference open using {Preference};
 import Anoma.Transaction.InformationFlow open using {InformationFlowControlPredicate};
 import Anoma.Transaction.Metadata open using {TransactionWithMetadata; Metadata} public;

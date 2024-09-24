@@ -1,23 +1,40 @@
 module Anoma.State.ResourceMachine;
 
 import Stdlib.Prelude open using {Bool};
-import Anoma.Transaction.Index as Transaction open using {Transaction};
+import Data.Set as Set open using {Set};
+import Anoma.Transaction.Types as Transaction open using {Transaction; mkTransaction; compose; verify};
+import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
+import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
+import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
+import Anoma.Transaction.Action as Action open;
+import Anoma.Delta as Delta open using {Delta};
+import Anoma.ProvingSystem.DeltaProof as DeltaProof;
 
---- The interface of the resource machine.
+--- The resource machine interface.
 trait
 type ResourceMachine :=
   mkResourceMachine {
-    --- Creates a ;Transaction; with the the ;Transaction.Constructor;.
-    --- TODO Clarify why `create` is needed.
-    create : Transaction.Constructor;
+    --- Creates a ;Transaction;.
+    create : (roots : Set CommitmentTree.Root)
+      -> (actions : Set Action)
+      -> (delta : Delta)
+      -> (deltaProof : DeltaProof.ProofRecord)
+      -> Transaction;
 
     --- Composes two ;Transaction;s with the transa
     compose : (tx1 tx2 : Transaction) -> Transaction;
 
-    --- Verifies a ;Transaction; by checking that the
-    --- - resource logic proofs
-    --- - compliance proofs
-    --- - delta proof (a.k.a., balance proof)
-    --- is valid.
+    --- Verifies a ;Transaction; by checking that all proofs are valid.
+    --- This includes resource logic proofs, compliance proofs, and the delta proof (a.k.a., balance proof))
     verify : (tx : Transaction) -> Bool
+  };
+
+--- The resource machine instantiation.
+--- NOTE: After all axioms have been replaced by concrete definitions, this intance becomes a concrete resource machine.
+instance
+Concrete-ResourceMachine : ResourceMachine :=
+  mkResourceMachine@{
+    create := Transaction.mkTransaction;
+    compose := Transaction.compose;
+    verify := Transaction.verify
   };
