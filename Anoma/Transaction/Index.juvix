@@ -1,8 +1,9 @@
 module Anoma.Transaction.Index;
 
-import Anoma.Transaction.Types open using {Transaction} public;
-import Anoma.Transaction.Preference open using {Preference};
-import Anoma.Transaction.InformationFlow open using {InformationFlowControlPredicate};
-import Anoma.Transaction.Metadata open using {TransactionWithMetadata; Metadata} public;
 import Anoma.Transaction.Action open using {Action; compose};
+import Anoma.Transaction.AppData open using {AppData; Entry};
 import Anoma.Transaction.Delta open using {delta};
+import Anoma.Transaction.InformationFlow open using {InformationFlowControlPredicate};
+import Anoma.Transaction.Metadata open using {TransactionWithMetadata; Metadata};
+import Anoma.Transaction.Preference open using {Preference};
+import Anoma.Transaction.Types open using {Transaction};

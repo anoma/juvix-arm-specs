@@ -1,31 +1,35 @@
 module Anoma.Transaction.Delta;
 
-import Stdlib.Prelude open using {Bool; List; Pair; Maybe; nothing; just; for; listFor; ||; ,; Result; error; ok};
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set; union; member?};
-import Anoma.Delta as Delta open using {Delta; zero};
+import Anoma.Delta as Delta open using {Delta};
 import Anoma.Transaction.Types open using {Transaction; commitmentSet; nullifierSet};
-import Anoma.Transaction.Action open using {DuplicateError; DuplicatedCommitmentError; DuplicatedNullifierError};
+import Anoma.Transaction.Action open using {DisjointSetError; NonDisjointCommitmentsError; NonDisjointNullifiersError};
 import Anoma.Resource.Index as Resource open using {Resource};
-import Anoma.MathProperty as MathProperty open;
+import Anoma.Math as Math open;
+
+type DeltaComputationError :=
+  | DisjointSet DisjointSetError
+  | InvalidResource Resource;
 
 --- Computes the ;Delta; of a ;Resource; ;Set; being part of a ;Transaction;.
 delta
   (resourcesAndMaybeNullifierKeys : Set (Pair Resource (Maybe Resource.NullifierKey)))
   (transaction : Transaction)
-  : Result DuplicateError Delta :=
+  : Result DeltaComputationError Delta :=
   case commitmentSet transaction, nullifierSet transaction of
-    | error err, _ := error (DuplicatedCommitmentError err)
-    | _, error err := error (DuplicatedNullifierError err)
-    | _, _ := ok zero;
--- TODO FIX THIS. Throw an error, if the resource in question is neither part of cms nor nfs.
---| ok cms, ok nfs :=
---  ok
---    listFor (acc := zero) ( (r, nk?) in Set.toList resourcesAndMaybeNullifierKeys)
---      {
---      case nk? of
---        | nothing := member? (Resource.commitment r) cms
---        | just nk := member? (Resource.nullifier r nk) nfs :=
---
---          AdditivelyHomomorphic.add acc (Resource.delta r)
---        | else := acc};
--- What should happen when the resource is not in the cms or nfs?
+    | error duplicates, _ := error (DisjointSet (NonDisjointCommitmentsError duplicates))
+    | _, error duplicates := error (DisjointSet (NonDisjointNullifiersError duplicates))
+    | ok cms, ok nfs :=
+      for (acc := ok Delta.zero) (r, nk? in resourcesAndMaybeNullifierKeys)
+        {case acc of
+          | error err := error err
+          | ok accDelta :=
+            let
+              isPartOfSet :=
+                case nk? of
+                  | nothing := member? (Resource.commitment r) cms
+                  | just nk := member? (Resource.nullifier r nk) nfs;
+            in if
+              | isPartOfSet := ok (AdditivelyHomomorphic.add accDelta (Resource.delta r))
+              | else := error (InvalidResource r)};

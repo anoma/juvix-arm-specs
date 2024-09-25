@@ -1,13 +1,13 @@
 module Anoma.Transaction.Types;
 
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set; toList; union};
-import Stdlib.Prelude open using {for; all; &&; just; nothing; Result; error; ok; Bool};
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
-import Anoma.Transaction.Action as Action open using {Action; module Action; DuplicatedCommitment; DuplicatedNullifier; mkDuplicatedCommitment; mkDuplicatedNullifier};
+import Anoma.Transaction.Action as Action open using {Action; module Action};
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.MathProperty open;
+import Anoma.Math open;
 import Anoma.ProvingSystem.Types open;
 import Anoma.ProvingSystem.DeltaProof as DeltaProof;
 
@@ -30,30 +30,24 @@ compose (tx1 tx2 : Transaction) : Transaction :=
     deltaProof := DeltaProof.aggregate (Transaction.deltaProof tx1) (Transaction.deltaProof tx2)
   };
 
+--- Verifies a ;Transaction;.
 verify (tx : Transaction) : Bool :=
   all (a in Set.toList (Transaction.actions tx)) {Action.verify a}
     && DeltaProof.verify (Transaction.deltaProof tx);
 
---- Returns the ;Resource.Commitment; ;Set; of a ;Transaction;.
-commitmentSet (transaction : Transaction) : Result DuplicatedCommitment (Set Resource.Commitment) :=
-  for (acc := ok Set.empty) (a in Transaction.actions transaction)
-    {case acc of
-      | ok acc' :=
-        case disjointUnion acc' (Action.commitments a) of {
-          | just cms := ok cms
-          | nothing := error mkDuplicatedCommitment
-        }
-      | error err := error err};
+--- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
+commitmentSet
+  (transaction : Transaction) : Result (Set Resource.Commitment) (Set Resource.Commitment) :=
+  accumulateFromActions (Action.commitments) transaction;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifierSet (transaction : Transaction) : Result DuplicatedNullifier (Set Resource.Nullifier) :=
+nullifierSet
+  (transaction : Transaction) : Result (Set Resource.Nullifier) (Set Resource.Nullifier) :=
+  accumulateFromActions (Action.nullifiers) transaction;
+
+accumulateFromActions
+  {T} {{Ord T}} (getter : Action -> Set T) (transaction : Transaction) : Result (Set T) (Set T) :=
   for (acc := ok Set.empty) (a in Transaction.actions transaction)
     {case acc of
-      | ok acc' :=
-        case disjointUnion acc' (Action.nullifiers a) of {
-          | just nfs := ok nfs
-          | nothing := error mkDuplicatedNullifier
-        }
+      | ok acc' := disjointUnion acc' (getter a)
       | error err := error err};
-
--- TODO refactor

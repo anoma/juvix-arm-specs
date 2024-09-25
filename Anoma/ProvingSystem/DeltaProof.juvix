@@ -1,7 +1,7 @@
 --- An instantiation of a proving System for delta proofs.
 module Anoma.ProvingSystem.DeltaProof;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Anoma.ProvingSystem.Types as Parametrized;
 
 axiom Proof : Type;
@@ -24,7 +24,7 @@ axiom prove : (provingKey : ProvingKey)
 axiom verify : (proofRecord : ProofRecord) -> Bool;
 
 instance
-Delta-ProvingSystem : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
+Delta-ProvingSystem : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Instance Witness :=
   Parametrized.mkProvingSystem@{
     prove;
     verify

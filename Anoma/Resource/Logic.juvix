@@ -1,6 +1,6 @@
 module Anoma.Resource.Logic;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set};
 import Anoma.Resource.Types open using {Resource; Ref; mkRef; LogicRef} public;
 import Anoma.Resource.Computable.Commitment open using {Commitment};

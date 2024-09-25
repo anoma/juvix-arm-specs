@@ -1,14 +1,13 @@
 --- An instantiation of a proving System for resource logic proofs.
 module Anoma.ProvingSystem.ResourceLogicProof;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set};
 import Anoma.Resource.Types open using {Resource};
 import Anoma.Resource.Computable.Commitment open using {Commitment};
 import Anoma.Resource.Computable.Nullifier open using {Nullifier};
 import Anoma.ProvingSystem.Types as Parametrized;
 
---- A fixed-size data type encoding the resource logic proof.
 axiom Proof : Type;
 
 axiom VerifyingKey : Type;
@@ -20,26 +19,28 @@ type Tag :=
   | Created Commitment
   | Consumed Nullifier;
 
---- The public inputs to the logi  function.
+--- The public inputs (Instance) of the resource logic function proof.
 type Instance :=
   mkInstance {
     tag : Tag;
     commitments : Set Commitment;
     nullifiers : Set Nullifier;
-    custom : CustomInstance
+    custom : InstanceCustomInputs
   };
 
-axiom CustomInstance : Type;
+--- Custom public inputs of the resource logic function proof being defined on the application level.
+axiom InstanceCustomInputs : Type;
 
---- The private inputs to the logic function.
+--- The private inputs (Witness) of the resource logic function proof.
 type Witness :=
   mkWitness {
     created : Set Resource;
     consumed : Set Resource;
-    custom : CustomWitness
+    custom : WitnessCustomInputs
   };
 
-axiom CustomWitness : Type;
+--- Custom private inputs of the resource logic function proof being defined on the application level.
+axiom WitnessCustomInputs : Type;
 
 ProofRecord : Type := Parametrized.ProofRecord Proof VerifyingKey Witness;
 
@@ -52,7 +53,7 @@ axiom verify : (proofRecord : ProofRecord) -> Bool;
 
 instance
 ResourceLogic-ProvingSystem
-  : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
+  : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Instance Witness :=
   Parametrized.mkProvingSystem@{
     prove;
     verify

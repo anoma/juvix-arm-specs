@@ -1,0 +1,45 @@
+module Anoma.Transaction.AppData;
+
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Data.Set as Set open using {Set};
+
+--- A fixed-size data type encoding the lookup key of application.
+axiom Key : Type;
+
+--- A fixed-size data type encoding the lookup value of application data.
+axiom Value : Type;
+
+--- A type describing an app data map entry.
+Entry : Type := Pair Key Value;
+
+--- A type describing an app data map.
+AppData : Type := Set Entry;
+
+--- A module implementing traits for ;Key;.
+module KeyInternal;
+  --- Compares two ;Key;s.
+  axiom compare : (k1 k2 : Key) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;Key;.
+  instance
+  Key-Ord : Ord Key := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Key;.
+  instance
+  Key-Eq : Eq Key := fromOrdToEq;
+end;
+
+--- A module implementing traits for ;Value;.
+module ValueInternal;
+  --- Compares two ;Value;s.
+  axiom compare : (v1 v2 : Value) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;Value;.
+  instance
+  Value-Ord : Ord Value := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Value;.
+  instance
+  Value-Eq : Eq Value := fromOrdToEq;
+end;

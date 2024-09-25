@@ -1,6 +1,6 @@
 module Anoma.State.ResourceMachine;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set};
 import Anoma.Transaction.Types as Transaction open using {Transaction; create; compose; verify};
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};

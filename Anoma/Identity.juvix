@@ -1,28 +1,19 @@
 module Anoma.Identity;
 
-import Stdlib.Prelude open using {Eq; Ord; Ordering; mkOrd};
+import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set};
 
 --- A fixed-size data type describing an external identity.
--- TODO is this correct? Do we need an ExternalIdentity type? Do we need the full identity machine to be defined here?
 axiom ExternalIdentity : Type;
-
---- The ;ExternalIdentity; identity associated with the caller of a function.
---- TODO How should we handle this key-pair? Is this supposed to be provided through the identity machine in the future?
-axiom self : ExternalIdentity;
 
 module ExternalIdentityInternal;
   --- Compares two ;ExternalIdentity; objects.
-  axiom compare : (extid1 extid2 : ExternalIdentity) -> Ordering;
+  axiom compare : (lhs rhs : ExternalIdentity) -> Ordering;
 
   --- Implements the ;Ord; trait for ;ExternalIdentity;.
-  --- NOTE: This is required for using them in ;Set;.
   instance
-  ExternalIdentity-Ord : Ord ExternalIdentity :=
-    mkOrd@{
-      cmp := compare
-    };
+  ExternalIdentity-Ord : Ord ExternalIdentity := mkOrd compare;
 
   --- Implements the ;Eq; trait for ;ExternalIdentity;.
   instance

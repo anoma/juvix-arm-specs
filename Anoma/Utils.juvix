@@ -1,0 +1,7 @@
+module Anoma.Utils;
+
+import Stdlib.Prelude open;
+
+--- A type describing the absence of a types.
+--- NOTE: This can be used in instantiated interfaces for type parameters that are not used.
+Unused : Type := Unit;

@@ -1,6 +1,6 @@
 module Anoma.Transaction.InformationFlow;
 
-import Stdlib.Prelude open using {Bool; List; true; false; all; any; not};
+import Stdlib.Prelude open;
 import Data.Set as Set open using {Set; toList; member?};
 import Anoma.Identity open using {ExternalIdentity};
 import Anoma.Transaction.Types as Transaction open using {Transaction};

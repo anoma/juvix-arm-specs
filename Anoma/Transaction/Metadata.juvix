@@ -1,6 +1,6 @@
 module Anoma.Transaction.Metadata;
 
-import Stdlib.Prelude open using {&&};
+import Stdlib.Prelude open;
 import Anoma.Transaction.Types as Transaction open using {Transaction};
 import Anoma.Transaction.Preference as Preference open using {Preference; compose};
 import Anoma.Transaction.InformationFlow open using {InformationFlowControlPredicate};
@@ -48,4 +48,6 @@ compose (txwm1 txwm2 : TransactionWithMetadata) : TransactionWithMetadata :=
       }
   };
 
--- TODO: Add `verify(TransactionWithMetadata)` which just verifies the underlying `Transaction`.
+--- Verifies a ;TransactionWithMetadata;.
+verify (txwm : TransactionWithMetadata) : Bool :=
+  Transaction.verify (TransactionWithMetadata.transaction txwm);

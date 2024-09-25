@@ -1,6 +1,6 @@
 module Anoma.Delta;
 
-import Anoma.MathProperty as MathProperty open;
+import Anoma.Math as Math open;
 
 --- A fixed-size data type encoding the resource delta.
 axiom Delta : Type;
@@ -11,16 +11,16 @@ axiom addDelta : (d1 d2 : Delta) -> Delta;
 --- The ;Delta; value zero.
 axiom zero : Delta;
 
---- Implements the ;MathProperty.AdditivelyHomomorphic; trait for ;Delta;.
+--- Implements the ;Math.AdditivelyHomomorphic; trait for ;Delta;.
 instance
-Delta-AdditivelyHomomorphic : MathProperty.AdditivelyHomomorphic Delta :=
-  MathProperty.mkAdditivelyHomomorphic@{
+Delta-AdditivelyHomomorphic : Math.AdditivelyHomomorphic Delta :=
+  Math.mkAdditivelyHomomorphic@{
     add (a b : Delta) : Delta := addDelta a b
   };
 
---- Implements the ;MathProperty.KindDistinct; trait for ;Delta;.
+--- Implements the ;Math.KindDistinct; trait for ;Delta;.
 instance
-Delta-KindDistinct : MathProperty.KindDistinct Delta :=
-  MathProperty.mkKindDistinct@{
+Delta-KindDistinct : Math.KindDistinct Delta :=
+  Math.mkKindDistinct@{
     add (a b : Delta) : Delta := addDelta a b
   };

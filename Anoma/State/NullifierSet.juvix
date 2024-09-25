@@ -2,7 +2,7 @@
 --- However, the resource machine will interact with the ;NullifierSet; and assumes certain formats.
 module Anoma.State.NullifierSet;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Anoma.Resource.Computable.Nullifier as Resource open using {Nullifier};
 
 --- The interface of the nullifier set.
@@ -11,8 +11,8 @@ type NullifierSet :=
   mkNullifierSet {
     --- Adds a ;Resource.Nullifier; to the ;NullifierSet;.
     --- TODO Wait for the specs to rename this from `write` to `add`.
-    write : Resource.Nullifier -> NullifierSet;
+    add : (nullifier : Resource.Nullifier) -> NullifierSet;
 
     --- Checks if a ;Resource.Nullifier; exists in the ;NullifierSet;.
-    exists : Resource.Nullifier -> Bool
+    exists : (nullifier : Resource.Nullifier) -> Bool
   };

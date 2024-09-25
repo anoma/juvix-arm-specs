@@ -1,7 +1,7 @@
 --- An instantiation of a proving System for compliance proofs.
 module Anoma.ProvingSystem.ComplianceProof;
 
-import Stdlib.Prelude open using {Bool};
+import Stdlib.Prelude open;
 import Anoma.ProvingSystem.Types as Parametrized;
 
 axiom Proof : Type;
@@ -10,7 +10,6 @@ axiom VerifyingKey : Type;
 
 axiom ProvingKey : Type;
 
---- NOTE: CommitmentTree.Root will be contained in the instance.
 axiom Instance : Type;
 
 axiom Witness : Type;
@@ -26,7 +25,7 @@ axiom verify : (proofRecord : ProofRecord) -> Bool;
 
 instance
 Compliance-ProvingSystem
-  : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Witness Instance :=
+  : Parametrized.ProvingSystem Proof VerifyingKey ProvingKey Instance Witness :=
   Parametrized.mkProvingSystem@{
     prove;
     verify

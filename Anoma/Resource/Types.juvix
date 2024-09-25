@@ -1,6 +1,6 @@
 module Anoma.Resource.Types;
 
-import Stdlib.Prelude open using {Bool} public;
+import Stdlib.Prelude open;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LogicRef; to be dynamically-sized.

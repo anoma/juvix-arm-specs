@@ -2,7 +2,7 @@
 --- However, the resource machine will interact with the ;CommitmentTree; and assumes certain formats.
 module Anoma.State.CommitmentTree;
 
-import Stdlib.Prelude open using {Maybe; Bool; Eq; Ord; Ordering; mkOrd};
+import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set};
 import Anoma.Resource.Computable.Commitment as Resource open using {Commitment};
@@ -19,16 +19,16 @@ trait
 type CommitmentTree :=
   mkCommitmentTree {
     --- Adds a ;Resource.Commitment; to the ;CommitmentTree; and returns the ;Path;.
-    add : CommitmentTree -> Resource.Commitment -> Path;
+    add : (tree : CommitmentTree) -> (commitment : Resource.Commitment) -> Path;
 
     --- Returns the ;Path; of a ;Resource.Commitment; in the ;CommitmentTree;, or nothing if it does not exist.
-    path : CommitmentTree -> Resource.Commitment -> Maybe Path;
+    path : (tree : CommitmentTree) -> (commitment : Resource.Commitment) -> Maybe Path;
 
     --- Verifies a ;Path; of a ;Resource.Commitment; in the ;CommitmentTree;.
-    verify : Resource.Commitment -> Path -> Root -> Bool;
+    verify : (commitment : Resource.Commitment) -> (path : Path) -> (root : Root) -> Bool;
 
     --- Returns the ;Root; of the ;CommitmentTree;.
-    root : CommitmentTree -> Root
+    root : (commitment : CommitmentTree) -> Root
   };
 
 module RootInternal;
@@ -36,17 +36,10 @@ module RootInternal;
   axiom compare : (lhs rhs : Root) -> Ordering;
 
   --- Implements the ;Ord; trait for ;Root;.
-  --- NOTE: This is required for using them in ;Set;.
   instance
-  Root-Ord : Ord Root :=
-    mkOrd@{
-      cmp := compare
-    };
+  Root-Ord : Ord Root := mkOrd compare;
 
   --- Implements the ;Eq; trait for ;Root;.
   instance
   Root-Eq : Eq Root := fromOrdToEq;
 end;
-
--- TODO: Do we need to express timestamps in the commitment tree?
--- https://specs.anoma.net/v2/system_architecture/state/resource_machine/rm_def/storage.html
