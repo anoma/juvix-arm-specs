@@ -12,8 +12,26 @@ type DeltaComputationError :=
   | DisjointSet DisjointSetError
   | InvalidResource Resource;
 
+--- TODO To calculate the transaction.delta you need to know which resources are "in" and "out".
+--- TODO Specs doesn't define how to do the sum for the subtraction.
+--- Paul: It is sufficient that the RM instance provides a function `partitionResources`.
+--- Paul: Why is the compliance proof not checking this?
+--- Paul: We should make `partitionResources` generic.
+--- Michael: What input arguments does the generic `partitionResources`.
+--- Paul: Ask Yulia / Chris: How are r_in and r_out defined?
+type ResourcePartition :=
+  mkResourceParition {
+    consumed : Set Resource;
+    created : Set Resource
+  };
+
+--- TODO 1. Confirm with Yulia.
+--- TODO 2. Ask engineering team to provide a builtin.
+axiom partitionResources : (transaction : Transaction) -> (OTHER_ARGS? : Type) -> ResourcePartition;
+
 --- Computes the ;Delta; of a ;Resource; ;Set; being part of a ;Transaction;.
-delta
+axiom delta : (transaction : Transaction) -> Delta;
+{-delta
   (resourcesAndMaybeNullifierKeys : Set (Pair Resource (Maybe Resource.NullifierKey)))
   (transaction : Transaction)
   : Result DeltaComputationError Delta :=
@@ -33,3 +51,4 @@ delta
             in if
               | isPartOfSet := ok (AdditivelyHomomorphic.add accDelta (Resource.delta r))
               | else := error (InvalidResource r)};
+-}
