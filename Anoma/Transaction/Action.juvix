@@ -4,7 +4,8 @@ import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Data.Set as Set open using {Set; union; intersection};
 import Anoma.Resource.Index as Resource open;
-import Anoma.ProvingSystem.Types open using {ProofRecord; ProofRecordSet; module ProofRecordSet};
+import Anoma.Proving.Types open using {ProofRecord};
+import Anoma.Proving.ProofRecordSet as ProofRecordSet open using {ProofRecordSet};
 import Anoma.Math open using {disjointUnion};
 import Anoma.Transaction.AppData open using {AppData};
 
@@ -48,7 +49,11 @@ verify (a : Action) : Bool := ProofRecordSet.verify (Action.proofs a);
 
 module ActionInternal;
   --- Compares two ;Action; objects.
-  axiom compare : (lhs rhs : Action) -> Ordering;
+    compare (lhs rhs : Action) : Ordering := 
+        let
+      prod (a : Action) : _ :=
+        Action.commitments a, Action.nullifiers a, Action.proofs a, Action.appData a;
+    in  Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;Action;.
   instance

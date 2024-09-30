@@ -1,0 +1,31 @@
+--- An instantiation of a proving System for delta proofs.
+module Anoma.Proving.DeltaProof;
+
+import Stdlib.Prelude open;
+import Anoma.Proving.Types as Parametrized open using {module Delta};
+import Anoma.Proving.System as Parametrized open using {ProvingSystem};
+
+ProofRecord : Type := Parametrized.ProofRecord Delta.Proof Delta.VerifyingKey Delta.Witness;
+
+axiom prove : (provingKey : Delta.ProvingKey)
+  -> (publicInputs : Delta.Instance)
+  -> (privateInputs : Delta.Witness)
+  -> Delta.Proof;
+
+axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+instance
+Delta-ProvingSystem
+  : Parametrized.ProvingSystem
+    Delta.Proof
+    Delta.VerifyingKey
+    Delta.ProvingKey
+    Delta.Instance
+    Delta.Witness :=
+  Parametrized.mkProvingSystem@{
+    prove;
+    verify
+  };
+
+--- Aggregates two  delta ;ProofRecord;s.
+axiom aggregate : (p1 p2 : ProofRecord) -> ProofRecord;

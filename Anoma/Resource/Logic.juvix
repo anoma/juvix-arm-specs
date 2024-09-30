@@ -3,14 +3,12 @@ module Anoma.Resource.Logic;
 import Stdlib.Prelude open;
 import Anoma.Utils open using {Ref; mkRef};
 import Anoma.Resource.Types open using {LogicRef};
-import Anoma.ProvingSystem.ResourceLogicProof as ResourceLogicProvingSystem;
+import Anoma.Proving.Types open using {module ResourceLogic};
 
 --- The resource logic function signature.
 --- NOTE: Logic as a program is not defined in the spec.
 Logic : Type :=
-  (publicInputs : ResourceLogicProvingSystem.Instance)
-    -> (privateInputs : ResourceLogicProvingSystem.Witness)
-    -> Bool;
+  (publicInputs : ResourceLogic.Instance) -> (privateInputs : ResourceLogic.Witness) -> Bool;
 
 --- Computes the ;LogicRef; from the ;Logic; function.
 --- NOTE: For the private testnet, this is allowed to be the identity function.

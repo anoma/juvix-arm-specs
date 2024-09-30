@@ -19,7 +19,7 @@ AppData : Type := Set Entry;
 --- A module implementing traits for ;Key;.
 module KeyInternal;
   --- Compares two ;Key;s.
-  axiom compare : (k1 k2 : Key) -> Ordering;
+  axiom compare : (lhs rhs : Key) -> Ordering;
 
   --- Implements the ;Ord; trait for ;Key;.
   instance
@@ -33,7 +33,7 @@ end;
 --- A module implementing traits for ;Value;.
 module ValueInternal;
   --- Compares two ;Value;s.
-  axiom compare : (v1 v2 : Value) -> Ordering;
+  axiom compare : (lhs rhs : Value) -> Ordering;
 
   --- Implements the ;Ord; trait for ;Value;.
   instance

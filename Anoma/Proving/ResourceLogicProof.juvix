@@ -1,0 +1,29 @@
+--- An instantiation of a proving System for resource logic proofs.
+module Anoma.Proving.ResourceLogicProof;
+
+import Stdlib.Prelude open;
+import Anoma.Proving.Types as Parametrized open using {module ResourceLogic};
+import Anoma.Proving.System as Parametrized open using {ProvingSystem};
+
+ProofRecord : Type :=
+  Parametrized.ProofRecord ResourceLogic.Proof ResourceLogic.VerifyingKey ResourceLogic.Witness;
+
+axiom prove : (provingKey : ResourceLogic.ProvingKey)
+  -> (publicInputs : ResourceLogic.Instance)
+  -> (privateInputs : ResourceLogic.Witness)
+  -> ResourceLogic.Proof;
+
+axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+instance
+ResourceLogic-ProvingSystem
+  : Parametrized.ProvingSystem
+    ResourceLogic.Proof
+    ResourceLogic.VerifyingKey
+    ResourceLogic.ProvingKey
+    ResourceLogic.Instance
+    ResourceLogic.Witness :=
+  Parametrized.mkProvingSystem@{
+    prove;
+    verify
+  };

@@ -1,6 +1,7 @@
 module Anoma.Resource.Object;
 
 import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Resource.Types open;
 
 --- A record describing a resource, the atomic unit of state in the Anoma state model.
@@ -15,3 +16,28 @@ type Resource :=
     nonce : Nonce;
     randSeed : RandSeed
   };
+
+module ResourceInternal;
+
+  --- Compares two ;Resource; objects.
+  compare (lhs rhs : Resource) : Ordering :=
+    let
+      prod (r : Resource) : _ :=
+        Resource.logicRef r
+          , Resource.labelRef r
+          , Resource.valueRef r
+          , Resource.quantity r
+          , Resource.ephemeral r
+          , Resource.nullifierKeyCommitment r
+          , Resource.nonce r
+          , Resource.randSeed r;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;Resource;.
+  instance
+  Resource-Ord : Ord Resource := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Resource;.
+  instance
+  Resource-Eq : Eq Resource := fromOrdToEq;
+end;

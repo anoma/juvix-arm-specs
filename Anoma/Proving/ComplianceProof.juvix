@@ -1,0 +1,29 @@
+--- An instantiation of a proving System for compliance proofs.
+module Anoma.Proving.ComplianceProof;
+
+import Stdlib.Prelude open;
+import Anoma.Proving.Types as Parametrized open using {module Compliance};
+import Anoma.Proving.System as Parametrized open using {ProvingSystem};
+
+ProofRecord : Type :=
+  Parametrized.ProofRecord Compliance.Proof Compliance.VerifyingKey Compliance.Witness;
+
+axiom prove : (provingKey : Compliance.ProvingKey)
+  -> (publicInputs : Compliance.Instance)
+  -> (privateInputs : Compliance.Witness)
+  -> Compliance.Proof;
+
+axiom verify : (proofRecord : ProofRecord) -> Bool;
+
+instance
+Compliance-ProvingSystem
+  : Parametrized.ProvingSystem
+    Compliance.Proof
+    Compliance.VerifyingKey
+    Compliance.ProvingKey
+    Compliance.Instance
+    Compliance.Witness :=
+  Parametrized.mkProvingSystem@{
+    prove;
+    verify
+  };

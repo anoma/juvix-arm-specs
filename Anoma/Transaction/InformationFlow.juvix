@@ -12,12 +12,6 @@ InformationFlowControlPredicate : Type := (tx : Transaction) -> (id : ExternalId
 --- NOTE: this will be concretized in an upcoming RM specs version.
 axiom HashPlaceholder : Type;
 
---- A placeholder for a function checking if a ;Transaction; does not include ;HashPlaceholder; ;Set;.
---- NOTE: this will be concretized in an upcoming RM specs version.
-axiom requireShieldedCheckPlaceholder : (tx : Transaction)
-  -> (hashes : Set HashPlaceholder)
-  -> Bool;
-
 --- The input data of the basePredicate function.
 type BaseData :=
   | AllowAny
@@ -26,6 +20,12 @@ type BaseData :=
   -- TODO Use ;Set; instead of ;List; once https://github.com/anoma/juvix/issues/3048 is resolved.
   | And (List BaseData)
   | Or (List BaseData);
+
+--- A placeholder for a function checking if a ;Transaction; does not include ;HashPlaceholder; ;Set;.
+--- NOTE: this will be concretized in an upcoming RM specs version.
+axiom requireShieldedCheckPlaceholder : (tx : Transaction)
+  -> (hashes : Set HashPlaceholder)
+  -> Bool;
 
 --- Returns the ;InformationFlowControlPredicate; depending on the provided ;BaseData;.
 terminating

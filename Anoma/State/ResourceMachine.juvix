@@ -6,7 +6,7 @@ import Anoma.Transaction.Object as Transaction open using {Transaction; create; 
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
 import Anoma.Transaction.Action as Action open;
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.ProvingSystem.DeltaProof as DeltaProof;
+import Anoma.Proving.DeltaProof as DeltaProof;
 
 --- The resource machine interface.
 trait

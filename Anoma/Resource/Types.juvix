@@ -1,5 +1,8 @@
 module Anoma.Resource.Types;
 
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 --- A fixed-size data type encoding the reference to the resource logic function.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LogicRef; to be dynamically-sized.
 axiom LogicRef : Type;
@@ -43,3 +46,94 @@ axiom Nullifier : Type;
 
 --- The nullifier key type describing a secret required to compute the ;Nullifier; of a resource
 axiom NullifierKey : Type;
+
+module LogicRefInternal;
+  --- Compares two ;LogicRef; objects.
+  axiom compare : (lhs rhs : LogicRef) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;LogicRef;.
+  instance
+  LogicRef-Ord : Ord LogicRef := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;LogicRef;.
+  instance
+  LogicRef-Eq : Eq LogicRef := fromOrdToEq;
+end;
+
+module LabelRefInternal;
+  --- Compares two ;LabelRef; objects.
+  axiom compare : (lhs rhs : LabelRef) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;LabelRef;.
+  instance
+  LabelRef-Ord : Ord LabelRef := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;LabelRef;.
+  instance
+  LabelRef-Eq : Eq LabelRef := fromOrdToEq;
+end;
+
+module ValueRefInternal;
+  --- Compares two ;ValueRef; objects.
+  axiom compare : (lhs rhs : ValueRef) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;ValueRef;.
+  instance
+  ValueRef-Ord : Ord ValueRef := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ValueRef;.
+  instance
+  ValueRef-Eq : Eq ValueRef := fromOrdToEq;
+end;
+
+module QuantityInternal;
+  --- Compares two ;Quantity; objects.
+  axiom compare : (lhs rhs : Quantity) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;Quantity;.
+  instance
+  Quantity-Ord : Ord Quantity := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Quantity;.
+  instance
+  Quantity-Eq : Eq Quantity := fromOrdToEq;
+end;
+
+module NullifierKeyCommitmentInternal;
+  --- Compares two ;NullifierKeyCommitment; objects.
+  axiom compare : (lhs rhs : NullifierKeyCommitment) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;NullifierKeyCommitment;.
+  instance
+  NullifierKeyCommitment-Ord : Ord NullifierKeyCommitment := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ValueRef;.
+  instance
+  NullifierKeyCommitment-Eq : Eq NullifierKeyCommitment := fromOrdToEq;
+end;
+
+module NonceInternal;
+  --- Compares two ;Nonce; objects.
+  axiom compare : (lhs rhs : Nonce) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;Nonce;.
+  instance
+  Nonce-Ord : Ord Nonce := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Nonce;.
+  instance
+  Nonce-Eq : Eq Nonce := fromOrdToEq;
+end;
+
+module RandSeedInternal;
+  --- Compares two ;RandSeed; objects.
+  axiom compare : (lhs rhs : RandSeed) -> Ordering;
+
+  --- Implements the ;Ord; trait for ;RandSeed;.
+  instance
+  RandSeed-Ord : Ord RandSeed := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;RandSeed;.
+  instance
+  RandSeed-Eq : Eq RandSeed := fromOrdToEq;
+end;

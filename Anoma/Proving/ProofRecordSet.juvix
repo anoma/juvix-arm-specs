@@ -1,0 +1,57 @@
+module Anoma.Proving.ProofRecordSet;
+
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Data.Set as Set open using {Set; toList; empty};
+import Anoma.Proving.ComplianceProof as ComplianceProof open;
+import Anoma.Proving.ResourceLogicProof as ResourceLogicProof open;
+import Anoma.Proving.DeltaProof as DeltaProof open;
+import Anoma.Proving.Types open;
+
+--- A proof record set.
+type ProofRecordSet :=
+  mkProofRecordSet {
+    complianceProofs : Set ComplianceProof.ProofRecord;
+    resourceLogicProofs : Set ResourceLogicProof.ProofRecord;
+    deltaProof : Maybe DeltaProof.ProofRecord
+  };
+
+--- The proof record set.
+empty : ProofRecordSet :=
+  mkProofRecordSet@{
+    resourceLogicProofs := Set.empty;
+    complianceProofs := Set.empty;
+    deltaProof := nothing
+  };
+
+--- Verifies a ;ProofRecordSet; ;nothing;.
+--- NOTE: At verification time, a proof record set must contain exactly one ;DeltaProof.ProofRecord;.
+verify (proofRecords : ProofRecordSet) : Bool :=
+  case ProofRecordSet.deltaProof proofRecords of {
+    | just deltaProof := DeltaProof.verify deltaProof
+    -- At verification time, this is must not be ;nothing;.
+    | nothing := false
+  }
+    && all (p in Set.toList (ProofRecordSet.complianceProofs proofRecords))
+         {ComplianceProof.verify p}
+    && all (p in Set.toList (ProofRecordSet.resourceLogicProofs proofRecords))
+         {ResourceLogicProof.verify p};
+
+module ProofRecordSetInternal;
+  --- Compares two ;ProofRecordSet; objects.
+  compare (lhs rhs : ProofRecordSet) : Ordering :=
+    let
+      prod (ps : ProofRecordSet) : _ :=
+        ProofRecordSet.complianceProofs ps
+          , ProofRecordSet.resourceLogicProofs ps
+          , ProofRecordSet.deltaProof ps;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;ProofRecordSet;.
+  instance
+  ProofRecordSet-Ord : Ord ProofRecordSet := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ProofRecordSet;.
+  instance
+  ProofRecordSet-Eq : Eq ProofRecordSet := fromOrdToEq;
+end;
