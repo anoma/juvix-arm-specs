@@ -30,6 +30,7 @@ type ResourcePartition :=
 axiom partitionResources : (transaction : Transaction) -> (OTHER_ARGS? : Type) -> ResourcePartition;
 
 --- Computes the ;Delta; of a ;Resource; ;Set; being part of a ;Transaction;.
+--- TODO Confirm with Yulia and engineering.
 axiom delta : (transaction : Transaction) -> Delta;
 {-delta
   (resourcesAndMaybeNullifierKeys : Set (Pair Resource (Maybe Resource.NullifierKey)))
