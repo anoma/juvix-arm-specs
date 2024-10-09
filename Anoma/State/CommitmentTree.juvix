@@ -32,6 +32,16 @@ type CommitmentTree :=
     root : (commitment : CommitmentTree) -> Root
   };
 
+--- The ;CommitmentTree; instantiation.
+instance
+Concrete-CommitmentTree : CommitmentTree :=
+  mkCommitmentTree@{
+    add := MISSING_ANOMA_BUILTIN;
+    path := MISSING_ANOMA_BUILTIN;
+    verify := MISSING_ANOMA_BUILTIN;
+    root := MISSING_ANOMA_BUILTIN
+  };
+
 module RootInternal;
   --- Compares two ;Root;s and returns their ;Ordering;.
   compare (lhs rhs : Root) : Ordering := Ord.cmp (Root.unRoot lhs) (Root.unRoot rhs);
