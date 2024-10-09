@@ -4,6 +4,7 @@ module Anoma.State.NullifierSet;
 
 import Stdlib.Prelude open;
 import Anoma.Resource.Types as Resource open using {Nullifier};
+import Anoma.Utils open;
 
 --- The interface of the nullifier set.
 trait
@@ -15,4 +16,12 @@ type NullifierSet :=
 
     --- Checks if a ;Resource.Nullifier; exists in the ;NullifierSet;.
     exists : (nullifier : Resource.Nullifier) -> Bool
+  };
+
+--- The ;NullifierSet; instantiation.
+instance
+Concrete-NullifierSet : NullifierSet :=
+  mkNullifierSet@{
+    add := MISSING_ANOMA_BUILTIN;
+    exists := MISSING_ANOMA_BUILTIN
   };
