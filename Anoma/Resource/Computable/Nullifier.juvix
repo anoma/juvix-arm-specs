@@ -7,7 +7,7 @@ import Anoma.Resource.Object open using {Resource};
 import Anoma.Utils open;
 
 --- Computes the ;Nullifier; of a ;Resource; given a ;NullifierKey;.
-nullifier (resource : Resource) (nullifierKey : NullifierKey) : Nullifier := MISSING_ANOMA_BUILTIN;
+nullifier (nullifierKey : NullifierKey) (resource : Resource) : Nullifier := MISSING_ANOMA_BUILTIN;
 
 module NullfierInternal;
   --- Compares two ;Nullifier; and returns their ;Ordering;.
