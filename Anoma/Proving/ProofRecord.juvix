@@ -16,7 +16,7 @@ type ProofRecord :=
 module ProofRecordInternal;
   instance
   ProofRecord-Ord : Ord ProofRecord :=
-    -- lexicographical ordering with proofRecordCompliance _ < proofRecordResourceLogic _ < proofRecordDelta _
+    -- lexicographical ordering with `proofRecordCompliance _ < proofRecordResourceLogic _ < proofRecordDelta _`.
     mkOrd@{
       cmp (p1 p2 : ProofRecord) : Ordering :=
         case p1, p2 of
