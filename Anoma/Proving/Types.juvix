@@ -9,9 +9,9 @@ import Anoma.Transaction.AppData open using {AppData};
 import Anoma.Utils open;
 
 --- A record describing a proof record, a map entry constituted by a VerifyingKey as the lookup-key
---- and a Proof and associated Witness as the value.
-GenericProofRecord (Proof VerifyingKey Witness : Type) : Type :=
-  Pair VerifyingKey (Pair Proof Witness);
+--- and a Proof and associated instance as the value.
+GenericProofRecord (Proof VerifyingKey Instance : Type) : Type :=
+  Pair VerifyingKey (Pair Proof Instance);
 
 module Delta;
   type Proof := mkProof {unProof : MISSING_DEFINITION};
@@ -49,6 +49,20 @@ module Delta;
     --- Implements the ;Eq; trait for ;VerifyingKey;.
     instance
     VerifyingKey-Eq : Eq VerifyingKey := fromOrdToEq;
+  end;
+
+  module InstanceInternal;
+    --- Compares two ;Instance; objects.
+    compare (lhs rhs : Instance) : Ordering :=
+      Ord.cmp (Instance.unInstance lhs) (Instance.unInstance rhs);
+
+    --- Implements the ;Ord; trait for ;Instance;.
+    instance
+    Instance-Ord : Ord Instance := mkOrd compare;
+
+    --- Implements the ;Eq; trait for ;Witness;.
+    instance
+    Instance-Eq : Eq Instance := fromOrdToEq;
   end;
 
   module WitnessInternal;

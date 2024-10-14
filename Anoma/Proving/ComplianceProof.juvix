@@ -6,7 +6,7 @@ import Anoma.Proving.Types as Parametrized open using {module Compliance};
 import Anoma.Utils open;
 
 ProofRecord : Type :=
-  Parametrized.GenericProofRecord Compliance.Proof Compliance.VerifyingKey Compliance.Witness;
+  Parametrized.GenericProofRecord Compliance.Proof Compliance.VerifyingKey Compliance.Instance;
 
 prove
   (provingKey : Compliance.ProvingKey)

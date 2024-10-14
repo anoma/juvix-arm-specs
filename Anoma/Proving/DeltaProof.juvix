@@ -5,7 +5,7 @@ import Stdlib.Prelude open;
 import Anoma.Proving.Types as Parametrized open using {module Delta};
 import Anoma.Utils open;
 
-ProofRecord : Type := Parametrized.GenericProofRecord Delta.Proof Delta.VerifyingKey Delta.Witness;
+ProofRecord : Type := Parametrized.GenericProofRecord Delta.Proof Delta.VerifyingKey Delta.Instance;
 
 prove
   (provingKey : Delta.ProvingKey)

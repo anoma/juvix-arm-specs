@@ -9,7 +9,7 @@ ProofRecord : Type :=
   Parametrized.GenericProofRecord
     ResourceLogic.Proof
     ResourceLogic.VerifyingKey
-    ResourceLogic.Witness;
+    ResourceLogic.Instance;
 
 prove
   (provingKey : ResourceLogic.ProvingKey)
