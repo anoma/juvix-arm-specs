@@ -24,11 +24,13 @@ type NullifierKeyCommitment :=
   mkNullifierKeyCommitment {unNullifierKeyCommitment : MISSING_DEFINITION};
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
---- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
+--- NOTE: It is sufficient to be a number that has an at most negligible chance of repeating, e.g., a pseudo-random number.
+-- ᚦ changed the above line to be grammatically correct
 type Nonce := mkNonce {unNonce : MISSING_DEFINITION};
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
+-- ᚦ do we need that still?
 type RandSeed := mkRandSeed {unRandSeed : MISSING_DEFINITION};
 
 --- The resource label type.
@@ -38,15 +40,20 @@ type Label := mkLabel {unLabel : MISSING_DEFINITION};
 type Value := mkValue {unValue : MISSING_DEFINITION};
 
 --- The resource kind type.
+-- ᚦ why is it not derived from the logic ref and the label?
+-- ᚦ compare with https://specs.anoma.net/latest/system_architecture/state/resource_machine/resource/computable_components/kind.html
 type Kind := mkKind {unKind : MISSING_DEFINITION};
 
 --- The resource commitment type.
 type Commitment := mkCommitment {unCommitment : MISSING_DEFINITION};
 
 --- The resource nullifier type.
+-- ᚦ why is this not derived from the nullifier key?
+-- ᚦ https://specs.anoma.net/latest/system_architecture/state/resource_machine/resource/computable_components/nullifier.html
 type Nullifier := mkNullifier {unNullifier : MISSING_DEFINITION};
 
 --- The nullifier key type describing a secret required to compute the ;Nullifier; of a resource
+-- ᚦ This one should probably moved before the Nullifier definition
 type NullifierKey := mkNullifierKey {unNullifierKey : MISSING_DEFINITION};
 
 module LogicRefInternal;
