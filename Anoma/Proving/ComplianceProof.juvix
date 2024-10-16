@@ -2,11 +2,16 @@
 module Anoma.Proving.ComplianceProof;
 
 import Stdlib.Prelude open;
-import Anoma.Proving.Types as Parametrized open using {module Compliance};
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Anoma.Proving.Types open using {module Compliance};
 import Anoma.Utils open;
 
-ProofRecord : Type :=
-  Parametrized.GenericProofRecord Compliance.Proof Compliance.VerifyingKey Compliance.Instance;
+type ProofRecord :=
+  mkProofRecord {
+    proof : Compliance.Proof;
+    verifyingKey : Compliance.VerifyingKey;
+    instance : Compliance.Instance
+  };
 
 prove
   (provingKey : Compliance.ProvingKey)
@@ -15,3 +20,20 @@ prove
   : Compliance.Proof := MISSING_ANOMA_BUILTIN;
 
 verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+
+module ProofRecordInternal;
+  --- Compares two ;ProofRecord; objects.
+  compare (lhs rhs : ProofRecord) : Ordering :=
+    let
+      prod (p : ProofRecord) : _ :=
+        ProofRecord.proof p, ProofRecord.verifyingKey p, ProofRecord.instance p;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Ord : Ord ProofRecord := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Eq : Eq ProofRecord := fromOrdToEq;
+end;

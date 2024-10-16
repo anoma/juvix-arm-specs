@@ -10,11 +10,6 @@ import Anoma.Resource.Computable.Nullifier open using {module NullfierInternal};
 import Anoma.Transaction.AppData open using {AppData};
 import Anoma.Utils open;
 
---- A record describing a proof record, a map entry constituted by a VerifyingKey as the lookup-key
---- and a Proof and associated instance as the value.
-GenericProofRecord (Proof VerifyingKey Instance : Type) : Type :=
-  Pair VerifyingKey (Pair Proof Instance);
-
 module Delta;
   type Proof := mkProof {unProof : MISSING_DEFINITION};
 

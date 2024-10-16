@@ -2,10 +2,16 @@
 module Anoma.Proving.DeltaProof;
 
 import Stdlib.Prelude open;
-import Anoma.Proving.Types as Parametrized open using {module Delta};
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Anoma.Proving.Types open using {module Delta};
 import Anoma.Utils open;
 
-ProofRecord : Type := Parametrized.GenericProofRecord Delta.Proof Delta.VerifyingKey Delta.Instance;
+type ProofRecord :=
+  mkProofRecord {
+    proof : Delta.Proof;
+    verifyingKey : Delta.VerifyingKey;
+    instance : Delta.Instance
+  };
 
 prove
   (provingKey : Delta.ProvingKey)
@@ -17,3 +23,20 @@ verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
 
 --- Aggregates two  delta ;ProofRecord;s.
 aggregate (p1 p2 : ProofRecord) : ProofRecord := ANOMA_BACKEND_IMPLEMENTATION;
+
+module ProofRecordInternal;
+  --- Compares two ;ProofRecord; objects.
+  compare (lhs rhs : ProofRecord) : Ordering :=
+    let
+      prod (p : ProofRecord) : _ :=
+        ProofRecord.proof p, ProofRecord.verifyingKey p, ProofRecord.instance p;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Ord : Ord ProofRecord := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Eq : Eq ProofRecord := fromOrdToEq;
+end;
