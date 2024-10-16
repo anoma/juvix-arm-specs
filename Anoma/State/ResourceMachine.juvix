@@ -6,7 +6,7 @@ import Anoma.Transaction.Object as Transaction open using {Transaction; mkTransa
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
 import Anoma.Transaction.Action as Action open using {Action};
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.Proving.DeltaProof as DeltaProof;
+import Anoma.Proving.ProofRecord open using {ProofRecord};
 
 --- The resource machine interface.
 trait
@@ -16,7 +16,7 @@ type ResourceMachine :=
     create : (roots : Set CommitmentTree.Root)
       -> (actions : Set Action)
       -> (delta : Delta)
-      -> (deltaProof : DeltaProof.ProofRecord)
+      -> (deltaProof : ProofRecord)
       -> Transaction;
 
     --- Composes two ;Transaction;s with the transa
