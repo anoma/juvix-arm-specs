@@ -9,10 +9,10 @@ import Anoma.Resource.Types as Resource open using {Commitment};
 import Anoma.Utils open;
 
 --- A state root of the commitment tree.
-type Root := mkRoot@{unRoot : MISSING_DEFINITION};
+type Root := mkRoot@{unRoot : Nat};
 
 --- A path in the commitment tree.
-type Path := mkPath@{unPath : MISSING_DEFINITION};
+type Path := mkPath@{unPath : List Nat};
 
 --- The interface of the commitment tree.
 positive

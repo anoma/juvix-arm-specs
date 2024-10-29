@@ -4,7 +4,7 @@ import PackageDescription.V2 open;
 
 package : Package :=
   defaultPackage@?{
-    name := "juvix-arm-specs";
+    name := "juvix-arm-transparent";
     version := mkVersion 2 0 0;
     dependencies := [github "anoma" "juvix-stdlib" "37d3dd74b78f0ec0c48c8adc44f5b99c6d068464"]
   };

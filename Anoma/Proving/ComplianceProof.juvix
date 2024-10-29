@@ -17,9 +17,9 @@ prove
   (provingKey : Compliance.ProvingKey)
   (publicInputs : Compliance.Instance)
   (privateInputs : Compliance.Witness)
-  : Compliance.Proof := MISSING_ANOMA_BUILTIN;
+  : Compliance.Proof := STILL_MISSING_ANOMA_BUILTIN;
 
-verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+verify (proofRecord : ProofRecord) : Bool := NOT_REQUIRED;
 
 module ProofRecordInternal;
   --- Compares two ;ProofRecord; objects.

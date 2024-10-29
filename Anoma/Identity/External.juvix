@@ -2,14 +2,15 @@ module Anoma.Identity.External;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Anoma.Utils open;
+import Anoma.Builtin.ByteArray open using {ByteArray};
 
 --- A fixed-size data type describing an external identity.
-type ExternalIdentity := mkExternalIdentity@{unExternalIdentity : MISSING_DEFINITION};
+type ExternalIdentity := mkExternalIdentity@{unExternalIdentity : ByteArray};
 
 module ExternalIdentityInternal;
   --- Compares two ;ExternalIdentity; objects.
-  compare (lhs rhs : ExternalIdentity) : Ordering := MISSING_ANOMA_BUILTIN;
+  compare (lhs rhs : ExternalIdentity) : Ordering :=
+    Ord.cmp (ExternalIdentity.unExternalIdentity lhs) (ExternalIdentity.unExternalIdentity rhs);
 
   --- Implements the ;Ord; trait for ;ExternalIdentity;.
   instance

@@ -32,4 +32,4 @@ module ProofRecordInternal;
 end;
 
 --- NOTE: At verification time, a proof record set must contain exactly one ;DeltaProof.ProofRecord;.
-verifyProofRecords (proofRecords : Set ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+verifyProofRecords (proofRecords : Set ProofRecord) : Bool := NOT_REQUIRED;

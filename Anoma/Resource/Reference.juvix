@@ -23,22 +23,22 @@ type Reference DataType RefType :=
 instance
 Label-Reference : Reference Label LabelRef :=
   mkReference@{
-    to := MISSING_JUVIX_IMPLEMENTATION;
-    from := MISSING_JUVIX_IMPLEMENTATION
+    to := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    from := STILL_MISSING_JUVIX_IMPLEMENTATION
   };
 
 --- Implements the ;Reference; trait for ;Logic;.
 instance
 Logic-Reference : Reference Logic LogicRef :=
   mkReference@{
-    to := MISSING_JUVIX_IMPLEMENTATION;
-    from := MISSING_JUVIX_IMPLEMENTATION
+    to := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    from := STILL_MISSING_JUVIX_IMPLEMENTATION
   };
 
 --- Implements the ;Reference; trait for ;Value;.
 instance
 Value-Reference : Reference Value ValueRef :=
   mkReference@{
-    to := MISSING_JUVIX_IMPLEMENTATION;
-    from := MISSING_JUVIX_IMPLEMENTATION
+    to := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    from := STILL_MISSING_JUVIX_IMPLEMENTATION
   };

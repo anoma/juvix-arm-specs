@@ -4,7 +4,7 @@ import Anoma.Transaction.Object open using {Transaction};
 import Anoma.Utils open;
 
 --- A fixed-size type describing the unit interval `[0,1]`.
-type UnitInterval := mkUnitInterval@{unUnitInterval : MISSING_DEFINITION};
+type UnitInterval := mkUnitInterval@{unUnitInterval : UNUSED};
 
 --- The preference function signature.
 Preference : Type := (tx : Transaction) -> UnitInterval;

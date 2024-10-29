@@ -1,0 +1,33 @@
+module Anoma.Builtin.ByteArray;
+
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
+builtin bytearray
+axiom ByteArray : Type;
+
+builtin bytearray-from-list-byte
+axiom mkByteArray : List Byte -> ByteArray;
+
+builtin bytearray-length
+axiom length : ByteArray -> Nat;
+
+-- TODO: Everything below needs to be removed.
+syntax alias AnomaContents := Nat;
+
+builtin anoma-bytearray-to-anoma-contents
+axiom toAnomaContents : ByteArray -> AnomaContents;
+
+builtin anoma-bytearray-from-anoma-contents
+axiom fromAnomaContents : Nat -> AnomaContents -> ByteArray;
+
+--- Implements the ;Ord; trait for ;ByteArray;.
+instance
+ByteArray-Ord : Ord ByteArray :=
+  mkOrd@{
+    cmp := Ord.cmp on toAnomaContents
+  };
+
+--- Implements the ;Eq; trait for ;ByteArray;.
+instance
+ByteArray-Eq : Eq ByteArray := fromOrdToEq;

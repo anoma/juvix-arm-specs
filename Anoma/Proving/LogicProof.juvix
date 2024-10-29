@@ -17,9 +17,9 @@ prove
   (provingKey : Logic.ProvingKey)
   (publicInputs : Logic.Instance)
   (privateInputs : Logic.Witness)
-  : Logic.Proof := MISSING_ANOMA_BUILTIN;
+  : Logic.Proof := STILL_MISSING_ANOMA_BUILTIN;
 
-verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+verify (proofRecord : ProofRecord) : Bool := NOT_REQUIRED;
 
 module ProofRecordInternal;
   --- Compares two ;ProofRecord; objects.

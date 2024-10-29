@@ -17,9 +17,9 @@ prove
   (provingKey : Delta.ProvingKey)
   (publicInputs : Delta.Instance)
   (privateInputs : Delta.Witness)
-  : Delta.Proof := MISSING_ANOMA_BUILTIN;
+  : Delta.Proof := STILL_MISSING_ANOMA_BUILTIN;
 
-verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+verify (proofRecord : ProofRecord) : Bool := NOT_REQUIRED;
 
 --- Aggregates two  delta ;ProofRecord;s.
 aggregate (p1 p2 : ProofRecord) : ProofRecord := ANOMA_BACKEND_IMPLEMENTATION;

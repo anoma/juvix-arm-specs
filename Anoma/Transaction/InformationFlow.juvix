@@ -11,7 +11,7 @@ InformationFlowControlPredicate : Type := (tx : Transaction) -> (id : ExternalId
 
 --- A placeholder for an unspecified hash type.
 --- NOTE: this will be concretized in an upcoming RM specs version.
-type HashPlaceholder := mkHashPlaceholder@{unHashPlaceholder : MISSING_DEFINITION};
+type HashPlaceholder := mkHashPlaceholder@{unHashPlaceholder : UNUSED};
 
 --- The input data of the `basePredicate` function.
 type BaseData :=

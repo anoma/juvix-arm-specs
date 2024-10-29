@@ -5,7 +5,7 @@ import Stdlib.Data.Set as Set open using {Set};
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Resource.Types as Resource;
 import Anoma.State.CommitmentTree as CommitmentTree;
-import Anoma.Transaction.Action open using {Action};
+import Anoma.Transaction.Action open using {Action; AnomaAction; toAnomaAction};
 import Anoma.Delta as Delta open using {Delta};
 import Anoma.Proving.ProofRecord open using {ProofRecord};
 import Anoma.Utils open;
@@ -21,16 +21,16 @@ type Transaction :=
   };
 
 --- Composes two ;Transaction; objects.
-composeTransactions (tx1 tx2 : Transaction) : Transaction := MISSING_ANOMA_BUILTIN;
+composeTransactions (tx1 tx2 : Transaction) : Transaction := STILL_MISSING_ANOMA_BUILTIN;
 
 --- Verifies a ;Transaction;.
-verifyTransaction (tx : Transaction) : Bool := MISSING_ANOMA_BUILTIN;
+verifyTransaction (tx : Transaction) : Bool := NOT_REQUIRED;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitmentSet (transaction : Transaction) : Set Resource.Commitment := MISSING_ANOMA_BUILTIN;
+commitmentSet (transaction : Transaction) : Set Resource.Commitment := STILL_MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifierSet (transaction : Transaction) : Set Resource.Nullifier := MISSING_ANOMA_BUILTIN;
+nullifierSet (transaction : Transaction) : Set Resource.Nullifier := STILL_MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
   --- Compares two ;Transaction; objects.
@@ -47,3 +47,21 @@ module TransactionInternal;
   instance
   Transaction-Eq : Eq Transaction := fromOrdToEq;
 end;
+
+--- NOTE: Needed for integration purposes.
+type AnomaTransaction :=
+  mkAnomaTransaction@{
+    roots : List CommitmentTree.Root;
+    actions : List AnomaAction;
+    delta : Delta;
+    deltaProofRecord : ProofRecord
+  };
+
+--- NOTE: Needed for integration purposes.
+toAnomaTransaction (transaction : Transaction) : AnomaTransaction :=
+  mkAnomaTransaction@{
+    roots := Set.toList (Transaction.roots transaction);
+    actions := map toAnomaAction (Set.toList (Transaction.actions transaction));
+    delta := Transaction.delta transaction;
+    deltaProofRecord := Transaction.deltaProofRecord transaction
+  };

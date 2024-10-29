@@ -5,4 +5,4 @@ import Anoma.Transaction.Object open using {Transaction};
 import Anoma.Utils open;
 
 --- Computes the ;Transaction; ;Delta;.
-delta (transaction : Transaction) : Delta := MISSING_ANOMA_BUILTIN;
+delta (transaction : Transaction) : Delta := STILL_MISSING_ANOMA_BUILTIN;

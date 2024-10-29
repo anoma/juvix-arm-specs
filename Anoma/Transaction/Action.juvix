@@ -23,7 +23,7 @@ type Action :=
   };
 
 --- Verifies an ;Action; by verifying all proofs in the ;ProofRecord; ;Set;.
-verifyAction (a : Action) : Bool := MISSING_ANOMA_BUILTIN;
+verifyAction (a : Action) : Bool := NOT_REQUIRED;
 
 module ActionInternal;
   --- Compares two ;Action; objects.
@@ -41,3 +41,20 @@ module ActionInternal;
   instance
   Action-Eq : Eq Action := fromOrdToEq;
 end;
+
+--- NOTE: Needed for integration purposes.
+type AnomaAction :=
+  mkAnomaAction@{
+    commitments : List Resource.Commitment;
+    nullifiers : List Resource.Nullifier;
+    proofRecords : List ProofRecord;
+    appData : AppData
+  };
+
+toAnomaAction (action : Action) : AnomaAction :=
+  mkAnomaAction@{
+    commitments := Set.toList (Action.commitments action);
+    nullifiers := Set.toList (Action.nullifiers action);
+    proofRecords := Set.toList (Action.proofRecords action);
+    appData := Action.appData action
+  };

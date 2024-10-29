@@ -7,18 +7,19 @@ import Anoma.Resource.Object open using {Resource};
 import Anoma.Resource.Types open using {Commitment; Nullifier};
 import Anoma.Resource.Tag open using {Tag};
 import Anoma.Transaction.AppData open using {AppData};
+import Anoma.Builtin.System open using {AnomaOpaque};
 import Anoma.Utils open;
 
 module Delta;
-  type Proof := mkProof@{unProof : MISSING_DEFINITION};
+  type Proof := mkProof@{unProof : AnomaOpaque};
 
-  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
 
-  type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+  type ProvingKey := mkProvingKey@{unProvingKey : UNUSED};
 
-  type Instance := mkInstance@{unInstance : MISSING_DEFINITION};
+  type Instance := mkInstance@{unInstance : UNUSED};
 
-  type Witness := mkWitness@{unWitness : MISSING_DEFINITION};
+  type Witness := mkWitness@{unWitness : UNUSED};
 
   module ProofInternal;
     --- Compares two ;Proof; objects.
@@ -77,11 +78,11 @@ module Delta;
 end;
 
 module Logic;
-  type Proof := mkProof@{unProof : MISSING_DEFINITION};
+  type Proof := mkProof@{unProof : AnomaOpaque};
 
-  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
 
-  type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+  type ProvingKey := mkProvingKey@{unProvingKey : Resource};
 
   --- The public inputs (Instance) of the resource logic function proof.
   type Instance :=
@@ -95,7 +96,7 @@ module Logic;
   --- Custom inputs of the resource logic function proof being defined on the application level.
   --- TODO To support the definition of ;CustomInputs; on the application level, Juvix must support existential types.
   --- NOTE: For the private testnet, this can be of type ;AppData;.
-  type CustomInputs := mkCustomInputs@{unCustomInputs : MISSING_DEFINITION};
+  CustomInputs : Type := AppData;
 
   --- The private inputs (Witness) of the resource logic function proof.
   type Witness :=
@@ -104,20 +105,6 @@ module Logic;
       consumed : Set Resource;
       customInputs : CustomInputs
     };
-
-  module CustomInputsInternal;
-    --- Compares two ;CustomInputs; objects.
-    compare (lhs rhs : CustomInputs) : Ordering :=
-      Ord.cmp (CustomInputs.unCustomInputs lhs) (CustomInputs.unCustomInputs rhs);
-
-    --- Implements the ;Ord; trait for ;Proof;.
-    instance
-    CustomInputs-Ord : Ord CustomInputs := mkOrd compare;
-
-    --- Implements the ;Eq; trait for ;CustomInputs;.
-    instance
-    CustomInputs-Eq : Eq CustomInputs := fromOrdToEq;
-  end;
 
   module ProofInternal;
     --- Compares two ;Proof; objects.
@@ -180,16 +167,18 @@ module Logic;
   end;
 end;
 
+-- Is this what is meant by action compliance in the RM interface?
+-- https://github.com/anoma/anoma/blob/2bd7784de9543d9cfc85ed49bd77cec549f8249c/hoon/resource-machine.hoon#L90
 module Compliance;
-  type Proof := mkProof@{unProof : MISSING_DEFINITION};
+  type Proof := mkProof@{unProof : AnomaOpaque};
 
-  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+  type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
 
-  type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+  type ProvingKey := mkProvingKey@{unProvingKey : UNUSED};
 
-  type Instance := mkInstance@{unInstance : MISSING_DEFINITION};
+  type Instance := mkInstance@{unInstance : UNUSED};
 
-  type Witness := mkWitness@{unWitness : MISSING_DEFINITION};
+  type Witness := mkWitness@{unWitness : UNUSED};
 
   module ProofInternal;
     --- Compares two ;Proof; objects.

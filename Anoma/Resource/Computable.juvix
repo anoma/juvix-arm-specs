@@ -8,16 +8,17 @@ import Anoma.Resource.Object open using {Resource; module Resource};
 import Anoma.Utils open;
 
 --- Computes the ;Commitment; of a ;Resource;.
-commitment (resource : Resource) : Commitment := MISSING_ANOMA_BUILTIN;
+commitment (resource : Resource) : Commitment := STILL_MISSING_ANOMA_BUILTIN;
 
 --- Computes the ;Nullifier; of a ;Resource; given a ;NullifierKey;.
-nullifier (nullifierKey : NullifierKey) (resource : Resource) : Nullifier := MISSING_ANOMA_BUILTIN;
+nullifier (nullifierKey : NullifierKey) (resource : Resource) : Nullifier :=
+  STILL_MISSING_ANOMA_BUILTIN;
 
 module KindInternal;
   --- The kind function as defined in the RM specs.
   --- NOTE: This definition does not specify that the ;LogicRef; and ;LabelRef; arguments
   --- must come from the same ;Resource; although this must be the case.
-  kind (logicRef : LogicRef) (labelRef : LabelRef) : Kind := MISSING_ANOMA_BUILTIN;
+  kind (logicRef : LogicRef) (labelRef : LabelRef) : Kind := STILL_MISSING_ANOMA_BUILTIN;
 
   --- Compares two ;Kind; objects.
   compare (lhs rhs : Kind) : Ordering := Ord.cmp (Kind.unKind lhs) (Kind.unKind rhs);
@@ -42,7 +43,7 @@ module ResourceDeltaInternal;
   --- The delta function as defined in the RM specs.
   --- NOTE: This definition does not specify that the ;Kind; and ;Quantity; arguments
   --- must come from the same ;Resource; although this must be the case.
-  delta (kind : Kind) (quantity : Quantity) : Delta := MISSING_ANOMA_BUILTIN;
+  delta (kind : Kind) (quantity : Quantity) : Delta := STILL_MISSING_ANOMA_BUILTIN;
 end;
 
 --- Computes the ;Delta; value of a given ;Resource;.
