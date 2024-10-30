@@ -240,8 +240,8 @@ module Transaction;
   -- Add the Transaction projection functions to the scope for convenience.
   open Transaction public;
 
-  --- Compute the delta for a list of actions.
-  axiom actionsDelta : List Action -> Delta;
+  --- Compute the delta for a set of actions.
+  axiom actionsDelta : Set Action -> Delta;
 
   --- Compute a proof for the transaction balance.
   axiom proveBalance : Transaction -> Proof;
