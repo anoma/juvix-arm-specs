@@ -20,6 +20,9 @@ type Transaction :=
     deltaProofRecord : ProofRecord
   };
 
+--- Computes the ;Transaction; ;Delta;.
+transactionDelta (transaction : Transaction) : Delta := MISSING_ANOMA_BUILTIN;
+
 --- Composes two ;Transaction; objects.
 composeTransactions (tx1 tx2 : Transaction) : Transaction := MISSING_ANOMA_BUILTIN;
 
@@ -27,10 +30,10 @@ composeTransactions (tx1 tx2 : Transaction) : Transaction := MISSING_ANOMA_BUILT
 verifyTransaction (tx : Transaction) : Bool := MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitmentSet (transaction : Transaction) : Set Resource.Commitment := MISSING_ANOMA_BUILTIN;
+commitments (transaction : Transaction) : Set Resource.Commitment := MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifierSet (transaction : Transaction) : Set Resource.Nullifier := MISSING_ANOMA_BUILTIN;
+nullifiers (transaction : Transaction) : Set Resource.Nullifier := MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
   --- Compares two ;Transaction; objects.

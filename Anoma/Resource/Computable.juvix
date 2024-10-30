@@ -46,7 +46,7 @@ module ResourceDeltaInternal;
 end;
 
 --- Computes the ;Delta; value of a given ;Resource;.
-delta (resource : Resource) : Delta :=
+resourceDelta (resource : Resource) : Delta :=
   let
     kind' := kind resource;
   in ResourceDeltaInternal.delta@{
