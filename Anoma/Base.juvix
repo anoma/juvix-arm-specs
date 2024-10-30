@@ -24,19 +24,6 @@ module Anoma.Base;
 
 import Stdlib.Prelude open;
 
---- A module containing types that are currently unknown or require furhter discussion.
--- SPEC_QUESTION / INST_QUESTION: What should these types be?
-module Unknown;
-  -- This is currently equal to the function type in RM instantiation.
-  axiom ResourceLogicFieldType : Type;
-
-  -- This is currently Nock.Atom in the RM instantiation.
-  axiom ResourceLabelFieldType : Type;
-
-  -- This is currently Nock.ByteArray in the RM instantiation.
-  axiom ResourceValueFieldType : Type;
-end;
-
 --- A module containing Nock types used in the interface.
 ---
 --- Stanard Juvix types (e.g Bool and Nat) are used in the interface where the
@@ -87,54 +74,6 @@ end;
 -- Add opaque types to the scope for convenience.
 open Opaque public;
 
---- A module containing data types and functions related to resources.
---- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/definition.md
-module Resource;
-
-  type Resource :=
-    mkResource@{
-      --- A 'succinct' representation of the resource logic.
-      logic : Unknown.ResourceLogicFieldType;
-      --- Specifies the fungibility domain for the resource.
-      label : Unknown.ResourceLabelFieldType;
-      --- A number representing the quentity of the resource.
-      quantity : Nat;
-      --- The fungible data associated with the resource.
-      value : Unknown.ResourceValueFieldType;
-      --- A flag that reflects the resource's ephemerality.
-      isEphemeral : Bool;
-      --- Guarantees the uniqueness of the resource computable components.
-      nonce : Nock.Atom;
-      --- Nullifier key commitment
-      nullifierKeyCommitment : Nock.Atom;
-      --- Randomness seed
-      rseed : Nock.Atom
-    };
-
-  -- Add the Resource projection functions into scope for convenience.
-  open Resource public;
-
-  --- Compute a commitment to a ;Resource;
-  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/commitment.md?plain=1#L8
-  axiom commitment : Resource -> Commitment;
-
-  --- Compute the kind of a ;Resource;
-  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/kind.md?plain=1#L9
-  axiom kind : Resource -> Kind;
-
-  --- Compute the nullifier of a ;Resource;
-  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/nullifier.md?plain=1#L8
-  axiom nullifier : Resource -> Nullifier;
-
-  --- Compute the delta of a ;Resource;
-  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/delta.md?plain=1#L8
-  axiom delta : Resource -> Delta;
-
-end;
-
--- Add the Resource type and constructor to the scope for convenience.
-open Resource using {Resource; mkResource} public;
-
 --- A module containing data types and functions related to actions.
 --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/action.md
 module Action;
@@ -182,10 +121,37 @@ end;
 -- Add the Action types and constructors to the scope for convenience.
 open Action using {Action; mkAction; AppDataElement; module AppDataElement; mkAppDataElement; AppDataValue; module AppDataValue; mkAppDataValue} public;
 
---- A module containing types related to the resource logic.
---- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/function_formats/resource_logic.md?plain=1#L8
-module ResourceLogic;
+--- A module containing data types and functions related to resources.
+--- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/definition.md
+module Resource;
 
+  -- SPEC_QUESTION: Is this a valid signature for a resource logic function?
+  ResourceLogic : Type := PublicInputs -> PrivateInputs -> Bool;
+
+  positive
+  type Resource :=
+    mkResource@{
+      --- A 'succinct' representation of the resource logic.
+      logic : ResourceLogic;
+      --- Specifies the fungibility domain for the resource.
+      label : Nock.Atom;
+      --- A number representing the quentity of the resource.
+      quantity : Nat;
+      --- The fungible data associated with the resource.
+      value : Nock.ByteArray;
+      --- A flag that reflects the resource's ephemerality.
+      isEphemeral : Bool;
+      --- Guarantees the uniqueness of the resource computable components.
+      nonce : Nock.Atom;
+      --- Nullifier key commitment
+      nullifierKeyCommitment : Nock.Atom;
+      --- Randomness seed
+      rseed : Nock.Atom
+    };
+
+  --- Types related to the resource logic
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/function_formats/resource_logic.md?plain=1#L8
+  positive
   type PublicInputs :=
     mkPublicInputs@{
       commitments : Set Commitment;
@@ -198,6 +164,7 @@ module ResourceLogic;
       appData : Set AppDataElement
     };
 
+  positive
   type PrivateInputs :=
     mkPrivateInputs@{
       created : Set Resource;
@@ -207,19 +174,34 @@ module ResourceLogic;
       customInputs : Nock.Atom
     };
 
-  --- The type of a resource logic.
-  -- SPEC_QUESTION: Is this a valid signature for a resource logic function?
-  ResourceLogic : Type := PublicInputs -> PrivateInputs -> Bool;
-
   --- Compute a proof for a resource logic
   -- SPEC_QUESTION: Is this a valid signature for computing a proof of a
   -- transparent resource logic function?
   axiom prove : Resource -> PublicInputs -> PrivateInputs -> Proof;
 
+  -- Add the Resource projection functions into scope for convenience.
+  open Resource public;
+
+  --- Compute a commitment to a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/commitment.md?plain=1#L8
+  axiom commitment : Resource -> Commitment;
+
+  --- Compute the kind of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/kind.md?plain=1#L9
+  axiom kind : Resource -> Kind;
+
+  --- Compute the nullifier of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/nullifier.md?plain=1#L8
+  axiom nullifier : Resource -> Nullifier;
+
+  --- Compute the delta of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/delta.md?plain=1#L8
+  axiom delta : Resource -> Delta;
+
 end;
 
--- Add the ResourceLogic, PublicInputs, and PrivateInputs types to the scope for convenience.
-open ResourceLogic using {ResourceLogic; PublicInputs; module PublicInputs; PrivateInputs; module PrivateInputs};
+-- Add the Resource type and constructor to the scope for convenience.
+open Resource using {Resource; mkResource; ResourceLogic; PublicInputs; module PublicInputs; mkPublicInputs; PrivateInputs; module PrivateInputs; mkPrivateInputs} public;
 
 --- A module containing data types and functions related to transactions.
 --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/transaction.md?plain=1#L8
