@@ -3,63 +3,59 @@ module Anoma.Identity.Object;
 import Stdlib.Prelude open;
 import Stdlib.Data.Nat as Nat open using {Nat; +; *; <=} public;
 import Stdlib.Trait.Eq as Eq open using {==} public;
-import Stdlib.Trait.Ord as Ord open using {Ordering; EQ} public;
+import Stdlib.Trait.Ord as Ord open using {Ordering; Equal} public;
 
-type OrdKey (OrdKey : Type) := mkOrdkey {compare : OrdKey -> OrdKey -> Ordering};
+type OrdKey (OrdKey : Type) := mkOrdkey@{compare : OrdKey -> OrdKey -> Ordering};
 
 type HASH (OrdKeyType Hashable : Type) :=
-  mkHASH {
+  mkHASH@{
     ordKey : OrdKey OrdKeyType;
     hash : Hashable -> OrdKeyType
   };
 
 type OrdMap (OrdKeyType : Type) (MapCon : Type -> Type) :=
-  mkOrdMap {
+  mkOrdMap@{
     ordKey : OrdKey OrdKeyType;
     empty : {a : Type} -> MapCon a;
     map : {a b : Type} -> (a -> b) -> MapCon a -> MapCon b;
     insert : {a : Type} -> Pair (MapCon a) (Pair OrdKeyType a) -> MapCon a;
     foldl : {a b : Type} -> (Pair a b -> b) -> b -> MapCon a -> b;
-    intersectWith : {a b c : Type}
-      -> (Pair a b -> c)
-      -> Pair (MapCon a) (MapCon b)
-      -> MapCon c;
+    intersectWith : {a b c : Type} -> (Pair a b -> c) -> Pair (MapCon a) (MapCon b) -> MapCon c;
     all : {a : Type} -> (a -> Bool) -> MapCon a -> Bool
   };
-
 
 type Signer (SignerType Signable Commitment : Type) :=
   mkSigner@{sign : SignerType -> Signable -> Commitment};
 
 type Decryptor (DecryptorType Plaintext Ciphertext : Type) :=
-  mkDecryptor {decrypt : DecryptorType -> Ciphertext -> Option Plaintext};
+  mkDecryptor@{decrypt : DecryptorType -> Ciphertext -> Maybe Plaintext};
 
 type InternalIdentity (SignerType Signable Commitment DecryptorType Plaintext Ciphertext : Type) :=
-  mkInternalIdentity {
+  mkInternalIdentity@{
     signer : Signer SignerType Signable Commitment;
     decryptor : Decryptor DecryptorType Plaintext Ciphertext
   };
 
 type Verifier (OrdKey VerifierType Signable Commitment : Type) :=
-  mkVerifier {
+  mkVerifier@{
     verify : VerifierType -> Signable -> Commitment -> Bool;
     verifierHash : HASH OrdKey VerifierType
   };
 
 type Encryptor (OrdKey EncryptorType Plaintext Ciphertext : Type) :=
-  mkEncryptor {
+  mkEncryptor@{
     encrypt : EncryptorType -> Plaintext -> Ciphertext;
     encryptorHash : HASH OrdKey EncryptorType
   };
 
 type ExternalIdentity (VerifierOrdKeyType VerifierType Signable Commitment EncryptorOrdKeyType EncryptorType Plaintext Ciphertext : Type) :=
-  mkExternalIdentity {
+  mkExternalIdentity@{
     verifier : Verifier VerifierOrdKeyType VerifierType Signable Commitment;
     encryptor : Encryptor EncryptorOrdKeyType EncryptorType Plaintext Ciphertext
   };
 
 type Identity (SignerType InternalSignable InternalCommitment DecryptorType InternalCiphertext InternalPlaintext VerifierOrdKeyType VerifierType ExternalSignable ExternalCommitment EncryptorOrdKeyType EncryptorType ExternalPlaintext ExternalCiphertext : Type) :=
-  mkIdentity {
+  mkIdentity@{
     internalIdentity : InternalIdentity
       SignerType
       InternalSignable
@@ -79,47 +75,36 @@ type Identity (SignerType InternalSignable InternalCommitment DecryptorType Inte
   };
 
 type SignsFor (OrdKey VerifierType Signable Commitment Evidence : Type) :=
-  mkSignsFor {
+  mkSignsFor@{
     verifier : Verifier OrdKey VerifierType Signable Commitment;
     signsFor : Evidence -> Pair VerifierType VerifierType -> Bool
   };
 
 type ReadsFor (OrdKey EncryptorType Plaintext Ciphertext Evidence : Type) :=
-  mkReadsFor {
+  mkReadsFor@{
     encryptor : Encryptor OrdKey EncryptorType Plaintext Ciphertext;
     readsFor : Evidence -> Pair EncryptorType EncryptorType -> Bool
   };
 
 type ComposeHashable (VerifierType : Type) (MapCon : Type -> Type) :=
-  mkComposeHashable {
+  mkComposeHashable@{
     threshold : Nat;
     weights : MapCon (Pair Nat VerifierType)
   };
 
 type ThresholdCompose (OrdKey : Type) (MapCon : Type
   -> Type) (VerifierType Signable Commitment SignerType VerifierHashOrdKeyType : Type) :=
-  mkThresholdCompose {
+  mkThresholdCompose@{
     map : OrdMap OrdKey MapCon;
     underlyingVerifier : Verifier OrdKey VerifierType Signable Commitment;
     underlyingSigner : Signer SignerType Signable Commitment;
-    verifierHash : HASH
-      VerifierHashOrdKeyType
-      (ComposeHashable VerifierType MapCon);
+    verifierHash : HASH VerifierHashOrdKeyType (ComposeHashable VerifierType MapCon);
     sign : MapCon SignerType -> Signable -> MapCon Commitment;
-    verify : ComposeHashable VerifierType MapCon
-      -> Signable
-      -> MapCon Commitment
-      -> Bool;
+    verify : ComposeHashable VerifierType MapCon -> Signable -> MapCon Commitment -> Bool;
     signerCompose : List (Pair VerifierType SignerType) -> MapCon SignerType;
-    verifierCompose : Nat
-      -> List (Pair Nat VerifierType)
-      -> ComposeHashable VerifierType MapCon;
-    verifierAnd : VerifierType
-      -> VerifierType
-      -> ComposeHashable VerifierType MapCon;
-    verifierOr : VerifierType
-      -> VerifierType
-      -> ComposeHashable VerifierType MapCon
+    verifierCompose : Nat -> List (Pair Nat VerifierType) -> ComposeHashable VerifierType MapCon;
+    verifierAnd : VerifierType -> VerifierType -> ComposeHashable VerifierType MapCon;
+    verifierOr : VerifierType -> VerifierType -> ComposeHashable VerifierType MapCon
   };
 
 projectVerifier
@@ -149,9 +134,7 @@ ThresholdComposeFunctor
   (verifier : Verifier OrdKey VerifierType Signable Commitment)
   (signer : Signer SignerType Signable Commitment)
   (mapIn : OrdMap OrdKey MapCon)
-  (thresholdComposeHash : HASH
-    VerifierHashOrdKeyType
-    (ComposeHashable VerifierType MapCon))
+  (thresholdComposeHash : HASH VerifierHashOrdKeyType (ComposeHashable VerifierType MapCon))
   : ThresholdCompose
     OrdKey
     MapCon
@@ -165,61 +148,43 @@ ThresholdComposeFunctor
     underlyingVerifier := verifier;
     underlyingSigner := signer;
     verifierHash := thresholdComposeHash;
-    sign :=
-      \ {s m := OrdMap.map map \ {i := Signer.sign underlyingSigner i m} s};
+    sign := \ {s m := OrdMap.map map \ {i := Signer.sign underlyingSigner i m} s};
     verify :=
       \ {| (mkComposeHashable t ws) s c :=
         t
           <= OrdMap.foldl
             map
-            \ {(mkPair x y) := x + y}
+            \ {(x, y) := x + y}
             0
             (OrdMap.intersectWith
               map
-              \ {| (mkPair (mkPair w v) x) :=
-                ite (Verifier.verify underlyingVerifier v s x) w 0}
-              (mkPair ws c))};
+              \ {| ((w, v), x) := ite (Verifier.verify underlyingVerifier v s x) w 0}
+              (ws, c))};
     signerCompose :=
       \ {l :=
         foldl
-          \ {m (mkPair v s) :=
-            OrdMap.insert
-              map
-              (mkPair
-                m
-                (mkPair
-                  (HASH.hash (Verifier.verifierHash underlyingVerifier) v)
-                  s))}
+          \ {m (v, s) :=
+            OrdMap.insert map (m, HASH.hash (Verifier.verifierHash underlyingVerifier) v, s)}
           (OrdMap.empty map)
+
           l};
     verifierCompose :=
       \ {threshold weights :=
         mkComposeHashable
           threshold
           (foldl
-            \ {m (mkPair w v) :=
-              OrdMap.insert
-                map
-                (mkPair
-                  m
-                  (mkPair
-                    (HASH.hash (Verifier.verifierHash underlyingVerifier) v)
-                    (mkPair w v)))}
+            \ {m (w, v) :=
+              OrdMap.insert map (m, HASH.hash (Verifier.verifierHash underlyingVerifier) v, w, v)}
             (OrdMap.empty map)
             weights)};
-    verifierAnd := \ {x y := verifierCompose 2 [mkPair 1 x; mkPair 1 y]};
-    verifierOr := \ {x y := verifierCompose 1 [mkPair 1 x; mkPair 1 y]}
+    verifierAnd := \ {x y := verifierCompose 2 [1, x; 1, y]};
+    verifierOr := \ {x y := verifierCompose 1 [1, x; 1, y]}
   };
 
 type ThresholdComposeSignsFor (OrdKey VerifierType Signable Commitment Evidence : Type) (MapCon : Type
   -> Type) VerifierHashOrdKeyType :=
-  mkThresholdComposeSignsFor {
-    underlyingSignsFor : SignsFor
-      OrdKey
-      VerifierType
-      Signable
-      Commitment
-      Evidence;
+  mkThresholdComposeSignsFor@{
+    underlyingSignsFor : SignsFor OrdKey VerifierType Signable Commitment Evidence;
     verifier : ThresholdCompose
       OrdKey
       MapCon
@@ -229,13 +194,11 @@ type ThresholdComposeSignsFor (OrdKey VerifierType Signable Commitment Evidence 
       VerifierType
       VerifierHashOrdKeyType;
     signsFor : Evidence
-      -> Pair
-        (ComposeHashable VerifierType MapCon)
-        (ComposeHashable VerifierType MapCon)
+      -> Pair (ComposeHashable VerifierType MapCon) (ComposeHashable VerifierType MapCon)
       -> Bool
   };
 
-  projectSignsFor
+projectSignsFor
   {OrdKey VerifierType Signable Commitment Evidence : Type}
   {MapCon : Type -> Type}
   {VerifierHashOrdKeyType : Type}
@@ -265,9 +228,7 @@ ThresholdComposeSignsForFunctor
   (S : SignsFor OrdKey VerifierType Signable Commitment Evidence)
   (signer : Signer VerifierType Signable Commitment)
   (map : OrdMap OrdKey MapCon)
-  (thresholdComposeHash : HASH
-    VerifierHashOrdKeyType
-    (ComposeHashable VerifierType MapCon))
+  (thresholdComposeHash : HASH VerifierHashOrdKeyType (ComposeHashable VerifierType MapCon))
   : ThresholdComposeSignsFor
     OrdKey
     VerifierType
@@ -285,18 +246,14 @@ ThresholdComposeSignsForFunctor
         map
         thresholdComposeHash;
     signsFor :=
-      \ {e (mkPair (mkComposeHashable t0 w0) (mkComposeHashable t1 w1)) :=
+      \ {e (mkComposeHashable t0 w0, mkComposeHashable t1 w1) :=
         OrdMap.all
           map
-          \ {(mkPair w v) :=
+          \ {(w, v) :=
             w * t1
               <= OrdMap.foldl
                   map
-                  \ {(mkPair (mkPair x v1) s) :=
-                    ite
-                      (SignsFor.signsFor underlyingSignsFor e (mkPair v v1))
-                      (x + s)
-                      s}
+                  \ {((x, v1), s) := ite (SignsFor.signsFor underlyingSignsFor e (v, v1)) (x + s) s}
                   0
                   w1
                 * t0}
