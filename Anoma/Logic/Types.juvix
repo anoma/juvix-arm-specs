@@ -1,0 +1,139 @@
+module Anoma.Logic.Types;
+
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Stdlib.Data.Set as Set open using {Set};
+
+import Anoma.Resource.Object open using {Resource};
+import Anoma.Resource.Types open using {Commitment; Nullifier};
+import Anoma.Resource.Tag open using {Tag};
+import Anoma.Transaction.AppData open using {AppData};
+import Anoma.Utils open;
+
+--- The resource logic function signature.
+Logic : Type := (publicInputs : Instance) -> (privateInputs : Witness) -> Bool;
+
+type Proof := mkProof@{unProof : MISSING_DEFINITION};
+
+type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+
+type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+
+--- The public inputs (Instance) of the resource logic function proof.
+type Instance :=
+  mkInstance@{
+    tag : Tag;
+    commitments : Set Commitment;
+    nullifiers : Set Nullifier;
+    appData : AppData
+  };
+
+--- Custom inputs of the resource logic function proof being defined on the application level.
+--- NOTE: For the private testnet, this can be of type ;AppData;.
+type CustomInputs := mkCustomInputs@{unCustomInputs : MISSING_DEFINITION};
+
+--- The private inputs (Witness) of the resource logic function proof.
+type Witness :=
+  mkWitness@{
+    created : Set Resource;
+    consumed : Set Resource;
+    customInputs : CustomInputs
+  };
+
+type ProofRecord :=
+  mkProofRecord@{
+    proof : Proof;
+    verifyingKey : VerifyingKey;
+    instance : Instance
+  };
+
+module CustomInputsInternal;
+  --- Compares two ;CustomInputs; objects.
+  compare (lhs rhs : CustomInputs) : Ordering :=
+    Ord.cmp (CustomInputs.unCustomInputs lhs) (CustomInputs.unCustomInputs rhs);
+
+  --- Implements the ;Ord; trait for ;Proof;.
+  instance
+  CustomInputs-Ord : Ord CustomInputs := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;CustomInputs;.
+  instance
+  CustomInputs-Eq : Eq CustomInputs := fromOrdToEq;
+end;
+
+module ProofInternal;
+  --- Compares two ;Proof; objects.
+  compare (lhs rhs : Proof) : Ordering := Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+
+  --- Implements the ;Ord; trait for ;Proof;.
+  instance
+  Proof-Ord : Ord Proof := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Proof;.
+  instance
+  Proof-Eq : Eq Proof := fromOrdToEq;
+end;
+
+module VerifyingKeyInternal;
+  --- Compares two ;VerifyingKey; objects.
+  compare (lhs rhs : VerifyingKey) : Ordering :=
+    Ord.cmp (VerifyingKey.unVerifyingKey lhs) (VerifyingKey.unVerifyingKey rhs);
+
+  --- Implements the ;Ord; trait for ;VerifyingKey;.
+  instance
+  VerifyingKey-Ord : Ord VerifyingKey := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;VerifyingKey;.
+  instance
+  VerifyingKey-Eq : Eq VerifyingKey := fromOrdToEq;
+end;
+
+module InstanceInternal;
+  --- Compares two ;Instance; objects.
+  compare (lhs rhs : Instance) : Ordering :=
+    let
+      prod (i : Instance) : _ :=
+        Instance.tag i, Instance.commitments i, Instance.nullifiers i, Instance.appData i;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;Instance;.
+  instance
+  Instance-Ord : Ord Instance := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Instance;.
+  instance
+  Instance-Eq : Eq Instance := fromOrdToEq;
+end;
+
+module WitnessInternal;
+  --- Compares two ;Witness; objects.
+  compare (lhs rhs : Witness) : Ordering :=
+    let
+      prod (w : Witness) : _ := Witness.created w, Witness.consumed w, Witness.customInputs w;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;Witness;.
+  instance
+  Witness-Ord : Ord Witness := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Witness;.
+  instance
+  Witness-Eq : Eq Witness := fromOrdToEq;
+end;
+
+module ProofRecordInternal;
+  --- Compares two ;ProofRecord; objects.
+  compare (lhs rhs : ProofRecord) : Ordering :=
+    let
+      prod (p : ProofRecord) : _ :=
+        ProofRecord.proof p, ProofRecord.verifyingKey p, ProofRecord.instance p;
+    in Ord.cmp (prod lhs) (prod rhs);
+
+  --- Implements the ;Ord; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Ord : Ord ProofRecord := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;ProofRecord;.
+  instance
+  ProofRecord-Eq : Eq ProofRecord := fromOrdToEq;
+end;

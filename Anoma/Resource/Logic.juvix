@@ -1,7 +1,0 @@
-module Anoma.Resource.Logic;
-
-import Stdlib.Prelude open;
-import Anoma.Proving.Types open using {module Logic};
-
---- The resource logic function signature.
-Logic : Type := (publicInputs : Logic.Instance) -> (privateInputs : Logic.Witness) -> Bool;

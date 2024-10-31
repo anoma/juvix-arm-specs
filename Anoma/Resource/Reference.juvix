@@ -1,9 +1,7 @@
 module Anoma.Resource.Reference;
 
-import Anoma.Resource.Types open using {Label; LabelRef};
-import Anoma.Resource.Types open using {Value; ValueRef};
-import Anoma.Resource.Types open using {LogicRef};
-import Anoma.Resource.Logic open using {Logic};
+import Anoma.Resource.Types open using {Label; LabelRef; Value; ValueRef; LogicRef};
+import Anoma.Logic open using {Logic};
 import Anoma.Utils open;
 
 --- A trait for transforming values of a ;DataType; into values of its

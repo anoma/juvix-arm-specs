@@ -7,7 +7,7 @@ import Anoma.Resource.Types as Resource;
 import Anoma.State.CommitmentTree as CommitmentTree;
 import Anoma.Transaction.Action open using {Action};
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.Proving.ProofRecord open using {ProofRecord};
+import Anoma.Generic.ProofRecord open using {ProofRecord};
 import Anoma.Utils open;
 
 --- A record describing a transaction object, the entity constituting a state transition in Anoma.
