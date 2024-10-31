@@ -32,11 +32,15 @@ composeTransactions (tx1 tx2 : Transaction) : Transaction :=
 verifyTransaction (tx : Transaction) : Bool := NOT_REQUIRED;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitments (transaction : Transaction) : Set Resource.Commitment :=
+--- TODO needed?
+commitmentsFromTransaction
+  (transaction : Transaction) : Set Resource.Commitment :=
   STILL_MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifiers (transaction : Transaction) : Set Resource.Nullifier :=
+--- TODO needed?
+nullifiersFromTransaction
+  (transaction : Transaction) : Set Resource.Nullifier :=
   STILL_MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
