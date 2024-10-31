@@ -31,12 +31,15 @@ composeTransactions (tx1 tx2 : Transaction) : Transaction :=
 verifyTransaction (tx : Transaction) : Bool := MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitments (transaction : Transaction) : Set Resource.Commitment :=
+--- TODO needed?
+commitmentsFromTransaction
+  (transaction : Transaction) : Set Resource.Commitment :=
   MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifiers (transaction : Transaction) : Set Resource.Nullifier :=
-  MISSING_ANOMA_BUILTIN;
+--- TODO needed?
+nullifiersFromTransaction
+  (transaction : Transaction) : Set Resource.Nullifier := MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
   --- Compares two ;Transaction; objects.
