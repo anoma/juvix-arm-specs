@@ -22,7 +22,8 @@ type ValueRef := mkValueRef@{unValueRef : AnomaOpaque};
 type Quantity := mkQuantity@{unQuantity : Nat};
 
 --- A fixed-size data type encoding the public commitment to the private nullifier key.
-type NullifierKeyCommitment := mkNullifierKeyCommitment@{unNullifierKeyCommitment : ByteArray};
+type NullifierKeyCommitment :=
+  mkNullifierKeyCommitment@{unNullifierKeyCommitment : ByteArray};
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
@@ -66,7 +67,8 @@ end;
 
 module LabelInternal;
   --- Compares two ;Label; objects.
-  compare (lhs rhs : Label) : Ordering := Ord.cmp (Label.unLabel lhs) (Label.unLabel rhs);
+  compare (lhs rhs : Label) : Ordering :=
+    Ord.cmp (Label.unLabel lhs) (Label.unLabel rhs);
 
   --- Implements the ;Ord; trait for ;Label;.
   instance
@@ -93,7 +95,8 @@ end;
 
 module ValueInternal;
   --- Compares two ;Value; objects.
-  compare (lhs rhs : Value) : Ordering := Ord.cmp (Value.unValue lhs) (Value.unValue rhs);
+  compare (lhs rhs : Value) : Ordering :=
+    Ord.cmp (Value.unValue lhs) (Value.unValue rhs);
 
   --- Implements the ;Ord; trait for ;Value;.
   instance
@@ -135,15 +138,17 @@ module QuantityInternal;
   Quantity-Natural : Natural Quantity :=
     mkNatural@{
       + (b1 b2 : Quantity) : Quantity :=
-        mkQuantity ((Natural.+) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
+        mkQuantity
+          ((Natural.+) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
       * (b1 b2 : Quantity) : Quantity :=
-        mkQuantity ((Natural.*) (Quantity.unQuantity b1) (Quantity.unQuantity b2))
+        mkQuantity
+          ((Natural.*) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
     };
 
   instance
   Quantity-FromNatural : FromNatural Quantity :=
     mkFromNatural@{
-      fromNat (n : Nat) : Quantity := mkQuantity n
+      fromNat (n : Nat) : Quantity := mkQuantity n;
     };
 end;
 
@@ -165,7 +170,8 @@ end;
 
 module NonceInternal;
   --- Compares two ;Nonce; objects.
-  compare (lhs rhs : Nonce) : Ordering := Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
+  compare (lhs rhs : Nonce) : Ordering :=
+    Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
 
   --- Implements the ;Ord; trait for ;Nonce;.
   instance

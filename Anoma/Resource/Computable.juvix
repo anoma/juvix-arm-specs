@@ -3,7 +3,16 @@ module Anoma.Resource.Computable;
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Delta open using {Delta};
-import Anoma.Resource.Types open using {Commitment; Nullifier; NullifierKey; Quantity; LogicRef; LabelRef; Kind; module Kind};
+import Anoma.Resource.Types open using {
+  Commitment;
+  Nullifier;
+  NullifierKey;
+  Quantity;
+  LogicRef;
+  LabelRef;
+  Kind;
+  module Kind;
+};
 import Anoma.Resource.Object open using {Resource; module Resource};
 import Anoma.Utils open;
 
@@ -18,10 +27,12 @@ module KindInternal;
   --- The kind function as defined in the RM specs.
   --- NOTE: This definition does not specify that the ;LogicRef; and ;LabelRef; arguments
   --- must come from the same ;Resource; although this must be the case.
-  kind (logicRef : LogicRef) (labelRef : LabelRef) : Kind := STILL_MISSING_ANOMA_BUILTIN;
+  kind (logicRef : LogicRef) (labelRef : LabelRef) : Kind :=
+    STILL_MISSING_ANOMA_BUILTIN;
 
   --- Compares two ;Kind; objects.
-  compare (lhs rhs : Kind) : Ordering := Ord.cmp (Kind.unKind lhs) (Kind.unKind rhs);
+  compare (lhs rhs : Kind) : Ordering :=
+    Ord.cmp (Kind.unKind lhs) (Kind.unKind rhs);
 
   --- Implements the ;Ord; trait for ;Kind;.
   instance
@@ -36,14 +47,15 @@ end;
 kind (resource : Resource) : Kind :=
   KindInternal.kind@{
     logicRef := Resource.logicRef resource;
-    labelRef := Resource.labelRef resource
+    labelRef := Resource.labelRef resource;
   };
 
 module ResourceDeltaInternal;
   --- The delta function as defined in the RM specs.
   --- NOTE: This definition does not specify that the ;Kind; and ;Quantity; arguments
   --- must come from the same ;Resource; although this must be the case.
-  delta (kind : Kind) (quantity : Quantity) : Delta := STILL_MISSING_ANOMA_BUILTIN;
+  delta (kind : Kind) (quantity : Quantity) : Delta :=
+    STILL_MISSING_ANOMA_BUILTIN;
 end;
 
 --- Computes the ;Delta; value of a given ;Resource;.
@@ -51,6 +63,6 @@ resourceDelta (resource : Resource) : Delta :=
   let
     kind' := kind resource;
   in ResourceDeltaInternal.delta@{
-    kind := kind';
-    quantity := Resource.quantity resource
-  };
+       kind := kind';
+       quantity := Resource.quantity resource;
+     };

@@ -10,7 +10,9 @@ type ExternalIdentity := mkExternalIdentity@{unExternalIdentity : ByteArray};
 module ExternalIdentityInternal;
   --- Compares two ;ExternalIdentity; objects.
   compare (lhs rhs : ExternalIdentity) : Ordering :=
-    Ord.cmp (ExternalIdentity.unExternalIdentity lhs) (ExternalIdentity.unExternalIdentity rhs);
+    Ord.cmp
+      (ExternalIdentity.unExternalIdentity lhs)
+      (ExternalIdentity.unExternalIdentity rhs);
 
   --- Implements the ;Ord; trait for ;ExternalIdentity;.
   instance

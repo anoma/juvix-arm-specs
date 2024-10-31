@@ -25,7 +25,7 @@ axiom fromAnomaContents : Nat -> AnomaContents -> ByteArray;
 instance
 ByteArray-Ord : Ord ByteArray :=
   mkOrd@{
-    cmp := Ord.cmp on toAnomaContents
+    cmp := Ord.cmp on toAnomaContents;
   };
 
 --- Implements the ;Eq; trait for ;ByteArray;.

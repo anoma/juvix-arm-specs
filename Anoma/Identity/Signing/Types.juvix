@@ -35,7 +35,9 @@ sign
     -- | The resulting signature
     -> Signature
   | message internalIdentity :=
-    SystemBuiltins.anomaSign message (InternalIdentity.unInternalIdentity internalIdentity)
+    SystemBuiltins.anomaSign
+        message
+        (InternalIdentity.unInternalIdentity internalIdentity)
       |> mkSignature;
 
 --- TODO Consider deleting the definitions below.
@@ -43,7 +45,10 @@ module NonDetached;
   type SignedMessage := mkSignedMessage@{unSignedMessage : ByteArray};
 
   {-# inline: true #-}
-  verify (signedMessage : SignedMessage) (externalIdentity : ExternalIdentity) : Bool :=
+  verify
+    (signedMessage : SignedMessage)
+    (externalIdentity : ExternalIdentity)
+    : Bool :=
     case verifyWithMessage {Unit} signedMessage externalIdentity of
       | just _ := true
       | nothing := false;
@@ -72,6 +77,8 @@ module NonDetached;
       -- | The resulting signed message.
       -> SignedMessage
     | message internalIdentity :=
-      SystemBuiltins.anomaSign message (InternalIdentity.unInternalIdentity internalIdentity)
+      SystemBuiltins.anomaSign
+          message
+          (InternalIdentity.unInternalIdentity internalIdentity)
         |> mkSignedMessage;
 end;

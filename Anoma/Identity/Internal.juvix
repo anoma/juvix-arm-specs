@@ -10,7 +10,9 @@ type InternalIdentity := mkInternalIdentity@{unInternalIdentity : ByteArray};
 module InternalIdentityInternal;
   --- Compares two ;InternalIdentity; objects.
   compare (lhs rhs : InternalIdentity) : Ordering :=
-    Ord.cmp (InternalIdentity.unInternalIdentity lhs) (InternalIdentity.unInternalIdentity rhs);
+    Ord.cmp
+      (InternalIdentity.unInternalIdentity lhs)
+      (InternalIdentity.unInternalIdentity rhs);
 
   --- Implements the ;Ord; trait for ;InternalIdentity;.
   instance

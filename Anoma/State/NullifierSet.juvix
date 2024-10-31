@@ -14,5 +14,5 @@ type NullifierSet :=
     add : (nullifier : Resource.Nullifier) -> NullifierSet;
 
     --- Checks if a ;Resource.Nullifier; exists in the ;NullifierSet;.
-    exists : (nullifier : Resource.Nullifier) -> Bool
+    exists : (nullifier : Resource.Nullifier) -> Bool;
   };

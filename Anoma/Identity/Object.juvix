@@ -10,7 +10,7 @@ import Anoma.Identity.Internal open;
 type Identity :=
   mkIdentity@{
     external : ExternalIdentity;
-    internal : InternalIdentity
+    internal : InternalIdentity;
   };
 
 module IdentityInternal;

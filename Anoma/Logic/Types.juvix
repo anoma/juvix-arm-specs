@@ -23,7 +23,7 @@ type Instance :=
     tag : Tag;
     commitments : Set Commitment;
     nullifiers : Set Nullifier;
-    appData : AppData
+    appData : AppData;
   };
 
 --- Custom inputs of the resource logic function proof being defined on the application level.
@@ -35,7 +35,7 @@ type Witness :=
   mkWitness@{
     created : Set Resource;
     consumed : Set Resource;
-    customInputs : CustomInputs
+    customInputs : CustomInputs;
   };
 
 --- The resource logic function signature.
@@ -45,12 +45,13 @@ type ProofRecord :=
   mkProofRecord@{
     proof : Proof;
     verifyingKey : VerifyingKey;
-    instance : Instance
+    instance : Instance;
   };
 
 module ProofInternal;
   --- Compares two ;Proof; objects.
-  compare (lhs rhs : Proof) : Ordering := Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+  compare (lhs rhs : Proof) : Ordering :=
+    Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
 
   --- Implements the ;Ord; trait for ;Proof;.
   instance
@@ -80,7 +81,10 @@ module InstanceInternal;
   compare (lhs rhs : Instance) : Ordering :=
     let
       prod (i : Instance) : _ :=
-        Instance.tag i, Instance.commitments i, Instance.nullifiers i, Instance.appData i;
+        Instance.tag i
+          , Instance.commitments i
+          , Instance.nullifiers i
+          , Instance.appData i;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;Instance;.
@@ -96,7 +100,8 @@ module WitnessInternal;
   --- Compares two ;Witness; objects.
   compare (lhs rhs : Witness) : Ordering :=
     let
-      prod (w : Witness) : _ := Witness.created w, Witness.consumed w, Witness.customInputs w;
+      prod (w : Witness) : _ :=
+        Witness.created w, Witness.consumed w, Witness.customInputs w;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;Witness;.

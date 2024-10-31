@@ -15,7 +15,7 @@ type AppDataValue := mkAppDataValue@{unAppDataValue : Nat};
 type AppDataEntry :=
   mkAppDataEntry@{
     key : AppDataKey;
-    value : AppDataValue
+    value : AppDataValue;
   };
 
 --- A type describing an app data map.
@@ -57,7 +57,8 @@ module AppDataEntryInternal;
   --- Compares two ;AppDataEntry;s.
   compare (lhs rhs : AppDataEntry) : Ordering :=
     let
-      prod (entry : AppDataEntry) : _ := AppDataEntry.key entry, AppDataEntry.value entry;
+      prod (entry : AppDataEntry) : _ :=
+        AppDataEntry.key entry, AppDataEntry.value entry;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;AppDataEntry;.

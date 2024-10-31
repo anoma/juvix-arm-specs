@@ -2,7 +2,12 @@ module Anoma.State.ResourceMachine;
 
 import Stdlib.Prelude open;
 import Stdlib.Data.Set as Set open using {Set};
-import Anoma.Transaction.Object as Transaction open using {Transaction; mkTransaction; composeTransactions; verifyTransaction};
+import Anoma.Transaction.Object as Transaction open using {
+  Transaction;
+  mkTransaction;
+  composeTransactions;
+  verifyTransaction;
+};
 import Anoma.State.CommitmentTree as CommitmentTree open using {Root};
 import Anoma.Transaction.Action as Action open using {Action};
 import Anoma.Delta as Delta open using {Delta};
@@ -24,7 +29,7 @@ type ResourceMachine :=
 
     --- Verifies a ;Transaction; by checking that all proofs are valid.
     --- This includes resource logic proofs, compliance proofs, and the delta proof (a.k.a., balance proof))
-    verify : (tx : Transaction) -> Bool
+    verify : (tx : Transaction) -> Bool;
   };
 
 --- The resource machine instantiation.
@@ -34,5 +39,5 @@ Concrete-ResourceMachine : ResourceMachine :=
   mkResourceMachine@{
     create := Transaction.mkTransaction;
     compose := Transaction.composeTransactions;
-    verify := Transaction.verifyTransaction
+    verify := Transaction.verifyTransaction;
   };

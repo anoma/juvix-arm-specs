@@ -24,7 +24,7 @@ type ProofRecord :=
   mkProofRecord@{
     proof : Proof;
     verifyingKey : VerifyingKey;
-    instance : Instance
+    instance : Instance;
   };
 
 --- The ;Delta; value zero.
@@ -37,19 +37,20 @@ addDelta (d1 d2 : Delta) : Delta := ANOMA_BACKEND_IMPLEMENTATION;
 instance
 Delta-AdditivelyHomomorphic : AdditivelyHomomorphic Delta :=
   mkAdditivelyHomomorphic@{
-    add (a b : Delta) : Delta := addDelta a b
+    add (a b : Delta) : Delta := addDelta a b;
   };
 
 --- Implements the ;KindDistinct; trait for ;Delta;.
 instance
 Delta-KindDistinct : KindDistinct Delta :=
   mkKindDistinct@{
-    add (a b : Delta) : Delta := addDelta a b
+    add (a b : Delta) : Delta := addDelta a b;
   };
 
 module ProofInternal;
   --- Compares two ;Proof; objects.
-  compare (lhs rhs : Proof) : Ordering := Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+  compare (lhs rhs : Proof) : Ordering :=
+    Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
 
   --- Implements the ;Ord; trait for ;Proof;.
   instance
@@ -90,7 +91,8 @@ end;
 
 module WitnessInternal;
   --- Compares two ;Witness; objects.
-  compare (lhs rhs : Witness) : Ordering := Ord.cmp (Witness.unWitness lhs) (Witness.unWitness rhs);
+  compare (lhs rhs : Witness) : Ordering :=
+    Ord.cmp (Witness.unWitness lhs) (Witness.unWitness rhs);
 
   --- Implements the ;Ord; trait for ;Witness;.
   instance

@@ -19,12 +19,13 @@ type ProofRecord :=
   mkProofRecord@{
     proof : Proof;
     verifyingKey : VerifyingKey;
-    instance : Instance
+    instance : Instance;
   };
 
 module ProofInternal;
   --- Compares two ;Proof; objects.
-  compare (lhs rhs : Proof) : Ordering := Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+  compare (lhs rhs : Proof) : Ordering :=
+    Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
 
   --- Implements the ;Ord; trait for ;Proof;.
   instance
@@ -65,7 +66,8 @@ end;
 
 module WitnessInternal;
   --- Compares two ;Witness; objects.
-  compare (lhs rhs : Witness) : Ordering := Ord.cmp (Witness.unWitness lhs) (Witness.unWitness rhs);
+  compare (lhs rhs : Witness) : Ordering :=
+    Ord.cmp (Witness.unWitness lhs) (Witness.unWitness rhs);
 
   --- Implements the ;Ord; trait for ;Witness;.
   instance

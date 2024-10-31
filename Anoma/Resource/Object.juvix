@@ -14,7 +14,7 @@ type Resource :=
     ephemeral : Bool;
     nullifierKeyCommitment : NullifierKeyCommitment;
     nonce : Nonce;
-    randSeed : RandSeed
+    randSeed : RandSeed;
   };
 
 module ResourceInternal;

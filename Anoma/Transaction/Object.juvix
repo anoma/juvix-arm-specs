@@ -17,29 +17,34 @@ type Transaction :=
     roots : Set CommitmentTree.Root;
     actions : Set Action;
     delta : Delta;
-    deltaProofRecord : ProofRecord
+    deltaProofRecord : ProofRecord;
   };
 
 --- Computes the ;Transaction; ;Delta;.
-transactionDelta (transaction : Transaction) : Delta := STILL_MISSING_ANOMA_BUILTIN;
+transactionDelta (transaction : Transaction) : Delta :=
+  STILL_MISSING_ANOMA_BUILTIN;
 
 --- Composes two ;Transaction; objects.
-composeTransactions (tx1 tx2 : Transaction) : Transaction := STILL_MISSING_ANOMA_BUILTIN;
+composeTransactions (tx1 tx2 : Transaction) : Transaction :=
+  STILL_MISSING_ANOMA_BUILTIN;
 
 --- Verifies a ;Transaction;.
 verifyTransaction (tx : Transaction) : Bool := NOT_REQUIRED;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitments (transaction : Transaction) : Set Resource.Commitment := STILL_MISSING_ANOMA_BUILTIN;
+commitments (transaction : Transaction) : Set Resource.Commitment :=
+  STILL_MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifiers (transaction : Transaction) : Set Resource.Nullifier := STILL_MISSING_ANOMA_BUILTIN;
+nullifiers (transaction : Transaction) : Set Resource.Nullifier :=
+  STILL_MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
   --- Compares two ;Transaction; objects.
   compare (lhs rhs : Transaction) : Ordering :=
     let
-      prod (tx : Transaction) : _ := Transaction.roots tx, Transaction.actions tx;
+      prod (tx : Transaction) : _ :=
+        Transaction.roots tx, Transaction.actions tx;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;Transaction;.
@@ -57,7 +62,7 @@ type AnomaTransaction :=
     roots : List CommitmentTree.Root;
     actions : List AnomaAction;
     delta : Delta;
-    deltaProofRecord : ProofRecord
+    deltaProofRecord : ProofRecord;
   };
 
 --- NOTE: Needed for integration purposes.
@@ -66,5 +71,5 @@ toAnomaTransaction (transaction : Transaction) : AnomaTransaction :=
     roots := Set.toList (Transaction.roots transaction);
     actions := map toAnomaAction (Set.toList (Transaction.actions transaction));
     delta := Transaction.delta transaction;
-    deltaProofRecord := Transaction.deltaProofRecord transaction
+    deltaProofRecord := Transaction.deltaProofRecord transaction;
   };
