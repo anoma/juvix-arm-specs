@@ -19,7 +19,7 @@ type Action :=
     commitments : Set Resource.Commitment;
     nullifiers : Set Resource.Nullifier;
     proofRecords : Set ProofRecord;
-    appData : AppData
+    appData : AppData;
   };
 
 --- Verifies an ;Action; by verifying all proofs in the ;ProofRecord; ;Set;.
@@ -30,7 +30,10 @@ module ActionInternal;
   compare (lhs rhs : Action) : Ordering :=
     let
       prod (a : Action) : _ :=
-        Action.commitments a, Action.nullifiers a, Action.proofRecords a, Action.appData a;
+        Action.commitments a
+          , Action.nullifiers a
+          , Action.proofRecords a
+          , Action.appData a;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;Action;.

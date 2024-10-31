@@ -36,8 +36,10 @@ module NonDetached;
   type SignedMessage := mkSignedMessage@{unSignedMessage : MISSING_DEFINITION};
 
   {-# inline: true #-}
-  verify (signedMessage : SignedMessage) (externalIdentity : ExternalIdentity) : Bool :=
-    MISSING_ANOMA_BUILTIN;
+  verify
+    (signedMessage : SignedMessage)
+    (externalIdentity : ExternalIdentity)
+    : Bool := MISSING_ANOMA_BUILTIN;
 
   {-# inline: true #-}
   verifyWithMessage

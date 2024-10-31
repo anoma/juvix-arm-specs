@@ -12,7 +12,8 @@ type AdditivelyHomomorphic T :=
 --- Implements the ;Eq; trait for ;AdditivelyHomomorphic; types.
 Property-AdditivelyHomomorphic
   {T} {{Eq T}} {{AdditivelyHomomorphic T}} (f : T -> T) (v1 v2 : T) : Bool :=
-  f (AdditivelyHomomorphic.add v1 v2) == AdditivelyHomomorphic.add (f v1) (f v2);
+  f (AdditivelyHomomorphic.add v1 v2)
+    == AdditivelyHomomorphic.add (f v1) (f v2);
 
 --- A trait describing kind distinctness.
 trait

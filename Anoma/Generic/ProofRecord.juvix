@@ -27,10 +27,11 @@ module ProofRecordInternal;
           | ComplianceProofRecord _, _ := LessThan
           | LogicProofRecord _, ComplianceProofRecord _ := GreaterThan
           | LogicProofRecord _, DeltaProofRecord _ := LessThan
-          | DeltaProofRecord _, _ := GreaterThan
+          | DeltaProofRecord _, _ := GreaterThan;
     };
 
 end;
 
 --- NOTE: At verification time, a proof record set must contain exactly one ;Delta.ProofRecord;.
-verifyProofRecords (proofRecords : Set ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
+verifyProofRecords (proofRecords : Set ProofRecord) : Bool :=
+  MISSING_ANOMA_BUILTIN;

@@ -65,7 +65,8 @@ end;
 
 module LabelInternal;
   --- Compares two ;Label; objects.
-  compare (lhs rhs : Label) : Ordering := Ord.cmp (Label.unLabel lhs) (Label.unLabel rhs);
+  compare (lhs rhs : Label) : Ordering :=
+    Ord.cmp (Label.unLabel lhs) (Label.unLabel rhs);
 
   --- Implements the ;Ord; trait for ;Label;.
   instance
@@ -92,7 +93,8 @@ end;
 
 module ValueInternal;
   --- Compares two ;Value; objects.
-  compare (lhs rhs : Value) : Ordering := Ord.cmp (Value.unValue lhs) (Value.unValue rhs);
+  compare (lhs rhs : Value) : Ordering :=
+    Ord.cmp (Value.unValue lhs) (Value.unValue rhs);
 
   --- Implements the ;Ord; trait for ;Value;.
   instance
@@ -149,7 +151,8 @@ end;
 
 module NonceInternal;
   --- Compares two ;Nonce; objects.
-  compare (lhs rhs : Nonce) : Ordering := Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
+  compare (lhs rhs : Nonce) : Ordering :=
+    Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
 
   --- Implements the ;Ord; trait for ;Nonce;.
   instance

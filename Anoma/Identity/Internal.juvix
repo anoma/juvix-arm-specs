@@ -5,7 +5,8 @@ import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Utils open;
 
 --- A fixed-size data type describing an internal identity.
-type InternalIdentity := mkInternalIdentity@{unInternalIdentity : MISSING_DEFINITION};
+type InternalIdentity :=
+  mkInternalIdentity@{unInternalIdentity : MISSING_DEFINITION};
 
 module InternalIdentityInternal;
   --- Compares two ;InternalIdentity; objects.

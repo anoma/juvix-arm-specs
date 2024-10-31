@@ -12,10 +12,12 @@ UNUSED : Type := Unit;
 MISSING_DEFINITION : Type := Unit;
 
 --- A placeholder for an implementation that is not required for the private testnet.
-NOT_REQUIRED : {A : Type} → A := failwith "THIS IS NOT REQUIRED FOR THE PRIVATE TESTNET";
+NOT_REQUIRED : {A : Type} → A :=
+  failwith "THIS IS NOT REQUIRED FOR THE PRIVATE TESTNET";
 
 --- A placeholder for a missing Juvix implementation.
-MISSING_JUVIX_IMPLEMENTATION : {A : Type} → A := failwith "THIS MUST BE IMPLEMENT BY JUVIX";
+MISSING_JUVIX_IMPLEMENTATION : {A : Type} → A :=
+  failwith "THIS MUST BE IMPLEMENT BY JUVIX";
 
 --- A placeholder for a missing Anoma builtin.
 MISSING_ANOMA_BUILTIN : {A : Type} → A :=
@@ -23,4 +25,5 @@ MISSING_ANOMA_BUILTIN : {A : Type} → A :=
 
 --- A placeholder for an implementation that must be implemented on by the Anoma instantiator in the backend, but is not supposed to be called from Juvix.
 ANOMA_BACKEND_IMPLEMENTATION : {A : Type} → A :=
-  failwith "THIS BACKEND IMPLEMENTATION IS NOT SUPPOSED TO BE CALLED FROM JUVIX";
+  failwith
+    "THIS BACKEND IMPLEMENTATION IS NOT SUPPOSED TO BE CALLED FROM JUVIX";
