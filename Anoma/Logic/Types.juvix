@@ -15,7 +15,7 @@ type Proof := mkProof@{unProof : AnomaOpaque};
 
 type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
 
-type ProvingKey := mkProvingKey@{unProvingKey : UNUSED};
+type ProvingKey := mkProvingKey@{unProvingKey : Resource};
 
 --- The public inputs (Instance) of the resource logic function proof.
 type Instance :=
