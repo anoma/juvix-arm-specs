@@ -23,7 +23,6 @@ type Quantity := mkQuantity@{unQuantity : Nat};
 
 --- A fixed-size data type encoding the public commitment to the private nullifier key.
 type NullifierKeyCommitment := mkNullifierKeyCommitment@{unNullifierKeyCommitment : ByteArray};
--- TODO Change to ;Nat;
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
@@ -44,15 +43,12 @@ type Kind := mkKind@{unKind : Nat};
 
 --- The resource commitment type.
 type Commitment := mkCommitment@{unCommitment : ByteArray};
--- TODO Change to ;Nat;
 
 --- The resource nullifier type.
 type Nullifier := mkNullifier@{unNullifier : ByteArray};
--- TODO Change to ;Nat;
 
 --- The nullifier key type describing a secret required to compute the ;Nullifier; of a resource
 type NullifierKey := mkNullifierKey@{unNullifierKey : ByteArray};
--- TODO Change to ;Nat;
 
 module LogicRefInternal;
   --- Compares two ;LogicRef; objects.

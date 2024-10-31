@@ -7,7 +7,7 @@ import Anoma.Resource.Types as Resource;
 import Anoma.State.CommitmentTree as CommitmentTree;
 import Anoma.Transaction.Action open using {Action; AnomaAction; toAnomaAction};
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.Proving.ProofRecord open using {ProofRecord};
+import Anoma.Generic.ProofRecord open using {ProofRecord};
 import Anoma.Utils open;
 
 --- A record describing a transaction object, the entity constituting a state transition in Anoma.
@@ -20,6 +20,9 @@ type Transaction :=
     deltaProofRecord : ProofRecord
   };
 
+--- Computes the ;Transaction; ;Delta;.
+transactionDelta (transaction : Transaction) : Delta := STILL_MISSING_ANOMA_BUILTIN;
+
 --- Composes two ;Transaction; objects.
 composeTransactions (tx1 tx2 : Transaction) : Transaction := STILL_MISSING_ANOMA_BUILTIN;
 
@@ -27,10 +30,10 @@ composeTransactions (tx1 tx2 : Transaction) : Transaction := STILL_MISSING_ANOMA
 verifyTransaction (tx : Transaction) : Bool := NOT_REQUIRED;
 
 --- Returns the ;Resource.Commitment; ;Set; of all ;Action;s in a ;Transaction; or the intersection ;Set;.
-commitmentSet (transaction : Transaction) : Set Resource.Commitment := STILL_MISSING_ANOMA_BUILTIN;
+commitments (transaction : Transaction) : Set Resource.Commitment := STILL_MISSING_ANOMA_BUILTIN;
 
 --- Returns the ;Resource.Nullifier; ;Set; of a ;Transaction;.
-nullifierSet (transaction : Transaction) : Set Resource.Nullifier := STILL_MISSING_ANOMA_BUILTIN;
+nullifiers (transaction : Transaction) : Set Resource.Nullifier := STILL_MISSING_ANOMA_BUILTIN;
 
 module TransactionInternal;
   --- Compares two ;Transaction; objects.

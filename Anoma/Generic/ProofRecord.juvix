@@ -1,0 +1,36 @@
+module Anoma.Generic.ProofRecord;
+
+import Stdlib.Prelude open;
+import Stdlib.Data.Set as Set open using {Set};
+
+import Anoma.Compliance.Types as Compliance;
+import Anoma.Logic.Types as Logic;
+import Anoma.Delta.Types as Delta;
+import Anoma.Utils open;
+
+--- A wrapper type for all of the supported proof record types.
+type ProofRecord :=
+  | ComplianceProofRecord Compliance.ProofRecord
+  | LogicProofRecord Logic.ProofRecord
+  | DeltaProofRecord Delta.ProofRecord;
+
+module ProofRecordInternal;
+  instance
+  ProofRecord-Ord : Ord ProofRecord :=
+    -- lexicographical ordering with `ComplianceProofRecord _ < LogicProofRecord _ < DeltaProofRecord _`.
+    mkOrd@{
+      cmp (p1 p2 : ProofRecord) : Ordering :=
+        case p1, p2 of
+          | ComplianceProofRecord c1, ComplianceProofRecord c2 := Ord.cmp c1 c2
+          | LogicProofRecord r1, LogicProofRecord r2 := Ord.cmp r1 r2
+          | DeltaProofRecord d1, DeltaProofRecord d2 := Ord.cmp d1 d2
+          | ComplianceProofRecord _, _ := LessThan
+          | LogicProofRecord _, ComplianceProofRecord _ := GreaterThan
+          | LogicProofRecord _, DeltaProofRecord _ := LessThan
+          | DeltaProofRecord _, _ := GreaterThan
+    };
+
+end;
+
+--- NOTE: At verification time, a proof record set must contain exactly one ;Delta.ProofRecord;.
+verifyProofRecords (proofRecords : Set ProofRecord) : Bool := STILL_MISSING_ANOMA_BUILTIN;
