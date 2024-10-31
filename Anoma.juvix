@@ -9,6 +9,6 @@ import Anoma.Logic as Logic public;
 import Anoma.Delta as Delta public;
 import Anoma.Logic open using {Logic} public;
 import Anoma.Delta open using {Delta} public;
-import Anoma.State as State public;
+import Anoma.State open public;
 
 import Anoma.Utils as Utils public;
