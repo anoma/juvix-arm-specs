@@ -10,9 +10,6 @@ import Anoma.Resource.Tag open using {Tag};
 import Anoma.Transaction.AppData open using {AppData};
 import Anoma.Utils open;
 
---- The resource logic function signature.
-Logic : Type := (publicInputs : Instance) -> (privateInputs : Witness) -> Bool;
-
 type Proof := mkProof@{unProof : MISSING_DEFINITION};
 
 type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
@@ -39,6 +36,9 @@ type Witness :=
     consumed : Set Resource;
     customInputs : CustomInputs
   };
+
+--- The resource logic function signature.
+Logic : Type := (publicInputs : Instance) -> (privateInputs : Witness) -> Bool;
 
 type ProofRecord :=
   mkProofRecord@{
