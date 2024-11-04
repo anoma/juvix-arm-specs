@@ -12,6 +12,3 @@ prove
   : Proof := MISSING_ANOMA_BUILTIN;
 
 verify (proofRecord : ProofRecord) : Bool := MISSING_ANOMA_BUILTIN;
-
---- Aggregates two  delta ;ProofRecord;s.
-aggregate (p1 p2 : ProofRecord) : ProofRecord := ANOMA_BACKEND_IMPLEMENTATION;
