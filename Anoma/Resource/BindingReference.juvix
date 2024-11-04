@@ -1,0 +1,64 @@
+module Anoma.Resource.BindingReference;
+
+import Stdlib.Prelude open;
+import Stdlib.Debug.Fail open using {failwith};
+
+import Anoma.Resource.Types open using {
+  Label;
+  LabelRef;
+  Value;
+  ValueRef;
+  LogicRef;
+};
+import Anoma.Logic open using {Logic};
+import Anoma.Utils open;
+
+--- A trait for transforming values of a ;DataType; into values of its
+--- corresponding ;RefType;. Values of ;RefType; must have fixed size. For the
+--- private testnet, the requirement can be relaxed by allowing ;RefType; to be
+--- dynamically-sized.
+trait
+type BindingReference DataType RefType :=
+  mkBindingReference@{
+    --- Computes the binding reference (RefType) from the data (DataType).
+    compute : DataType -> RefType;
+    --- Checks whether a particular piece of data matches a binding reference.
+    check : RefType -> DataType -> Bool;
+  };
+
+--- Implements the ;BindingReference; trait for ;Label;.
+instance
+Label-BindingReference : BindingReference Label LabelRef :=
+  mkBindingReference@{
+    compute := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    check := STILL_MISSING_JUVIX_IMPLEMENTATION;
+  };
+
+--- Implements the ;BindingReference; trait for ;Logic;.
+instance
+Logic-BindingReference : BindingReference Logic LogicRef :=
+  mkBindingReference@{
+    compute := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    check := STILL_MISSING_JUVIX_IMPLEMENTATION;
+  };
+
+--- Implements the ;BindingReference; trait for ;Value;.
+instance
+Value-BindingReference : BindingReference Value ValueRef :=
+  mkBindingReference@{
+    compute := STILL_MISSING_JUVIX_IMPLEMENTATION;
+    check := STILL_MISSING_JUVIX_IMPLEMENTATION;
+  };
+
+RefNotFoundError : {A : Type} → A :=
+  failwith "The referenced data could not be found.";
+
+RefDataMismatchError : {A : Type} → A :=
+  failwith "The fetched data does not match the referenced data.";
+
+lookupFromRefernce
+  {DataType}
+  {RefType}
+  {{BindingReference DataType RefType}}
+  (bindingRef : RefType)
+  : Maybe DataType := STILL_MISSING_JUVIX_IMPLEMENTATION;
