@@ -17,7 +17,7 @@ type Transaction :=
     roots : Set CommitmentTree.Root;
     actions : Set Action;
     delta : Delta;
-    deltaProofRecord : ProofRecord;
+    deltaProofRecord : Delta.ProofRecord;
   };
 
 --- Computes the ;Transaction; ;Delta;.
@@ -26,7 +26,15 @@ transactionDelta (transaction : Transaction) : Delta :=
 
 --- Composes two ;Transaction; objects.
 composeTransactions (tx1 tx2 : Transaction) : Transaction :=
-  STILL_MISSING_ANOMA_BUILTIN;
+  mkTransaction@{
+    roots := Set.union (Transaction.roots tx1) (Transaction.roots tx2);
+    actions := Set.union (Transaction.actions tx1) (Transaction.actions tx2);
+    delta := Delta.addDelta (Transaction.delta tx1) (Transaction.delta tx2);
+    deltaProofRecord :=
+      Delta.aggregate
+        (Transaction.deltaProofRecord tx1)
+        (Transaction.deltaProofRecord tx2);
+  };
 
 --- Verifies a ;Transaction;.
 verifyTransaction (tx : Transaction) : Bool := NOT_REQUIRED;
@@ -66,7 +74,7 @@ type AnomaTransaction :=
     roots : List CommitmentTree.Root;
     actions : List AnomaAction;
     delta : Delta;
-    deltaProofRecord : ProofRecord;
+    deltaProofRecord : Delta.ProofRecord;
   };
 
 --- NOTE: Needed for integration purposes.
