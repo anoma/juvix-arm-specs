@@ -7,7 +7,7 @@ import Anoma.Resource.Types as Resource;
 import Anoma.State.CommitmentTree as CommitmentTree;
 import Anoma.Transaction.Action open using {Action};
 import Anoma.Delta as Delta open using {Delta};
-import Anoma.Generic.ProofRecord open using {ProofRecord};
+import Anoma.Generic.ProofRecord open using {ProofRecord; DeltaProofRecord};
 import Anoma.Utils open;
 
 --- A record describing a transaction object, the entity constituting a state transition in Anoma.
@@ -23,9 +23,18 @@ type Transaction :=
 --- Computes the ;Transaction; ;Delta;.
 transactionDelta (transaction : Transaction) : Delta := MISSING_ANOMA_BUILTIN;
 
+axiom dummy : {A : Type} -> A;
+
 --- Composes two ;Transaction; objects.
 composeTransactions (tx1 tx2 : Transaction) : Transaction :=
-  MISSING_ANOMA_BUILTIN;
+  mkTransaction@{
+    roots := Set.union (Transaction.roots tx1) (Transaction.roots tx2);
+    actions := Set.union (Transaction.actions tx1) (Transaction.actions tx2);
+    delta := Delta.addDelta (Transaction.delta tx1) (Transaction.delta tx2);
+    --- TODO Fix when inputs deltaProofRecord are known.
+    deltaProofRecord :=
+      DeltaProofRecord (Delta.mkProofRecord dummy dummy dummy);
+  };
 
 --- Verifies a ;Transaction;.
 verifyTransaction (tx : Transaction) : Bool := MISSING_ANOMA_BUILTIN;
