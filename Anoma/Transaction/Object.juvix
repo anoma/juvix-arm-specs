@@ -33,7 +33,11 @@ composeTransactions (tx1 tx2 : Transaction) : Transaction :=
     delta := Delta.addDelta (Transaction.delta tx1) (Transaction.delta tx2);
     --- TODO Fix when inputs deltaProofRecord are known.
     deltaProofRecord :=
-      DeltaProofRecord (Delta.mkProofRecord dummy dummy dummy);
+      DeltaProofRecord (Delta.mkProofRecord@{
+        proof := dummy;
+        verifyingKey := dummy;
+        instance := dummy;
+    });
   };
 
 --- Verifies a ;Transaction;.
