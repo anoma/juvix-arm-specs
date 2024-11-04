@@ -65,10 +65,6 @@ module Opaque;
   --- The zero value of `Opaque.Delta`.
   -- This is not in the specification but is used to initialize delta fields.
   axiom zeroDelta : Delta;
-
-  -- TODO: Other Set functions will be required.
-  -- See https://github.com/anoma/nspec/issues/197
-  axiom Set : Type -> Type;
 end;
 
 -- Add opaque types to the scope for convenience.
