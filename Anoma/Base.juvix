@@ -31,7 +31,7 @@ import Anoma.Base.Set as Set open using {Set};
 --- semantics of the Juvix type and the Nock type are the same (e.g a boolean flag).
 module Nock;
   --- A type representing a Nock atom.
-  type Atom := mkAtom Nat;
+  Atom : Type := Nat;
 
   --- The Nock encoding of a ByteArray.
   type ByteArray :=
@@ -39,7 +39,7 @@ module Nock;
       --- The number of bytes in the ByteArray.
       length : Atom;
       --- The bytes of the ByteArray represented as an ;Atom; in little-endian byte ordering.
-      payload : Atom
+      payload : Atom;
     };
 end;
 
@@ -79,13 +79,13 @@ module Action;
     mkAppDataValue@{
       value : Nock.Atom;
       -- SPEC_QUESTION: Is the deletion criterion required?
-      deletionCriterion : Nock.Atom
+      deletionCriterion : Nock.Atom;
     };
 
   type AppDataElement :=
     mkAppDataElement@{
       key : Nock.Atom;
-      value : AppDataValue
+      value : AppDataValue;
     };
 
   type Action :=
@@ -100,7 +100,7 @@ module Action;
       --- Application specific data needed to create resource logic proofs.
       -- SPEC_QUESTION, INST_QUESTION: The RM instantiation does not enforce
       -- this type, it accepts any data. Does this need to be specified?
-      appData : Set AppDataElement
+      appData : Set AppDataElement;
     };
 
   -- Add the Action and AppData projection functions to the scope for convenience.
@@ -116,34 +116,61 @@ module Action;
 end;
 
 -- Add the Action types and constructors to the scope for convenience.
-open Action using {Action; mkAction; AppDataElement; module AppDataElement; mkAppDataElement; AppDataValue; module AppDataValue; mkAppDataValue} public;
+open Action using {
+  Action;
+  mkAction;
+  AppDataElement;
+  module AppDataElement;
+  mkAppDataElement;
+  AppDataValue;
+  module AppDataValue;
+  mkAppDataValue;
+} public;
 
 --- A module containing data types and functions related to resources.
 --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/definition.md
 module Resource;
 
   -- SPEC_QUESTION: Is this a valid signature for a resource logic function?
-  ResourceLogic : Type := PublicInputs -> PrivateInputs -> Bool;
+  Logic : Type := PublicInputs -> PrivateInputs -> Bool;
+
+  Label : Type := Nock.Atom;
+
+  Value : Type := Nock.ByteArray;
+
+  Quantity : Type := Nat;
+
+  NullifierKeyCommitment : Type := Nock.Atom;
+
+  Nonce : Type := Nock.Atom;
+
+  RSeed : Type := Nock.Atom;
 
   positive
   type Resource :=
     mkResource@{
       --- A 'succinct' representation of the resource logic.
-      logic : ResourceLogic;
+      logic : Logic;
       --- Specifies the fungibility domain for the resource.
-      label : Nock.Atom;
+      label : Label;
       --- A number representing the quentity of the resource.
-      quantity : Nat;
+      quantity : Quantity;
       --- The fungible data associated with the resource.
-      value : Nock.ByteArray;
+      value : Value;
       --- A flag that reflects the resource's ephemerality.
       isEphemeral : Bool;
       --- Guarantees the uniqueness of the resource computable components.
-      nonce : Nock.Atom;
-      --- Nullifier key commitment
-      nullifierKeyCommitment : Nock.Atom;
+      ---
+      --- NOTE: This should be a number having an at most negligible chance of
+      --- repeating is sufficient, e.g., a pseudo-random number.
+      nonce : Nonce;
+      --- The public commitment to the private nullifier key.
+      nullifierKeyCommitment : NullifierKeyCommitment;
       --- Randomness seed
-      rseed : Nock.Atom
+      ---
+      --- NOTE: This seed provides pseudo randomness and cannot be expected to
+      --- provide true randomness.
+      rseed : RSeed;
     };
 
   --- Types related to the resource logic
@@ -158,7 +185,7 @@ module Resource;
       tag : Nock.Atom;
       -- SPEC_QUESTION, INST_QUESTION: The RM instantiation does not enforce
       -- this type, it accepts any data. Does this need to be specified?
-      appData : Set AppDataElement
+      appData : Set AppDataElement;
     };
 
   positive
@@ -168,7 +195,7 @@ module Resource;
       consumed : Set Resource;
       -- The value of customInputs is an anomaEncoded (jammed) value of some
       -- application specific data type.
-      customInputs : Nock.Atom
+      customInputs : Nock.Atom;
     };
 
   --- Compute a proof for a resource logic
@@ -198,7 +225,16 @@ module Resource;
 end;
 
 -- Add the Resource type and constructor to the scope for convenience.
-open Resource using {Resource; mkResource; ResourceLogic; PublicInputs; module PublicInputs; mkPublicInputs; PrivateInputs; module PrivateInputs; mkPrivateInputs} public;
+open Resource using {
+  Resource;
+  mkResource;
+  PublicInputs;
+  module PublicInputs;
+  mkPublicInputs;
+  PrivateInputs;
+  module PrivateInputs;
+  mkPrivateInputs;
+} public;
 
 --- A module containing data types and functions related to transactions.
 --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/transaction.md?plain=1#L8
@@ -213,7 +249,7 @@ module Transaction;
       --- The delta associated with the transaction.
       delta : Delta;
       --- The transaction balance proof.
-      balanceProof : Proof
+      balanceProof : Proof;
     };
 
   -- Add the Transaction projection functions to the scope for convenience.
@@ -228,3 +264,45 @@ end;
 
 -- Add the Transaction type and constructor to the scope for convenience.
 open Transaction using {Transaction; mkTransaction} public;
+
+module Traits;
+  import Anoma.Builtin.System open using {anomaEncode};
+  import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
+  instance
+  ordByteArrayI : Ord Nock.ByteArray :=
+    let
+      prod (b : Nock.ByteArray) : _ :=
+        Nock.ByteArray.length b, Nock.ByteArray.payload b;
+    in mkOrd@{
+         cmp (lhs rhs : Nock.ByteArray) : Ordering :=
+           Ord.cmp (prod lhs) (prod rhs);
+       };
+
+  --- Define an Ord instance via anomaEncode.
+  anomaEncodeOrd {A} : Ord A := mkOrd (Ord.cmp on anomaEncode);
+
+  instance
+  ordCommitmentI : Ord Commitment := anomaEncodeOrd;
+
+  instance
+  eqCommitmentI : Eq Commitment := fromOrdToEq;
+
+  instance
+  ordNullifierI : Ord Nullifier := anomaEncodeOrd;
+
+  instance
+  eqNullifierI : Eq Nullifier := fromOrdToEq;
+
+  instance
+  ordLogicI : Ord Resource.Logic := anomaEncodeOrd;
+
+  instance
+  eqLogicI : Eq Resource.Logic := fromOrdToEq;
+
+  instance
+  ordKindI : Ord Kind := anomaEncodeOrd;
+
+  instance
+  eqKindI : Eq Kind := fromOrdToEq;
+end;
