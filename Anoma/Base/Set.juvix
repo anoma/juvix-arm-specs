@@ -1,5 +1,9 @@
 {-- This module contains the Set API to be used when interacting with Anoma.
 
+The Set type from `Stdlib.Data.Set` should be used in applications. The
+functions in this module should be used to translate to and from the Anoma Set
+data structure.
+
 It is recommended that you import this module as follows:
 
 import Anoma.Base.Set as Set open using {Set}
@@ -12,136 +16,34 @@ if you use this module and the standard library set from Stdlib.Data.Set in the
 same module. --}
 module Anoma.Base.Set;
 
-import Stdlib.Prelude open hiding {foldl; all; any; isMember; for};
+import Stdlib.Prelude open;
 import Stdlib.Data.Set as StdlibSet open using {Set as StdlibSet};
 
 --- A module containing the builtin Anoma Set API.
 module Internal;
-
   axiom Set : Type -> Type;
 
-  axiom lookup : {A : Type} -> (elem : A) -> (set : Set A) -> Maybe A;
-
-  axiom isMember : {A : Type} -> (elem : A) -> (set : Set A) -> Bool;
-
-  axiom insert : {A : Type} -> (elem : A) -> (set : Set A) -> Set A;
-
+  -- Uses Hoon stdlib ++tap:in https://developers.urbit.org/reference/hoon/stdlib/2h#tapin
   axiom toList : {A : Type} -> (set : Set A) -> List A;
 
+  -- Uses Hoon stdlib ++silt https://developers.urbit.org/reference/hoon/stdlib/2l#silt
   axiom fromList : {A : Type} -> (list : List A) -> Set A;
-
-  axiom size : {A : Type} -> (set : Set A) -> Nat;
-
-  axiom delete : {A : Type} -> (elem : A) -> (set : Set A) -> Set A;
-
-  axiom map : {A B : Type} -> (fun : A -> B) -> (set : Set A) -> Set B;
-
-  --- Implemented using `++rep:in` https://developers.urbit.org/reference/hoon/stdlib/2h#repin
-  -- NB: The initial accumulator should be the second default argument of the function.
-  axiom foldl : {A B : Type} -> (fun : B -> A -> B) -> (acc : B) -> Set A -> B;
-
-  axiom union : {A : Type} -> (set1 set2 : Set A) -> Set A;
-
-  axiom intersection : {A : Type} -> (set1 set2 : Set A) -> Set A;
-
-  axiom difference : {A : Type} -> (set1 set2 : Set A) -> Set A;
-
-  axiom all : {A : Type} -> (predicate : A -> Bool) -> (set : Set A) -> Bool;
-
-  axiom any : {A : Type} -> (predicate : A -> Bool) -> (set : Set A) -> Bool;
 end;
 
 open Internal using {Set} public;
 
-{-# inline: true #-}
-singleton {A} (elem : A) : Set A := Internal.fromList {A} [elem];
-
-{-# inline: true #-}
-empty {A} : Set A := Internal.fromList {A} [];
-
-{-# inline: true #-}
-lookup {A} (elem : A) (set : Set A) : Maybe A := Internal.lookup {A} elem set;
-
-{-# inline: true #-}
-isMember {A} (elem : A) (set : Set A) : Bool := Internal.isMember {A} elem set;
-
-{-# inline: true #-}
-insert {A} (elem : A) (set : Set A) : Set A := Internal.insert {A} elem set;
-
+--- Returns the elements of `set` as a ;List; in an unspecified order.
 {-# inline: true #-}
 toList {A} (set : Set A) : List A := Internal.toList {A} set;
 
+--- Create a set from an unsorted ;List;.
 {-# inline: true #-}
 fromList {A} (list : List A) : Set A := Internal.fromList {A} list;
 
+--- Convert a Juvix Stdlib Set to an Anoma Set.
 fromStdlibSet {A} (set : StdlibSet A) : Set A :=
   set |> StdlibSet.toList |> fromList;
 
+--- Convert an Anoma Set to a Juvix Stdlib Set.
 toStdlibSet {A} {{Ord A}} (set : Set A) : StdlibSet A :=
   set |> toList |> StdlibSet.fromList;
-
-{-# inline: true #-}
-size {A} (set : Set A) : Nat := Internal.size {A} set;
-
-{-# inline: true #-}
-delete {A} (elem : A) (set : Set A) : Set A := Internal.delete elem set;
-
-{-# inline: true #-}
-union {A} (set1 set2 : Set A) : Set A := Internal.union {A} set1 set2;
-
-{-# inline: true #-}
-intersection {A} (set1 set2 : Set A) : Set A := Internal.intersection set1 set2;
-
-{-# inline: true #-}
-difference {A} (set1 set2 : Set A) : Set A := Internal.difference set1 set2;
-
-{-# inline: true #-}
-isEmpty {A} (set : Set A) : Bool := size set == 0;
-
-syntax iterator map {init := 0; range := 1};
-{-# inline: true #-}
-map {A B} (fun : A -> B) (set : Set A) : Set B := Internal.map {A} {B} fun set;
-
-{-# inline: true #-}
-foldl {A B} (fun : B -> A -> B) (acc : B) (set : Set A) : B :=
-  Internal.foldl {A} {B} fun acc set;
-
--- The hoon stdlib does not define foldr so we cannot implement Foldable.
-syntax iterator for {init := 1; range := 1};
-{-# inline: true #-}
-for : {A B : Type} -> (B -> A -> B) -> B -> Set A -> B := foldl;
-
-syntax iterator all {init := 0; range := 1};
-{-# inline: true #-}
-all {A} (predicate : A -> Bool) (set : Set A) : Bool :=
-  Internal.all {A} predicate set;
-
-syntax iterator any {init := 0; range := 1};
-{-# inline: true #-}
-any {A} (predicate : A -> Bool) (set : Set A) : Bool :=
-  Internal.any {A} predicate set;
-
-isSubset {A} (set1 set2 : Set A) : Bool :=
-  all (x in set1) {
-    isMember x set2
-  };
-
-syntax iterator filter {init := 0; range := 1};
-{-# specialize: [1] #-}
-filter {A} (predicate : A -> Bool) (set : Set A) : Set A :=
-  for (acc := empty) (x in set) {
-    if
-      | predicate x := insert x acc
-      | else := acc
-  };
-
-{-# specialize: [1] #-}
-disjointUnion {A} (set1 set2 : Set A) : Result A (Set A) :=
-  for (acc := ok set2) (x in set1) {
-    case acc of
-      | error _ := acc
-      | ok set :=
-        if
-          | isMember x set2 := error x
-          | else := ok (insert x set)
-  };
