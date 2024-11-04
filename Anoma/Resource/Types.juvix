@@ -3,48 +3,49 @@ module Anoma.Resource.Types;
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Utils open;
+import Anoma.Base as Base;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LogicRef; to be dynamically-sized.
-type LogicRef := mkLogicRef@{unLogicRef : MISSING_DEFINITION};
+type LogicRef := mkLogicRef@{unLogicRef : Base.Resource.Logic};
 
 --- A fixed-size data type encoding the reference to the resource label field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LabelRef; to be dynamically-sized.
-type LabelRef := mkLabelRef@{unLabelRef : MISSING_DEFINITION};
+type LabelRef := mkLabelRef@{unLabelRef : Base.Resource.Label};
 
 --- A fixed-size data type encoding the reference to the resource value field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;ValueRef; to be dynamically-sized.
-type ValueRef := mkValueRef@{unValueRef : MISSING_DEFINITION};
+type ValueRef := mkValueRef@{unValueRef : Base.Resource.Value};
 
 --- A fixed-size data type encoding the quantity of a resource.
-type Quantity := mkQuantity@{unQuantity : MISSING_DEFINITION};
+type Quantity := mkQuantity@{unQuantity : Base.Resource.Quantity};
 
 --- A fixed-size data type encoding the public commitment to the private nullifier key.
 type NullifierKeyCommitment :=
-  mkNullifierKeyCommitment@{unNullifierKeyCommitment : MISSING_DEFINITION};
+  mkNullifierKeyCommitment@{unNullifierKeyCommitment : Base.Resource.NullifierKeyCommitment};
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
-type Nonce := mkNonce@{unNonce : MISSING_DEFINITION};
+type Nonce := mkNonce@{unNonce : Base.Resource.Nonce};
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
-type RandSeed := mkRandSeed@{unRandSeed : MISSING_DEFINITION};
+type RandSeed := mkRandSeed@{unRandSeed : Base.Resource.RSeed};
 
 --- The resource label type.
-type Label := mkLabel@{unLabel : MISSING_DEFINITION};
+type Label := mkLabel@{unLabel : Base.Resource.Label};
 
 --- The resource value type.
-type Value := mkValue@{unValue : MISSING_DEFINITION};
+type Value := mkValue@{unValue : Base.Resource.Value};
 
 --- The resource kind type.
-type Kind := mkKind@{unKind : MISSING_DEFINITION};
+type Kind := mkKind@{unKind : Base.Kind};
 
 --- The resource commitment type.
-type Commitment := mkCommitment@{unCommitment : MISSING_DEFINITION};
+type Commitment := mkCommitment@{unCommitment : Base.Commitment};
 
 --- The resource nullifier type.
-type Nullifier := mkNullifier@{unNullifier : MISSING_DEFINITION};
+type Nullifier := mkNullifier@{unNullifier : Base.Nullifier};
 
 --- The nullifier key type describing a secret required to compute the ;Nullifier; of a resource
 type NullifierKey := mkNullifierKey@{unNullifierKey : MISSING_DEFINITION};
