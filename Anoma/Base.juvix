@@ -23,6 +23,7 @@ https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/doc
 module Anoma.Base;
 
 import Stdlib.Prelude open;
+import Anoma.Base.Set as Set open using {Set};
 
 --- A module containing Nock types used in the interface.
 ---
