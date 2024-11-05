@@ -2,7 +2,7 @@ module Anoma.Identity.Internal;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Anoma.Builtin.ByteArray open using {ByteArray};
+import Anoma.Builtin.ByteArray open using {ByteArray; toAnomaContents};
 
 --- A fixed-size data type describing an internal identity.
 type InternalIdentity := mkInternalIdentity@{unInternalIdentity : ByteArray};
@@ -22,3 +22,12 @@ module InternalIdentityInternal;
   instance
   InternalIdentity-Eq : Eq InternalIdentity := fromOrdToEq;
 end;
+
+instance
+InternalIdentity-Show : Show InternalIdentity :=
+  mkShow
+    \{id :=
+      id
+        |> InternalIdentity.unInternalIdentity
+        |> toAnomaContents
+        |> natToString};

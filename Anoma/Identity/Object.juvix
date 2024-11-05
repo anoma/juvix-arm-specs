@@ -26,3 +26,15 @@ module IdentityInternal;
   instance
   Identity-Eq : Eq Identity := fromOrdToEq;
 end;
+
+instance
+Identity-Show : Show Identity :=
+  mkShow
+    \{id :=
+      "{"
+        ++str "external : "
+        ++str (id |> Identity.external |> Show.show)
+        ++str ", "
+        ++str "internal : "
+        ++str (id |> Identity.internal |> Show.show)
+        ++str "}"};
