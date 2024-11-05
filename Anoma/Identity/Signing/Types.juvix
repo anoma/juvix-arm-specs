@@ -12,11 +12,11 @@ type Signature := mkSignature@{unSignature : ByteArray};
 verify
   : {Message : Type}
     -- | The signature to verify.
-    -> Signature
+    -> (signature : Signature)
     -- | The message to verify against.
-    -> Message
+    -> (message : Message)
     -- | The signer external identity to verify against.
-    -> ExternalIdentity
+    -> (signer : ExternalIdentity)
     -- | The verification result.
     -> Bool
   | (mkSignature signature) message externalIdentity :=
@@ -29,9 +29,9 @@ verify
 sign
   : {Message : Type}
     -- | The message to sign.
-    -> Message
+    -> (message : Message)
     -- | The signing internal identity.
-    -> InternalIdentity
+    -> (signer : InternalIdentity)
     -- | The resulting signature
     -> Signature
   | message internalIdentity :=
@@ -57,9 +57,9 @@ module NonDetached;
   verifyWithMessage
     : {Message : Type}
       -- | The signed message to verify.
-      -> SignedMessage
+      -> (signedMessage : SignedMessage)
       -- | The signer external identity to verify against.
-      -> ExternalIdentity
+      -> (signer : ExternalIdentity)
       -- | The original message.
       -> Maybe Message
     | (mkSignedMessage signedMessage) externalIdentity :=
@@ -71,9 +71,9 @@ module NonDetached;
   sign
     : {Message : Type}
       -- | The message to sign.
-      -> Message
+      -> (message : Message)
       -- | The signing internal identity.
-      -> InternalIdentity
+      -> (signer : InternalIdentity)
       -- | The resulting signed message.
       -> SignedMessage
     | message internalIdentity :=
