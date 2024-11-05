@@ -6,5 +6,5 @@ package : Package :=
   defaultPackage@?{
     name := "juvix-arm-specs";
     version := mkVersion 2 0 0;
-    dependencies := [github "anoma" "juvix-stdlib" "37d3dd74b78f0ec0c48c8adc44f5b99c6d068464"]
+    dependencies := [github "anoma" "juvix-stdlib" "8bc67b874860a26cba02d853b879e9c0a347efe2"]
   };
