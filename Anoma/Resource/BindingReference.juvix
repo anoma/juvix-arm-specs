@@ -21,9 +21,9 @@ trait
 type BindingReference DataType RefType :=
   mkBindingReference@{
     --- Computes the binding reference (RefType) from the data (DataType).
-    compute : DataType -> RefType;
+    compute : (data : DataType) -> RefType;
     --- Checks whether a particular piece of data matches a binding reference.
-    check : RefType -> DataType -> Bool;
+    check : (reference : RefType) -> (data : DataType) -> Bool;
   };
 
 --- Implements the ;BindingReference; trait for ;Label;.
@@ -50,15 +50,27 @@ Value-BindingReference : BindingReference Value ValueRef :=
     check := MISSING_JUVIX_IMPLEMENTATION;
   };
 
-RefNotFoundError : {A : Type} → A :=
-  failwith "The referenced data could not be found.";
-
-RefDataMismatchError : {A : Type} → A :=
-  failwith "The fetched data does not match the referenced data.";
-
-lookupFromRefernce
+lookupFromReference
   {DataType}
   {RefType}
   {{BindingReference DataType RefType}}
-  (bindingRef : RefType)
+  (reference : RefType)
   : Maybe DataType := MISSING_JUVIX_IMPLEMENTATION;
+
+lookupFromReferenceChecked
+  {DataType}
+  {RefType}
+  {{BindingReference DataType RefType}}
+  (reference : RefType)
+  : DataType :=
+  case
+    lookupFromReference@{
+      reference;
+    }
+  of
+    | nothing := failwith "The referenced data could not be found."
+    | just data :=
+      if
+        | BindingReference.check reference data := data
+        | else :=
+          failwith "The fetched data does not match the referenced data.";
