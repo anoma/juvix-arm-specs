@@ -2,7 +2,12 @@ module Anoma.Resource.Types;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Anoma.Builtin.ByteArray open using {ByteArray};
+import Anoma.Builtin.ByteArray open using {
+  ByteArray;
+  FixedSize;
+  mkFixedSize;
+  AnomaEncoded;
+};
 import Anoma.Builtin.System open using {anomaEncode; AnomaOpaque};
 import Anoma.Utils open;
 
@@ -27,11 +32,14 @@ type NullifierKeyCommitment :=
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating, e.g., a pseudo-random number.
-type Nonce := mkNonce@{unNonce : Nat};
+type Nonce := mkNonce@{unNonce : AnomaEncoded};
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
-type RandSeed := mkRandSeed@{unRandSeed : Nat};
+type RandSeed := mkRandSeed@{unRandSeed : AnomaEncoded};
+
+--- The size of bytes.
+randSeedBytesSize : AnomaEncoded := 32;
 
 --- The resource label type.
 type Label := mkLabel@{unLabel : Nat};
@@ -169,6 +177,9 @@ module NullifierKeyCommitmentInternal;
 end;
 
 module NonceInternal;
+  instance
+  Nonce-FixedSize : FixedSize Nonce := mkFixedSize 32;
+
   --- Compares two ;Nonce; objects.
   compare (lhs rhs : Nonce) : Ordering :=
     Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
@@ -183,6 +194,8 @@ module NonceInternal;
 end;
 
 module RandSeedInternal;
+  RandSeed-FixedSize : FixedSize RandSeed := mkFixedSize 32;
+
   --- Compares two ;RandSeed; objects.
   compare (lhs rhs : RandSeed) : Ordering :=
     Ord.cmp (RandSeed.unRandSeed lhs) (RandSeed.unRandSeed rhs);

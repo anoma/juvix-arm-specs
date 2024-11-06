@@ -3,6 +3,9 @@ module Anoma.Builtin.ByteArray;
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 
+trait
+type FixedSize T := mkFixedSize@{sizeOf : Nat};
+
 builtin bytearray
 axiom ByteArray : Type;
 
@@ -13,6 +16,7 @@ builtin bytearray-length
 axiom length : ByteArray -> Nat;
 
 -- TODO Should be moved into base.
+-- TODO Should we use `AnomaEncoded : Type := Nat;` here?
 syntax alias AnomaEncoded := Nat;
 
 builtin anoma-bytearray-to-anoma-contents

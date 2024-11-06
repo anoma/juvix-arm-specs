@@ -2,6 +2,7 @@ module Anoma.Random;
 
 import Stdlib.Prelude open;
 import Anoma.Builtin.ByteArray as ByteArray open using {ByteArray};
+import Anoma.Builtin.ByteArray open;
 import Anoma.Builtin.System as SystemBuiltins;
 import Anoma.Builtin.System open using {
   PseudoRandomNumberGenerator;
@@ -33,16 +34,36 @@ pseudoRandomNumberGeneratorSplit (generator : PRNG) : Pair PRNG PRNG :=
 
 syntax alias prngSplit := pseudoRandomNumberGeneratorSplit;
 
---- Generates pseudo-random bytes ;ByteArray; of the specified length and returns the updated PRNG.
---- @param length The number of output bytes to generate.
+--- Generates pseudo-random bytes ;ByteArray; of the specified size and returns the updated PRNG.
+--- @param bytesSize The number of output bytes to generate.
 --- @param generator The generator to use.
 --- @return A pair containing the random number and the advanced PRNG.
 {-# inline: true #-}
 pseudoRandomNumberGeneratorNextBytes
-  (length : Nat) (generator : PRNG) : Pair ByteArray PRNG :=
-  SystemBuiltins.pseudoRandomNumberGeneratorNextBytes length generator;
+  (bytesSize : Nat) (generator : PRNG) : Pair ByteArray PRNG :=
+  SystemBuiltins.pseudoRandomNumberGeneratorNextBytes bytesSize generator;
 
 syntax alias prngNextBytes := pseudoRandomNumberGeneratorNextBytes;
+
+--- Generate a ;List; of `n` pseudo-random ;ByteArray;s of size `bytesSize` starting
+--- with a given `generator`.
+--- @param n The the number of nonces to generate.
+--- @param generator The generator to use.
+--- @return A pair containing the random byte arrays and the advanced PRNG.
+pseudoRandomNumberGeneratorNextNBytes
+  (n : Nat) (bytesSize : Nat) (generator : PRNG) : Pair (List ByteArray) PRNG :=
+  let
+    update (acc : Pair (List ByteArray) PRNG) : Pair (List ByteArray) PRNG :=
+      let
+        next :=
+          prngNextBytes@{
+            bytesSize;
+            generator := snd acc;
+          };
+      in fst next :: fst acc, snd next;
+  in iterate n update ([], generator);
+
+syntax alias prngNextNBytes := pseudoRandomNumberGeneratorNextNBytes;
 
 --- Generates a pseudo-random nonce ;Nonce; and returns the updated PRNG.
 --- @param generator The generator to use.
@@ -52,45 +73,25 @@ generateNonce (generator : PRNG) : Pair Nonce PRNG :=
     fun := ByteArray.toAnomaEncoded >> mkNonce;
     pair :=
       prngNextBytes@{
-        length := 32;
+        bytesSize := FixedSize.sizeOf {Nonce};
         generator;
       };
   };
 
 --- Generates a ;List; of pseudo-random nonces ;Nonce; and returns the updated PRNG.
---- @param count The the number of nonces to generate
+--- @param n The the number of nonces to generate.
 --- @param generator The generator to use.
---- @return A pair containing a list of nonces and the advanced PRNG.
+--- @return A pair containing the nonces and the advanced PRNG.
 generateNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
   let
-    last {A} (defaultValue : A) (list : List A) : A :=
-      head defaultValue (reverse list);
-
-    noncesAndPrngs :=
-      listFor (acc := []) (_ in replicate n 0) {
-        let
-          lastPrng :=
-            last@{
-              defaultValue := generator;
-              list := map snd acc;
-            };
-        in snoc acc (generateNonce lastPrng)
+    pair : Pair (List ByteArray) PRNG :=
+      prngNextNBytes@{
+        n;
+        bytesSize := FixedSize.sizeOf {Nonce};
+        generator;
       };
-
-    nonces :=
-      listFor (acc := []) (pair in noncesAndPrngs) {
-        snoc acc (fst pair)
-      };
-    prngs :=
-      listFor (acc := []) (pair in noncesAndPrngs) {
-        snoc acc (snd pair)
-      };
-
-    lastGenerator :=
-      last@{
-        defaultValue := generator;
-        list := prngs;
-      };
-  in nonces, lastGenerator;
+    fun := ByteArray.toAnomaEncoded >> mkNonce;
+    nonces := map fun (fst pair);
+  in nonces, snd pair;
 
 UnusedRandSeed : RandSeed := mkRandSeed 0;
