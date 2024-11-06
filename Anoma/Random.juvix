@@ -97,7 +97,7 @@ generateNextNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
 --- Generates a pseudo-random nonce from a randomness seed.
 --- @param randSeed The randomness seed for the PRNG.
 --- @return The nonce.
-generatePseudoRandomNonce (randSeed : RandSeed) : Nonce :=
+generateNonce (randSeed : RandSeed) : Nonce :=
   fst
     generateNextNonce@{
       generator := prngInit randSeed;
@@ -107,7 +107,7 @@ generatePseudoRandomNonce (randSeed : RandSeed) : Nonce :=
 --- @param n The the number of nonces to generate.
 --- @param randSeed The randomness seed for the PRNG.
 --- @return The list of nonces.
-generatePseudoRandomNonces (n : Nat) (randSeed : RandSeed) : List Nonce :=
+generateNonces (n : Nat) (randSeed : RandSeed) : List Nonce :=
   fst
     generateNextNonces@{
       n;
