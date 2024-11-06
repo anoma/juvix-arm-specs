@@ -68,7 +68,7 @@ syntax alias prngNextNBytes := pseudoRandomNumberGeneratorNextNBytes;
 --- Generates a pseudo-random nonce ;Nonce; and returns the updated PRNG.
 --- @param generator The generator to use.
 --- @return A pair containing the random number and the advanced PRNG.
-generateNonce (generator : PRNG) : Pair Nonce PRNG :=
+generateNextNonce (generator : PRNG) : Pair Nonce PRNG :=
   first@{
     fun := ByteArray.toAnomaEncoded >> mkNonce;
     pair :=
@@ -82,7 +82,7 @@ generateNonce (generator : PRNG) : Pair Nonce PRNG :=
 --- @param n The the number of nonces to generate.
 --- @param generator The generator to use.
 --- @return A pair containing the nonces and the advanced PRNG.
-generateNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
+generateNextNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
   let
     pair : Pair (List ByteArray) PRNG :=
       prngNextNBytes@{
@@ -93,5 +93,25 @@ generateNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
     fun := ByteArray.toAnomaEncoded >> mkNonce;
     nonces := map fun (fst pair);
   in nonces, snd pair;
+
+--- Generates a pseudo-random nonce from a randomness seed.
+--- @param randSeed The randomness seed for the PRNG.
+--- @return The nonce.
+generatePseudoRandomNonce (randSeed : RandSeed) : Nonce :=
+  fst
+    generateNextNonce@{
+      generator := prngInit randSeed;
+    };
+
+--- Generates a list of pseudo-random nonces from a randomness seed.
+--- @param n The the number of nonces to generate.
+--- @param randSeed The randomness seed for the PRNG.
+--- @return The list of nonces.
+generatePseudoRandomNonces (n : Nat) (randSeed : RandSeed) : List Nonce :=
+  fst
+    generateNextNonces@{
+      n;
+      generator := prngInit randSeed;
+    };
 
 UnusedRandSeed : RandSeed := mkRandSeed 0;
