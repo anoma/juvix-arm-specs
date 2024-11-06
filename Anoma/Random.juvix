@@ -7,14 +7,20 @@ import Anoma.Builtin.System open using {
   PseudoRandomNumberGenerator;
   PRNG;
 } public;
-import Anoma.Resource.Types open using {Nonce; mkNonce};
+import Anoma.Resource.Types open using {
+  Nonce;
+  mkNonce;
+  RandSeed;
+  mkRandSeed;
+  module RandSeed;
+};
 
 --- Creates and initializes a pure PRNG with a seed.
 --- @param seed The seed.
 --- @return The initialized PRNG.
 {-# inline: true #-}
-pseudoRandomNumberGeneratorInit (seed : Nat) : PRNG :=
-  SystemBuiltins.pseudoRandomNumberGeneratorInit seed;
+pseudoRandomNumberGeneratorInit (randSeed : RandSeed) : PRNG :=
+  SystemBuiltins.pseudoRandomNumberGeneratorInit (RandSeed.unRandSeed randSeed);
 
 syntax alias prngInit := pseudoRandomNumberGeneratorInit;
 
@@ -27,32 +33,39 @@ pseudoRandomNumberGeneratorSplit (generator : PRNG) : Pair PRNG PRNG :=
 
 syntax alias prngSplit := pseudoRandomNumberGeneratorSplit;
 
---- Generates a random number and returns the update PRNG.
+--- Generates pseudo-random bytes ;ByteArray; of the specified length and returns the updated PRNG.
 --- @param outputBytes The number of output bytes to generate.
 --- @param generator The generator to use.
 --- @return A pair containing the random number and the advanced PRNG.
 {-# inline: true #-}
 pseudoRandomNumberGeneratorNextBytes
-  (outputBytes : Nat) (generator : PRNG) : Pair ByteArray PRNG :=
-  SystemBuiltins.pseudoRandomNumberGeneratorNextBytes outputBytes generator;
+  (length : Nat) (generator : PRNG) : Pair ByteArray PRNG :=
+  SystemBuiltins.pseudoRandomNumberGeneratorNextBytes length generator;
 
 syntax alias prngNextBytes := pseudoRandomNumberGeneratorNextBytes;
 
-pseudoRandomBytes32Nat (generator : PRNG) : Pair Nat PRNG :=
+--- Generates a pseudo-random nonce ;Nonce; and returns the updated PRNG.
+--- @param outputBytes The number of output bytes to generate.
+--- @param generator The generator to use.
+--- @return A pair containing the random number and the advanced PRNG.
+generateNonce (generator : PRNG) : Pair Nonce PRNG :=
   first@{
-    fun := ByteArray.toAnomaEncoded;
+    fun := ByteArray.toAnomaEncoded >> mkNonce;
     pair :=
       prngNextBytes@{
-        outputBytes := 32;
+        length := 32;
         generator;
       };
   };
 
-generateNonce (generator : PRNG) : Pair Nonce PRNG :=
+generateRandSeed (generator : PRNG) : Pair RandSeed PRNG :=
   first@{
-    fun := mkNonce;
+    fun := ByteArray.toAnomaEncoded >> mkRandSeed;
     pair :=
-      pseudoRandomBytes32Nat@{
+      prngNextBytes@{
+        length := 32;
         generator;
       };
   };
+
+UnusedRandSeed : RandSeed := mkRandSeed 0;
