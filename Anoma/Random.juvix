@@ -34,7 +34,7 @@ pseudoRandomNumberGeneratorSplit (generator : PRNG) : Pair PRNG PRNG :=
 syntax alias prngSplit := pseudoRandomNumberGeneratorSplit;
 
 --- Generates pseudo-random bytes ;ByteArray; of the specified length and returns the updated PRNG.
---- @param outputBytes The number of output bytes to generate.
+--- @param length The number of output bytes to generate.
 --- @param generator The generator to use.
 --- @return A pair containing the random number and the advanced PRNG.
 {-# inline: true #-}
@@ -45,7 +45,6 @@ pseudoRandomNumberGeneratorNextBytes
 syntax alias prngNextBytes := pseudoRandomNumberGeneratorNextBytes;
 
 --- Generates a pseudo-random nonce ;Nonce; and returns the updated PRNG.
---- @param outputBytes The number of output bytes to generate.
 --- @param generator The generator to use.
 --- @return A pair containing the random number and the advanced PRNG.
 generateNonce (generator : PRNG) : Pair Nonce PRNG :=
@@ -58,14 +57,40 @@ generateNonce (generator : PRNG) : Pair Nonce PRNG :=
       };
   };
 
-generateRandSeed (generator : PRNG) : Pair RandSeed PRNG :=
-  first@{
-    fun := ByteArray.toAnomaEncoded >> mkRandSeed;
-    pair :=
-      prngNextBytes@{
-        length := 32;
-        generator;
+--- Generates a ;List; of pseudo-random nonces ;Nonce; and returns the updated PRNG.
+--- @param count The the number of nonces to generate
+--- @param generator The generator to use.
+--- @return A pair containing a list of nonces and the advanced PRNG.
+generateNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
+  let
+    last {A} (defaultValue : A) (list : List A) : A :=
+      head defaultValue (reverse list);
+
+    noncesAndPrngs :=
+      listFor (acc := []) (_ in replicate n 0) {
+        let
+          lastPrng :=
+            last@{
+              defaultValue := generator;
+              list := map snd acc;
+            };
+        in snoc acc (generateNonce lastPrng)
       };
-  };
+
+    nonces :=
+      listFor (acc := []) (pair in noncesAndPrngs) {
+        snoc acc (fst pair)
+      };
+    prngs :=
+      listFor (acc := []) (pair in noncesAndPrngs) {
+        snoc acc (snd pair)
+      };
+
+    lastGenerator :=
+      last@{
+        defaultValue := generator;
+        list := prngs;
+      };
+  in nonces, lastGenerator;
 
 UnusedRandSeed : RandSeed := mkRandSeed 0;
