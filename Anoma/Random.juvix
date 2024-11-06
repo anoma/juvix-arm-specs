@@ -37,22 +37,3 @@ pseudoRandomNumberGeneratorNextBytes
   SystemBuiltins.pseudoRandomNumberGeneratorNextBytes outputBytes generator;
 
 syntax alias prngNextBytes := pseudoRandomNumberGeneratorNextBytes;
-
-pseudoRandomBytes32Nat (generator : PRNG) : Pair Nat PRNG :=
-  first@{
-    fun := ByteArray.toAnomaEncoded;
-    pair :=
-      prngNextBytes@{
-        outputBytes := 32;
-        generator;
-      };
-  };
-
-generateNonce (generator : PRNG) : Pair Nonce PRNG :=
-  first@{
-    fun := mkNonce;
-    pair :=
-      pseudoRandomBytes32Nat@{
-        generator;
-      };
-  };
