@@ -6,11 +6,5 @@ package : Package :=
   defaultPackage@?{
     name := "juvix-arm-transparent";
     version := mkVersion 2 0 0;
-    dependencies :=
-      [
-        github
-          "anoma"
-          "juvix-stdlib"
-          "8bc67b874860a26cba02d853b879e9c0a347efe2";
-      ];
+    dependencies := [github "anoma" "juvix-stdlib" "v0.8.0"];
   };
