@@ -11,6 +11,8 @@ UNUSED : Type := Unit;
 --- NOTE: This can be used in instantiated interfaces for type parameters that are not unknown.
 STILL_MISSING_DEFINITION : Type := Unit;
 
+MISSING_SIZE : Nat := 0;
+
 --- A placeholder for an implementation that is not required for the private testnet.
 NOT_REQUIRED : {A : Type} → A :=
   failwith "THIS IS NOT REQUIRED FOR THE PRIVATE TESTNET";

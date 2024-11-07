@@ -2,13 +2,9 @@ module Anoma.Resource.Types;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Anoma.Builtin.ByteArray open using {
-  ByteArray;
-  FixedSize;
-  mkFixedSize;
-  AnomaEncoded;
-};
+import Anoma.Builtin.ByteArray open using {ByteArray; AnomaEncoded};
 import Anoma.Builtin.System open using {anomaEncode; AnomaOpaque};
+import Anoma.Primitives.FixedSize open;
 import Anoma.Utils open;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
@@ -161,6 +157,11 @@ module QuantityInternal;
 end;
 
 module NullifierKeyCommitmentInternal;
+  --- Implements the ;FixedSize; trait for ;NullifierKeyCommitment;.
+  instance
+  NullifierKeyCommitment-FixedSize : FixedSize NullifierKeyCommitment :=
+    mkFixedSize 32;
+
   --- Compares two ;NullifierKeyCommitment; objects.
   compare (lhs rhs : NullifierKeyCommitment) : Ordering :=
     Ord.cmp
@@ -177,6 +178,7 @@ module NullifierKeyCommitmentInternal;
 end;
 
 module NonceInternal;
+  --- Implements the ;FixedSize; trait for ;Nonce;.
   instance
   Nonce-FixedSize : FixedSize Nonce := mkFixedSize 32;
 
@@ -194,6 +196,8 @@ module NonceInternal;
 end;
 
 module RandSeedInternal;
+  --- Implements the ;FixedSize; trait for ;RandSeed;.
+  instance
   RandSeed-FixedSize : FixedSize RandSeed := mkFixedSize 32;
 
   --- Compares two ;RandSeed; objects.
@@ -233,4 +237,21 @@ module NullifierInternal;
   --- Implements the ;Eq; trait for ;Nullifier;.
   instance
   Nullifier-Eq : Eq Nullifier := fromOrdToEq;
+end;
+
+module NullifierKeyInternal;
+  --- Implements the ;FixedSize; trait for ;NullifierKey;.
+  instance
+  NullifierKey-FixedSize : FixedSize NullifierKey := mkFixedSize 64;
+
+  --- Compares two ;NullifierKey; and returns their ;Ordering;.
+  compare (lhs rhs : NullifierKey) : Ordering := STILL_MISSING_ANOMA_BUILTIN;
+
+  --- Implements the ;Ord; trait for ;Nullifier;.
+  instance
+  NullifierKey-Ord : Ord NullifierKey := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;Nullifier;.
+  instance
+  NullifierKey-Eq : Eq NullifierKey := fromOrdToEq;
 end;

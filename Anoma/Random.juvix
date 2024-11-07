@@ -1,8 +1,8 @@
 module Anoma.Random;
 
 import Stdlib.Prelude open;
+import Anoma.Primitives.FixedSize open;
 import Anoma.Builtin.ByteArray as ByteArray open using {ByteArray};
-import Anoma.Builtin.ByteArray open;
 import Anoma.Builtin.System as SystemBuiltins;
 import Anoma.Builtin.System open using {
   PseudoRandomNumberGenerator;
@@ -73,7 +73,7 @@ generateNextNonce (generator : PRNG) : Pair Nonce PRNG :=
     fun := ByteArray.toAnomaEncoded >> mkNonce;
     pair :=
       prngNextBytes@{
-        bytesSize := FixedSize.sizeOf {Nonce};
+        bytesSize := FixedSize.byteSize {Nonce};
         generator;
       };
   };
@@ -87,7 +87,7 @@ generateNextNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
     pair : Pair (List ByteArray) PRNG :=
       prngNextNBytes@{
         n;
-        bytesSize := FixedSize.sizeOf {Nonce};
+        bytesSize := FixedSize.byteSize {Nonce};
         generator;
       };
     fun := ByteArray.toAnomaEncoded >> mkNonce;

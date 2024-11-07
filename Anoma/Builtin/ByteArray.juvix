@@ -3,9 +3,6 @@ module Anoma.Builtin.ByteArray;
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 
-trait
-type FixedSize T := mkFixedSize@{sizeOf : Nat};
-
 builtin bytearray
 axiom ByteArray : Type;
 
