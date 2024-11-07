@@ -103,6 +103,16 @@ generateNonce (randSeed : RandSeed) : Nonce :=
       generator := prngInit randSeed;
     };
 
+--- Generates a pair of pseudo-random nonces from a randomness seed.
+--- @param randSeed The randomness seed for the PRNG.
+--- @return The pair of nonces.
+generateNoncePair (randSeed : RandSeed) : Pair Nonce Nonce :=
+  let
+    nonceAndPrng := generateNextNonce (prngInit (randSeed));
+    nonce1 := fst nonceAndPrng;
+    nonce2 := fst (generateNextNonce (snd nonceAndPrng));
+  in nonce1, nonce2;
+
 --- Generates a list of pseudo-random nonces from a randomness seed.
 --- @param n The the number of nonces to generate.
 --- @param randSeed The randomness seed for the PRNG.
