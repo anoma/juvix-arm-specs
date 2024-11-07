@@ -157,9 +157,7 @@ module NullifierKeyCommitmentInternal;
   --- Implements the ;FixedSize; trait for ;NullifierKeyCommitment;.
   instance
   NullifierKeyCommitment-FixedSize : FixedSize NullifierKeyCommitment :=
-    mkFixedSize@{
-      byteSize := 32;
-    };
+    mkFixedSize 32;
 
   --- Compares two ;NullifierKeyCommitment; objects.
   compare (lhs rhs : NullifierKeyCommitment) : Ordering :=
@@ -179,10 +177,7 @@ end;
 module NonceInternal;
   --- Implements the ;FixedSize; trait for ;Nonce;.
   instance
-  Nonce-FixedSize : FixedSize Nonce :=
-    mkFixedSize@{
-      byteSize := 32;
-    };
+  Nonce-FixedSize : FixedSize Nonce := mkFixedSize 32;
 
   --- Compares two ;Nonce; objects.
   compare (lhs rhs : Nonce) : Ordering :=
@@ -200,10 +195,7 @@ end;
 module RandSeedInternal;
   --- Implements the ;FixedSize; trait for ;RandSeed;.
   instance
-  RandSeed-FixedSize : FixedSize RandSeed :=
-    mkFixedSize@{
-      byteSize := 32;
-    };
+  RandSeed-FixedSize : FixedSize RandSeed := mkFixedSize 32;
 
   --- Compares two ;RandSeed; objects.
   compare (lhs rhs : RandSeed) : Ordering :=
@@ -247,10 +239,7 @@ end;
 module NullifierKeyInternal;
   --- Implements the ;FixedSize; trait for ;NullifierKey;.
   instance
-  NullifierKey-FixedSize : FixedSize NullifierKey :=
-    mkFixedSize@{
-      byteSize := 64;
-    };
+  NullifierKey-FixedSize : FixedSize NullifierKey := mkFixedSize 64;
 
   --- Compares two ;NullifierKey; and returns their ;Ordering;.
   compare (lhs rhs : NullifierKey) : Ordering := STILL_MISSING_ANOMA_BUILTIN;
