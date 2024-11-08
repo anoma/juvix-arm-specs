@@ -8,6 +8,7 @@ import Anoma.Resource.Object open using {Resource};
 import Anoma.Resource.Types open using {Commitment; Nullifier};
 import Anoma.Resource.Tag open using {Tag};
 import Anoma.Transaction.AppData open using {AppData};
+import Anoma.Transaction.CustomInputs open using {CustomInputs};
 import Anoma.Utils open;
 import Anoma.Builtin.System open;
 
@@ -25,10 +26,6 @@ type Instance :=
     nullifiers : Set Nullifier;
     appData : AppData;
   };
-
---- Custom inputs of the resource logic function proof being defined on the application level.
---- NOTE: For the private testnet, this can be of type ;AppData;.
-CustomInputs : Type := AppData;
 
 --- The private inputs (Witness) of the resource logic function proof.
 type Witness :=

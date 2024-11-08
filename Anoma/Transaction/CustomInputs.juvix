@@ -1,0 +1,50 @@
+module Anoma.Transaction.CustomInputs;
+
+import Stdlib.Prelude open;
+import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+import Stdlib.Data.Map as Map open using {Map};
+import Anoma.Builtin.ByteArray open using {ByteArray};
+import Anoma.Utils open;
+
+--- A data type encoding the lookup key of application.
+type CustomInputsKey := mkCustomInputsKey@{unCustomInputsKey : ByteArray};
+
+--- A data type encoding the lookup value of application data.
+type CustomInputsValue := mkCustomInputsValue@{unCustomInputsValue : ByteArray};
+
+--- A type describing an app data map.
+CustomInputs : Type := Map CustomInputsKey CustomInputsValue;
+
+--- A module implementing traits for ;CustomInputsKey;.
+module CustomInputsKeyInternal;
+  --- Compares two ;CustomInputsKey;s.
+  compare (lhs rhs : CustomInputsKey) : Ordering :=
+    Ord.cmp
+      (CustomInputsKey.unCustomInputsKey lhs)
+      (CustomInputsKey.unCustomInputsKey rhs);
+
+  --- Implements the ;Ord; trait for ;CustomInputsKey;.
+  instance
+  CustomInputsKey-Ord : Ord CustomInputsKey := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;CustomInputsKey;.
+  instance
+  CustomInputsKey-Eq : Eq CustomInputsKey := fromOrdToEq;
+end;
+
+--- A module implementing traits for ;CustomInputsValue;.
+module CustomInputsValueInternal;
+  --- Compares two ;CustomInputsValue;s.
+  compare (lhs rhs : CustomInputsValue) : Ordering :=
+    Ord.cmp
+      (CustomInputsValue.unCustomInputsValue lhs)
+      (CustomInputsValue.unCustomInputsValue rhs);
+
+  --- Implements the ;Ord; trait for ;CustomInputsValue;.
+  instance
+  CustomInputsValue-Ord : Ord CustomInputsValue := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;CustomInputsValue;.
+  instance
+  CustomInputsValue-Eq : Eq CustomInputsValue := fromOrdToEq;
+end;

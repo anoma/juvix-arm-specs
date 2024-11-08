@@ -2,25 +2,40 @@ module Anoma.Transaction.AppData;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Stdlib.Data.Set as Set open using {Set};
+import Stdlib.Data.Map as Map open using {Map};
+import Anoma.Builtin.ByteArray open using {ByteArray};
 import Anoma.Utils open;
 
---- A fixed-size data type encoding the lookup key of application.
-type AppDataKey := mkAppDataKey@{unAppDataKey : Nat};
+--- A data type encoding the deletion criterion.
+-- TODO Add enumeration from the specs.
+type DeletionCriterion :=
+  | AfterBlock STILL_MISSING_DEFINITION
+  | AfterTimestamp STILL_MISSING_DEFINITION
+  | AfterSignatureOverData STILL_MISSING_DEFINITION
+  | AfterPredicates STILL_MISSING_DEFINITION
+  | StoreForever STILL_MISSING_DEFINITION;
 
---- A fixed-size data type encoding the lookup value of application data.
-type AppDataValue := mkAppDataValue@{unAppDataValue : Nat};
+--- A data type encoding the lookup key of application.
+type AppDataKey := mkAppDataKey@{unAppDataKey : ByteArray};
 
---- A type describing an app data map entry.
-type AppDataEntry :=
-  mkAppDataEntry@{
-    key : AppDataKey;
-    value : AppDataValue;
-  };
+--- A data type encoding the lookup value of application data.
+type AppDataValue :=
+  mkAppDataValue@{unAppDataValue : Pair ByteArray DeletionCriterion};
 
 --- A type describing an app data map.
-AppData : Type := Set AppDataEntry;
---
+AppData : Type := Map AppDataKey AppDataValue;
+
+module DeletionCriterionInternal;
+  axiom compare : DeletionCriterion -> DeletionCriterion -> Ordering;
+
+  --- Implements the ;Ord; trait for ;DeletionCriterion;.
+  instance
+  DeletionCriterion-Ord : Ord DeletionCriterion := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;DeletionCriterion;.
+  instance
+  DeletionCriterion-Eq : Eq DeletionCriterion := fromOrdToEq;
+end;
 
 --- A module implementing traits for ;AppDataKey;.
 module AppDataKeyInternal;
@@ -50,22 +65,4 @@ module AppDataValueInternal;
   --- Implements the ;Eq; trait for ;AppDataValue;.
   instance
   AppDataValue-Eq : Eq AppDataValue := fromOrdToEq;
-end;
-
---- A module implementing traits for ;AppDataEntry;.
-module AppDataEntryInternal;
-  --- Compares two ;AppDataEntry;s.
-  compare (lhs rhs : AppDataEntry) : Ordering :=
-    let
-      prod (entry : AppDataEntry) : _ :=
-        AppDataEntry.key entry, AppDataEntry.value entry;
-    in Ord.cmp (prod lhs) (prod rhs);
-
-  --- Implements the ;Ord; trait for ;AppDataEntry;.
-  instance
-  AppDataEntry-Ord : Ord AppDataEntry := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;AppDataEntry;.
-  instance
-  AppDataEntry-Eq : Eq AppDataEntry := fromOrdToEq;
 end;
