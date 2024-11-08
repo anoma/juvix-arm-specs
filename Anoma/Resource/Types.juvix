@@ -3,6 +3,7 @@ module Anoma.Resource.Types;
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Primitives.FixedSize open;
+import Anoma.Builtin.ByteArray open;
 import Anoma.Utils open;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
@@ -26,11 +27,11 @@ type NullifierKeyCommitment :=
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
-type Nonce := mkNonce@{unNonce : MISSING_DEFINITION};
+type Nonce := mkNonce@{unNonce : ByteArray};
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
-type RandSeed := mkRandSeed@{unRandSeed : MISSING_DEFINITION};
+type RandSeed := mkRandSeed@{unRandSeed : ByteArray};
 
 --- The resource label type.
 type Label := mkLabel@{unLabel : MISSING_DEFINITION};
