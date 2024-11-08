@@ -1,0 +1,308 @@
+{-- This module contains the _base interface_ for the Anoma Resource Machine.
+
+The _base interface_ describes the interface exposed by the transparent
+instantiation of the RM specification.
+
+A higher-level interace that is transformed to this base interface will be
+provided to Application developers.
+
+The base interface does not include the standard library functions (signing,
+encoding, hashing) that application developers will require to develop
+applications.
+
+In what follows _RM instantiation_ refers to the Elixir transparent RM instantiation.
+
+Axioms are used for functions that are provided by the RM instantiation.
+
+Links to the RM specification are provided for each data type field and function.
+
+Questions about the RM specification are marked with 'SPEC_QUESTION'.
+Questions about the RM instantiation are marked with 'INST_QUESTION'.
+
+https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/index.md --}
+module Anoma.Base;
+
+import Stdlib.Prelude open;
+import Anoma.Base.Set as Set open using {Set};
+
+--- A module containing Nock types used in the interface.
+---
+--- Stanard Juvix types (e.g Bool and Nat) are used in the interface where the
+--- semantics of the Juvix type and the Nock type are the same (e.g a boolean flag).
+module Nock;
+  --- A type representing a Nock atom.
+  Atom : Type := Nat;
+
+  --- The Nock encoding of a ByteArray.
+  type ByteArray :=
+    mkByteArray@{
+      --- The number of bytes in the ByteArray.
+      length : Atom;
+      --- The bytes of the ByteArray represented as an ;Atom; in little-endian byte ordering.
+      payload : Atom;
+    };
+end;
+
+--- A module containing opaque types whose values can only be constructed using
+--- RM instantiation functions and values provided by the RM instantiation.
+---
+--- INST_QUESTION: Can we assume that Kind, Commitment, Proof and
+--- Delta types etc. are ;Nock.Atom;s so we don't need to make them builtin axioms?
+module Opaque;
+  axiom Kind : Type;
+
+  -- We need access to the underlying atom for Commitment and Nullifier to
+  -- construct a public input tag.
+  type Commitment := private-mkCommitment Nock.Atom;
+
+  type Nullifier := private-mkNullifier Nock.Atom;
+
+  axiom Delta : Type;
+
+  axiom Proof : Type;
+
+  axiom CommitmentTreeRoot : Type;
+
+  --- The zero value of `Opaque.Delta`.
+  -- This is not in the specification but is used to initialize delta fields.
+  axiom zeroDelta : Delta;
+end;
+
+-- Add opaque types to the scope for convenience.
+open Opaque public;
+
+--- A module containing data types and functions related to actions.
+--- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/action.md
+module Action;
+
+  type AppDataValue :=
+    mkAppDataValue@{
+      value : Nock.Atom;
+      -- SPEC_QUESTION: Is the deletion criterion required?
+      deletionCriterion : Nock.Atom;
+    };
+
+  type AppDataElement :=
+    mkAppDataElement@{
+      key : Nock.Atom;
+      value : AppDataValue;
+    };
+
+  type Action :=
+    mkAction@{
+      --- A set of created resources commitments.
+      commitments : Set Commitment;
+      --- A set of consumed resources nullifiers.
+      nullifiers : Set Nullifier;
+      --- A set of proofs.
+      -- INST_QUESTION: How do you / do you need to distinguish between the different types of proofs?
+      proofs : Set Proof;
+      --- Application specific data needed to create resource logic proofs.
+      -- SPEC_QUESTION, INST_QUESTION: The RM instantiation does not enforce
+      -- this type, it accepts any data. Does this need to be specified?
+      appData : Set AppDataElement;
+    };
+
+  -- Add the Action and AppData projection functions to the scope for convenience.
+  open Action public;
+
+  --- Compute the delta for an action.
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/action.md?plain=1#L79
+  axiom delta : Action -> Delta;
+
+  --- Compute a compliance proof for the Action.
+  axiom prove : Action -> Proof;
+
+end;
+
+-- Add the Action types and constructors to the scope for convenience.
+open Action using {
+  Action;
+  mkAction;
+  AppDataElement;
+  module AppDataElement;
+  mkAppDataElement;
+  AppDataValue;
+  module AppDataValue;
+  mkAppDataValue;
+} public;
+
+--- A module containing data types and functions related to resources.
+--- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/definition.md
+module Resource;
+
+  -- SPEC_QUESTION: Is this a valid signature for a resource logic function?
+  Logic : Type := PublicInputs -> PrivateInputs -> Bool;
+
+  Label : Type := Nock.Atom;
+
+  Value : Type := Nock.ByteArray;
+
+  Quantity : Type := Nat;
+
+  NullifierKeyCommitment : Type := Nock.Atom;
+
+  Nonce : Type := Nock.Atom;
+
+  RSeed : Type := Nock.Atom;
+
+  positive
+  type Resource :=
+    mkResource@{
+      --- A 'succinct' representation of the resource logic.
+      logic : Logic;
+      --- Specifies the fungibility domain for the resource.
+      label : Label;
+      --- A number representing the quentity of the resource.
+      quantity : Quantity;
+      --- The fungible data associated with the resource.
+      value : Value;
+      --- A flag that reflects the resource's ephemerality.
+      isEphemeral : Bool;
+      --- Guarantees the uniqueness of the resource computable components.
+      ---
+      --- NOTE: This should be a number having an at most negligible chance of
+      --- repeating is sufficient, e.g., a pseudo-random number.
+      nonce : Nonce;
+      --- The public commitment to the private nullifier key.
+      nullifierKeyCommitment : NullifierKeyCommitment;
+      --- Randomness seed
+      ---
+      --- NOTE: This seed provides pseudo randomness and cannot be expected to
+      --- provide true randomness.
+      rseed : RSeed;
+    };
+
+  --- Types related to the resource logic
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/function_formats/resource_logic.md?plain=1#L8
+  positive
+  type PublicInputs :=
+    mkPublicInputs@{
+      commitments : Set Commitment;
+      nullifiers : Set Nullifier;
+      -- In the RM instantiation tag is equal to exactly one commitment or
+      -- nullifier.
+      tag : Nock.Atom;
+      -- SPEC_QUESTION, INST_QUESTION: The RM instantiation does not enforce
+      -- this type, it accepts any data. Does this need to be specified?
+      appData : Set AppDataElement;
+    };
+
+  positive
+  type PrivateInputs :=
+    mkPrivateInputs@{
+      created : Set Resource;
+      consumed : Set Resource;
+      -- The value of customInputs is an anomaEncoded (jammed) value of some
+      -- application specific data type.
+      customInputs : Nock.Atom;
+    };
+
+  --- Compute a proof for a resource logic
+  -- SPEC_QUESTION: Is this a valid signature for computing a proof of a
+  -- transparent resource logic function?
+  axiom prove : Resource -> PublicInputs -> PrivateInputs -> Proof;
+
+  -- Add the Resource projection functions into scope for convenience.
+  open Resource public;
+
+  --- Compute a commitment to a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/commitment.md?plain=1#L8
+  axiom commitment : Resource -> Commitment;
+
+  --- Compute the kind of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/kind.md?plain=1#L9
+  axiom kind : Resource -> Kind;
+
+  --- Compute the nullifier of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/nullifier.md?plain=1#L8
+  axiom nullifier : Resource -> Nullifier;
+
+  --- Compute the delta of a ;Resource;
+  --- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/resource/computable_components/delta.md?plain=1#L8
+  axiom delta : Resource -> Delta;
+
+end;
+
+-- Add the Resource type and constructor to the scope for convenience.
+open Resource using {
+  Resource;
+  mkResource;
+  PublicInputs;
+  module PublicInputs;
+  mkPublicInputs;
+  PrivateInputs;
+  module PrivateInputs;
+  mkPrivateInputs;
+} public;
+
+--- A module containing data types and functions related to transactions.
+--- https://github.com/anoma/nspec/blob/920678dc0cb41e7959a42171c63f515f0377aa51/docs/system_architecture/state/resource_machine/transaction.md?plain=1#L8
+module Transaction;
+  type Transaction :=
+    mkTransaction@{
+      --- A set of roots of the commitment tree.
+      -- SPEC_QUESTION, INST_QUESTION: How do we obtain these roots?
+      roots : Set CommitmentTreeRoot;
+      --- A set of actions.
+      actions : Set Action;
+      --- The delta associated with the transaction.
+      delta : Delta;
+      --- The transaction balance proof.
+      balanceProof : Proof;
+    };
+
+  -- Add the Transaction projection functions to the scope for convenience.
+  open Transaction public;
+
+  --- Compute the delta for a set of actions.
+  axiom actionsDelta : Set Action -> Delta;
+
+  --- Compute a proof for the transaction balance.
+  axiom proveBalance : Transaction -> Proof;
+end;
+
+-- Add the Transaction type and constructor to the scope for convenience.
+open Transaction using {Transaction; mkTransaction} public;
+
+module Traits;
+  import Anoma.Builtin.System open using {anomaEncode};
+  import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
+  instance
+  ordByteArrayI : Ord Nock.ByteArray :=
+    let
+      prod (b : Nock.ByteArray) : _ :=
+        Nock.ByteArray.length b, Nock.ByteArray.payload b;
+    in mkOrd@{
+         cmp (lhs rhs : Nock.ByteArray) : Ordering :=
+           Ord.cmp (prod lhs) (prod rhs);
+       };
+
+  --- Define an Ord instance via anomaEncode.
+  anomaEncodeOrd {A} : Ord A := mkOrd (Ord.cmp on anomaEncode);
+
+  instance
+  ordCommitmentI : Ord Commitment := anomaEncodeOrd;
+
+  instance
+  eqCommitmentI : Eq Commitment := fromOrdToEq;
+
+  instance
+  ordNullifierI : Ord Nullifier := anomaEncodeOrd;
+
+  instance
+  eqNullifierI : Eq Nullifier := fromOrdToEq;
+
+  instance
+  ordLogicI : Ord Resource.Logic := anomaEncodeOrd;
+
+  instance
+  eqLogicI : Eq Resource.Logic := fromOrdToEq;
+
+  instance
+  ordKindI : Ord Kind := anomaEncodeOrd;
+
+  instance
+  eqKindI : Eq Kind := fromOrdToEq;
+end;

@@ -1,0 +1,49 @@
+{-- This module contains the Set API to be used when interacting with Anoma.
+
+The Set type from `Stdlib.Data.Set` should be used in applications. The
+functions in this module should be used to translate to and from the Anoma Set
+data structure.
+
+It is recommended that you import this module as follows:
+
+import Anoma.Base.Set as Set open using {Set}
+
+or
+
+import Anoma.Base.Set as AnomaSet open using {Set as AnomaSet}
+
+if you use this module and the standard library set from Stdlib.Data.Set in the
+same module. --}
+module Anoma.Base.Set;
+
+import Stdlib.Prelude open;
+import Stdlib.Data.Set as StdlibSet open using {Set as StdlibSet};
+
+--- A module containing the builtin Anoma Set API.
+module Internal;
+  axiom Set : Type -> Type;
+
+  -- Uses Hoon stdlib ++tap:in https://developers.urbit.org/reference/hoon/stdlib/2h#tapin
+  axiom toList : {A : Type} -> (set : Set A) -> List A;
+
+  -- Uses Hoon stdlib ++silt https://developers.urbit.org/reference/hoon/stdlib/2l#silt
+  axiom fromList : {A : Type} -> (list : List A) -> Set A;
+end;
+
+open Internal using {Set} public;
+
+--- Returns the elements of `set` as a ;List; in an unspecified order.
+{-# inline: true #-}
+toList {A} (set : Set A) : List A := Internal.toList {A} set;
+
+--- Create a set from an unsorted ;List;.
+{-# inline: true #-}
+fromList {A} (list : List A) : Set A := Internal.fromList {A} list;
+
+--- Convert a Juvix Stdlib Set to an Anoma Set.
+fromStdlibSet {A} (set : StdlibSet A) : Set A :=
+  set |> StdlibSet.toList |> fromList;
+
+--- Convert an Anoma Set to a Juvix Stdlib Set.
+toStdlibSet {A} {{Ord A}} (set : Set A) : StdlibSet A :=
+  set |> toList |> StdlibSet.fromList;
