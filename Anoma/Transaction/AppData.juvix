@@ -16,11 +16,13 @@ type DeletionCriterion :=
   | StoreForever MISSING_DEFINITION;
 
 --- A data type encoding the lookup key of application.
-type AppDataKey := mkAppDataKey@{unAppDataKey : ByteArray};
+--- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
+type AppDataKey := mkAppDataKey@{unAppDataKey : Nat};
 
 --- A data type encoding the lookup value of application data.
+--- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
 type AppDataValue :=
-  mkAppDataValue@{unAppDataValue : Pair ByteArray DeletionCriterion};
+  mkAppDataValue@{unAppDataValue : Pair Nat DeletionCriterion};
 
 --- A type describing an app data map.
 AppData : Type := Map AppDataKey AppDataValue;
