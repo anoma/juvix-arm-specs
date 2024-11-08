@@ -13,7 +13,7 @@ type DeletionCriterion :=
   | AfterTimestamp STILL_MISSING_DEFINITION
   | AfterSignatureOverData STILL_MISSING_DEFINITION
   | AfterPredicates STILL_MISSING_DEFINITION
-  | StoreForever STILL_MISSING_DEFINITION;
+  | StoreForever;
 
 --- A data type encoding the lookup key of application.
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
