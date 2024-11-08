@@ -22,7 +22,10 @@ type AppDataKey := mkAppDataKey@{unAppDataKey : Nat};
 --- A data type encoding the lookup value of application data.
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
 type AppDataValue :=
-  mkAppDataValue@{unAppDataValue : Pair Nat DeletionCriterion};
+  mkAppDataValue@{
+    value : Nat;
+    deletionCriterion : DeletionCriterion;
+  };
 
 --- A type describing an app data map.
 AppData : Type := Map AppDataKey AppDataValue;
@@ -58,7 +61,10 @@ end;
 module AppDataValueInternal;
   --- Compares two ;AppDataValue;s.
   compare (lhs rhs : AppDataValue) : Ordering :=
-    Ord.cmp (AppDataValue.unAppDataValue lhs) (AppDataValue.unAppDataValue rhs);
+    let
+      prod (value : AppDataValue) : _ :=
+        AppDataValue.value value, AppDataValue.deletionCriterion value;
+    in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;AppDataValue;.
   instance
