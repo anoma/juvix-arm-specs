@@ -5,6 +5,7 @@ import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Builtin.ByteArray open using {ByteArray};
 import Anoma.Builtin.System open using {anomaEncode; AnomaOpaque};
 import Anoma.Primitives.FixedSize open;
+import Anoma.Builtin.ByteArray open;
 import Anoma.Utils open;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
@@ -27,7 +28,7 @@ type NullifierKeyCommitment :=
   mkNullifierKeyCommitment@{unNullifierKeyCommitment : ByteArray};
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
---- NOTE: This should be a number having an at most negligible chance of repeating, e.g., a pseudo-random number.
+--- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
 type Nonce := mkNonce@{unNonce : ByteArray};
 
 --- A fixed-size data type encoding a randomness seed.

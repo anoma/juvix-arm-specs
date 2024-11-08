@@ -2,7 +2,7 @@ module Anoma.Random;
 
 import Stdlib.Prelude open;
 import Anoma.Primitives.FixedSize open;
-import Anoma.Builtin.ByteArray as ByteArray open using {ByteArray};
+import Anoma.Builtin.ByteArray as ByteArray open using {ByteArray; mkByteArray};
 import Anoma.Builtin.System as SystemBuiltins;
 import Anoma.Builtin.System open using {
   PseudoRandomNumberGenerator;
@@ -90,7 +90,7 @@ generateNextNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
         bytesSize := FixedSize.byteSize {Nonce};
         generator;
       };
-    fun :=  mkNonce;
+    fun := mkNonce;
     nonces := map fun (fst pair);
   in nonces, snd pair;
 
@@ -124,4 +124,10 @@ generateNonces (n : Nat) (randSeed : RandSeed) : List Nonce :=
       generator := prngInit randSeed;
     };
 
-UnusedRandSeed : RandSeed := mkRandSeed 0;
+UnusedRandSeed : RandSeed :=
+  mkRandSeed
+    (mkByteArray
+      replicate@{
+        resultLength := FixedSize.byteSize {RandSeed};
+        value := 0x0;
+      });
