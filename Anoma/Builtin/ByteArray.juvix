@@ -13,20 +13,19 @@ builtin bytearray-length
 axiom length : ByteArray -> Nat;
 
 -- TODO Should be moved into base.
--- TODO Should we use `AnomaEncoded : Type := Nat;` here?
-syntax alias AnomaEncoded := Nat;
+syntax alias AnomaByteArray := Nat;
 
 builtin anoma-bytearray-to-anoma-contents
-axiom toAnomaEncoded : ByteArray -> AnomaEncoded;
+axiom toAnomaByteArray : ByteArray -> AnomaByteArray;
 
 builtin anoma-bytearray-from-anoma-contents
-axiom fromAnomaEncoded : Nat -> AnomaEncoded -> ByteArray;
+axiom fromAnomaByteArray : Nat -> AnomaByteArray -> ByteArray;
 
 --- Implements the ;Ord; trait for ;ByteArray;.
 instance
 ByteArray-Ord : Ord ByteArray :=
   mkOrd@{
-    cmp := Ord.cmp on toAnomaEncoded;
+    cmp := Ord.cmp on toAnomaByteArray;
   };
 
 --- Implements the ;Eq; trait for ;ByteArray;.

@@ -29,5 +29,5 @@ InternalIdentity-Show : Show InternalIdentity :=
     \{id :=
       id
         |> InternalIdentity.unInternalIdentity
-        |> ByteArray.toAnomaEncoded
+        |> ByteArray.toAnomaByteArray
         |> natToString};

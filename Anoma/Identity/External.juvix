@@ -29,5 +29,5 @@ ExternalIdentity-Show : Show ExternalIdentity :=
     \{id :=
       id
         |> ExternalIdentity.unExternalIdentity
-        |> ByteArray.toAnomaEncoded
+        |> ByteArray.toAnomaByteArray
         |> natToString};
