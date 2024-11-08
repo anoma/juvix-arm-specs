@@ -2,7 +2,7 @@ module Anoma.Identity.External;
 
 import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
-import Anoma.Builtin.ByteArray as ByteArray open using {ByteArray};
+import Anoma.Builtin.ByteArray open using {ByteArray; module ByteArrayInternal};
 
 --- A fixed-size data type describing an external identity.
 type ExternalIdentity := mkExternalIdentity@{unExternalIdentity : ByteArray};
@@ -29,5 +29,5 @@ ExternalIdentity-Show : Show ExternalIdentity :=
     \{id :=
       id
         |> ExternalIdentity.unExternalIdentity
-        |> ByteArray.toAnomaByteArray
+        |> ByteArrayInternal.toAnomaByteArray
         |> natToString};

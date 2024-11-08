@@ -87,8 +87,9 @@ syntax alias PRNG := PseudoRandomNumberGenerator;
 --- Creates and initializes a pure PRNG with a seed.
 --- @param The seed.
 --- @return The initialized PRNG.
-builtin anoma-random-generator-init
-axiom pseudoRandomNumberGeneratorInit : Nat -> PRNG;
+-- TODO Conversion should be handled on the base layer.
+-- builtin anoma-random-generator-init
+axiom pseudoRandomNumberGeneratorInit : ByteArray -> PRNG;
 
 --- Returns two distinct PRNGs.
 --- @param The generator to split.

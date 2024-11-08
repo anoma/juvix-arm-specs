@@ -70,7 +70,7 @@ syntax alias prngNextNBytes := pseudoRandomNumberGeneratorNextNBytes;
 --- @return A pair containing the random number and the advanced PRNG.
 generateNextNonce (generator : PRNG) : Pair Nonce PRNG :=
   first@{
-    fun := ByteArray.toAnomaByteArray >> mkNonce;
+    fun := mkNonce;
     pair :=
       prngNextBytes@{
         bytesSize := FixedSize.byteSize {Nonce};
@@ -90,7 +90,7 @@ generateNextNonces (n : Nat) (generator : PRNG) : Pair (List Nonce) PRNG :=
         bytesSize := FixedSize.byteSize {Nonce};
         generator;
       };
-    fun := ByteArray.toAnomaByteArray >> mkNonce;
+    fun :=  mkNonce;
     nonces := map fun (fst pair);
   in nonces, snd pair;
 
