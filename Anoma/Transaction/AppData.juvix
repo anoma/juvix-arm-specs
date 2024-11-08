@@ -9,10 +9,10 @@ import Anoma.Utils open;
 --- A data type encoding the deletion criterion.
 -- TODO Add enumeration from the specs.
 type DeletionCriterion :=
-  | DeleteAfterBlock MISSING_DEFINITION
-  | DeleteAfterTimestamp MISSING_DEFINITION
-  | DeleteAfterSignatureOverData MISSING_DEFINITION
-  | DeleteAfterPredicates MISSING_DEFINITION
+  | AfterBlock MISSING_DEFINITION
+  | AfterTimestamp MISSING_DEFINITION
+  | AfterSignatureOverData MISSING_DEFINITION
+  | AfterPredicates MISSING_DEFINITION
   | StoreForever MISSING_DEFINITION;
 
 --- A data type encoding the lookup key of application.
@@ -24,6 +24,18 @@ type AppDataValue :=
 
 --- A type describing an app data map.
 AppData : Type := Map AppDataKey AppDataValue;
+
+module DeletionCriterionInternal;
+  axiom compare : DeletionCriterion -> DeletionCriterion -> Ordering;
+
+  --- Implements the ;Ord; trait for ;DeletionCriterion;.
+  instance
+  DeletionCriterion-Ord : Ord DeletionCriterion := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;DeletionCriterion;.
+  instance
+  DeletionCriterion-Eq : Eq DeletionCriterion := fromOrdToEq;
+end;
 
 --- A module implementing traits for ;AppDataKey;.
 module AppDataKeyInternal;
@@ -38,4 +50,19 @@ module AppDataKeyInternal;
   --- Implements the ;Eq; trait for ;AppDataKey;.
   instance
   AppDataKey-Eq : Eq AppDataKey := fromOrdToEq;
+end;
+
+--- A module implementing traits for ;AppDataValue;.
+module AppDataValueInternal;
+  --- Compares two ;AppDataValue;s.
+  compare (lhs rhs : AppDataValue) : Ordering :=
+    Ord.cmp (AppDataValue.unAppDataValue lhs) (AppDataValue.unAppDataValue rhs);
+
+  --- Implements the ;Ord; trait for ;AppDataValue;.
+  instance
+  AppDataValue-Ord : Ord AppDataValue := mkOrd compare;
+
+  --- Implements the ;Eq; trait for ;AppDataValue;.
+  instance
+  AppDataValue-Eq : Eq AppDataValue := fromOrdToEq;
 end;

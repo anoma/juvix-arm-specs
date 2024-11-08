@@ -29,7 +29,6 @@ module ProofRecordInternal;
           | LogicProofRecord _, DeltaProofRecord _ := LessThan
           | DeltaProofRecord _, _ := GreaterThan;
     };
-
 end;
 
 --- NOTE: At verification time, a proof record set must contain exactly one ;Delta.ProofRecord;.

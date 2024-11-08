@@ -8,6 +8,7 @@ import Anoma.Resource.Object open using {Resource};
 import Anoma.Resource.Types open using {Commitment; Nullifier};
 import Anoma.Resource.Tag open using {Tag};
 import Anoma.Transaction.AppData open using {AppData};
+import Anoma.Transaction.CustomInputs open using {CustomInputs};
 import Anoma.Utils open;
 
 type Proof := mkProof@{unProof : MISSING_DEFINITION};
@@ -24,10 +25,6 @@ type Instance :=
     nullifiers : Set Nullifier;
     appData : AppData;
   };
-
---- Custom inputs of the resource logic function proof being defined on the application level.
---- NOTE: For the private testnet, this can be of type ;AppData;.
-type CustomInputs := mkCustomInputs@{unCustomInputs : MISSING_DEFINITION};
 
 --- The private inputs (Witness) of the resource logic function proof.
 type Witness :=
@@ -46,20 +43,6 @@ type ProofRecord :=
     verifyingKey : VerifyingKey;
     instance : Instance;
   };
-
-module CustomInputsInternal;
-  --- Compares two ;CustomInputs; objects.
-  compare (lhs rhs : CustomInputs) : Ordering :=
-    Ord.cmp (CustomInputs.unCustomInputs lhs) (CustomInputs.unCustomInputs rhs);
-
-  --- Implements the ;Ord; trait for ;Proof;.
-  instance
-  CustomInputs-Ord : Ord CustomInputs := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;CustomInputs;.
-  instance
-  CustomInputs-Eq : Eq CustomInputs := fromOrdToEq;
-end;
 
 module ProofInternal;
   --- Compares two ;Proof; objects.
