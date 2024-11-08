@@ -34,9 +34,6 @@ type Nonce := mkNonce@{unNonce : AnomaEncoded};
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
 type RandSeed := mkRandSeed@{unRandSeed : AnomaEncoded};
 
---- The size of bytes.
-randSeedBytesSize : AnomaEncoded := 32;
-
 --- The resource label type.
 type Label := mkLabel@{unLabel : Nat};
 
