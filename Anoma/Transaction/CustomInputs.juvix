@@ -14,7 +14,7 @@ type CustomInputsKey := mkCustomInputsKey@{unCustomInputsKey : Nat};
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
 type CustomInputsValue := mkCustomInputsValue@{unCustomInputsValue : Nat};
 
---- A type describing an app data map.
+--- A type describing a map of custom inputs.
 CustomInputs : Type := Map CustomInputsKey CustomInputsValue;
 
 --- A module implementing traits for ;CustomInputsKey;.

@@ -126,8 +126,6 @@ generateNonces (n : Nat) (randSeed : RandSeed) : List Nonce :=
 
 UnusedRandSeed : RandSeed :=
   mkRandSeed
-    (mkByteArray
-      replicate@{
-        resultLength := FixedSize.byteSize {RandSeed};
-        value := 0x0;
-      });
+    ByteArray.zero@{
+      length := FixedSize.byteSize {RandSeed};
+    };
