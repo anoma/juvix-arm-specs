@@ -23,7 +23,7 @@ type AppDataKey := mkAppDataKey@{unAppDataKey : Nat};
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
 type AppDataValue :=
   mkAppDataValue@{
-    value : Nat;
+    data : Nat;
     deletionCriterion : DeletionCriterion;
   };
 
@@ -63,7 +63,7 @@ module AppDataValueInternal;
   compare (lhs rhs : AppDataValue) : Ordering :=
     let
       prod (value : AppDataValue) : _ :=
-        AppDataValue.value value, AppDataValue.deletionCriterion value;
+        AppDataValue.data value, AppDataValue.deletionCriterion value;
     in Ord.cmp (prod lhs) (prod rhs);
 
   --- Implements the ;Ord; trait for ;AppDataValue;.
