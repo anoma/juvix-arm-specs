@@ -4,6 +4,7 @@ import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Stdlib.Data.Map as Map open using {Map};
 import Anoma.Builtin.ByteArray open using {ByteArray};
+import Anoma.Builtin.System open using {anomaEncode; anomaDecode};
 import Anoma.Utils open;
 
 --- A data type encoding the deletion criterion.
@@ -74,3 +75,14 @@ module AppDataValueInternal;
   instance
   AppDataValue-Eq : Eq AppDataValue := fromOrdToEq;
 end;
+
+lookupAppData
+  {Key Value : Type} (key : Key) (appData : AppData) : Maybe Value :=
+  case
+    Map.lookup@{
+      key := anomaEncode key |> mkAppDataKey;
+      map := appData;
+    }
+  of
+    | nothing := nothing
+    | just value := just (value |> AppDataValue.data |> anomaDecode);
