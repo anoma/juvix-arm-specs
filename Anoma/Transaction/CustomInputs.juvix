@@ -4,6 +4,7 @@ import Stdlib.Prelude open;
 import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Stdlib.Data.Map as Map open using {Map};
 import Anoma.Builtin.ByteArray open using {ByteArray};
+import Anoma.Builtin.System open using {anomaEncode; anomaDecode};
 import Anoma.Utils open;
 
 --- A data type encoding the lookup key of custom inputs .
@@ -50,3 +51,15 @@ module CustomInputsValueInternal;
   instance
   CustomInputsValue-Eq : Eq CustomInputsValue := fromOrdToEq;
 end;
+
+lookupCustomInputs
+  {Key Value : Type} (key : Key) (customInputs : CustomInputs) : Maybe Value :=
+  case
+    Map.lookup@{
+      key := anomaEncode key |> mkCustomInputsKey;
+      map := customInputs;
+    }
+  of
+    | nothing := nothing
+    | just value :=
+      just (value |> CustomInputsValue.unCustomInputsValue |> anomaDecode);
