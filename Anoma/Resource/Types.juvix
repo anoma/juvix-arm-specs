@@ -91,203 +91,107 @@ type NullifierKey :=
     unNullifierKey : ByteArray;
   };
 
-module LogicRefInternal;
-  --- Compares two ;LogicRef; objects.
-  compare (lhs rhs : LogicRef) : Ordering :=
-    Ord.cmp (LogicRef.unLogicRef lhs) (LogicRef.unLogicRef rhs);
+deriving instance
+LogicRef-Ord : Ord LogicRef;
 
-  --- Implements the ;Ord; trait for ;LogicRef;.
-  instance
-  LogicRef-Ord : Ord LogicRef := mkOrd compare;
+deriving instance
+LogicRef-Eq : Eq LogicRef;
 
-  --- Implements the ;Eq; trait for ;LogicRef;.
-  instance
-  LogicRef-Eq : Eq LogicRef := fromOrdToEq;
-end;
+deriving instance
+Label-Ord : Ord Label;
 
-module LabelInternal;
-  --- Compares two ;Label; objects.
-  compare (lhs rhs : Label) : Ordering :=
-    Ord.cmp (Label.unLabel lhs) (Label.unLabel rhs);
+deriving instance
+Label-Eq : Eq Label;
 
-  --- Implements the ;Ord; trait for ;Label;.
-  instance
-  Label-Ord : Ord Label := mkOrd compare;
+deriving instance
+LabelRef-Ord : Ord LabelRef;
 
-  --- Implements the ;Eq; trait for ;Label;.
-  instance
-  Label-Eq : Eq Label := fromOrdToEq;
-end;
+deriving instance
+LabelRef-Eq : Eq LabelRef;
 
-module LabelRefInternal;
-  --- Compares two ;LabelRef; objects.
-  compare (lhs rhs : LabelRef) : Ordering :=
-    Ord.cmp (LabelRef.unLabelRef lhs) (LabelRef.unLabelRef rhs);
+deriving instance
+Value-Ord : Ord Value;
 
-  --- Implements the ;Ord; trait for ;LabelRef;.
-  instance
-  LabelRef-Ord : Ord LabelRef := mkOrd compare;
+deriving instance
+Value-Eq : Eq Value;
 
-  --- Implements the ;Eq; trait for ;LabelRef;.
-  instance
-  LabelRef-Eq : Eq LabelRef := fromOrdToEq;
-end;
+deriving instance
+ValueRef-Ord : Ord ValueRef;
 
-module ValueInternal;
-  --- Compares two ;Value; objects.
-  compare (lhs rhs : Value) : Ordering :=
-    Ord.cmp (Value.unValue lhs) (Value.unValue rhs);
+deriving instance
+ValueRef-Eq : Eq ValueRef;
 
-  --- Implements the ;Ord; trait for ;Value;.
-  instance
-  Value-Ord : Ord Value := mkOrd compare;
+deriving instance
+Quantity-Ord : Ord Quantity;
 
-  --- Implements the ;Eq; trait for ;Value;.
-  instance
-  Value-Eq : Eq Value := fromOrdToEq;
-end;
+deriving instance
+Quantity-Eq : Eq Quantity;
 
-module ValueRefInternal;
-  --- Compares two ;ValueRef; objects.
-  compare (lhs rhs : ValueRef) : Ordering :=
-    Ord.cmp (ValueRef.unValueRef lhs) (ValueRef.unValueRef rhs);
+--- Implements the ;FixedSize; trait for ;NullifierKeyCommitment;.
+instance
+NullifierKeyCommitment-FixedSize : FixedSize NullifierKeyCommitment :=
+  mkFixedSize 32;
 
-  --- Implements the ;Ord; trait for ;ValueRef;.
-  instance
-  ValueRef-Ord : Ord ValueRef := mkOrd compare;
+deriving instance
+NullifierKeyCommitment-Ord : Ord NullifierKeyCommitment;
 
-  --- Implements the ;Eq; trait for ;ValueRef;.
-  instance
-  ValueRef-Eq : Eq ValueRef := fromOrdToEq;
-end;
+deriving instance
+NullifierKeyCommitment-Eq : Eq NullifierKeyCommitment;
 
-module QuantityInternal;
-  --- Compares two ;Quantity; objects.
-  compare (lhs rhs : Quantity) : Ordering :=
-    Ord.cmp (Quantity.unQuantity lhs) (Quantity.unQuantity rhs);
+--- Implements the ;FixedSize; trait for ;Nonce;.
+instance
+Nonce-FixedSize : FixedSize Nonce := mkFixedSize 32;
 
-  --- Implements the ;Ord; trait for ;Quantity;.
-  instance
-  Quantity-Ord : Ord Quantity := mkOrd compare;
+deriving instance
+Nonce-Ord : Ord Nonce;
 
-  --- Implements the ;Eq; trait for ;Quantity;.
-  instance
-  Quantity-Eq : Eq Quantity := fromOrdToEq;
+deriving instance
+Nonce-Eq : Eq Nonce;
 
-  instance
-  Quantity-Natural : Natural Quantity :=
-    mkNatural@{
-      + (b1 b2 : Quantity) : Quantity :=
-        mkQuantity
-          ((Natural.+) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
-      * (b1 b2 : Quantity) : Quantity :=
-        mkQuantity
-          ((Natural.*) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
-    };
+instance
+Quantity-Natural : Natural Quantity :=
+  mkNatural@{
+    + (b1 b2 : Quantity) : Quantity :=
+      mkQuantity
+        ((Natural.+) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
+    * (b1 b2 : Quantity) : Quantity :=
+      mkQuantity
+        ((Natural.*) (Quantity.unQuantity b1) (Quantity.unQuantity b2));
+  };
 
-  instance
-  Quantity-FromNatural : FromNatural Quantity :=
-    mkFromNatural@{
-      fromNat (n : Nat) : Quantity := mkQuantity n;
-    };
-end;
+instance
+Quantity-FromNatural : FromNatural Quantity :=
+  mkFromNatural@{
+    fromNat (n : Nat) : Quantity := mkQuantity n;
+  };
 
-module NullifierKeyCommitmentInternal;
-  --- Implements the ;FixedSize; trait for ;NullifierKeyCommitment;.
-  instance
-  NullifierKeyCommitment-FixedSize : FixedSize NullifierKeyCommitment :=
-    mkFixedSize 32;
+instance
+RandSeed-FixedSize : FixedSize RandSeed := mkFixedSize 32;
 
-  --- Compares two ;NullifierKeyCommitment; objects.
-  compare (lhs rhs : NullifierKeyCommitment) : Ordering :=
-    Ord.cmp
-      (NullifierKeyCommitment.unNullifierKeyCommitment lhs)
-      (NullifierKeyCommitment.unNullifierKeyCommitment rhs);
+deriving instance
+RandSeed-Ord : Ord RandSeed;
 
-  --- Implements the ;Ord; trait for ;NullifierKeyCommitment;.
-  instance
-  NullifierKeyCommitment-Ord : Ord NullifierKeyCommitment := mkOrd compare;
+deriving instance
+RandSeed-Eq : Eq RandSeed;
 
-  --- Implements the ;Eq; trait for ;ValueRef;.
-  instance
-  NullifierKeyCommitment-Eq : Eq NullifierKeyCommitment := fromOrdToEq;
-end;
+deriving instance
+Commitment-Ord : Ord Commitment;
 
-module NonceInternal;
-  --- Implements the ;FixedSize; trait for ;Nonce;.
-  instance
-  Nonce-FixedSize : FixedSize Nonce := mkFixedSize 32;
+deriving instance
+Commitment-Eq : Eq Commitment;
 
-  --- Compares two ;Nonce; objects.
-  compare (lhs rhs : Nonce) : Ordering :=
-    Ord.cmp (Nonce.unNonce lhs) (Nonce.unNonce rhs);
+deriving instance
+Nullifier-Ord : Ord Nullifier;
 
-  --- Implements the ;Ord; trait for ;Nonce;.
-  instance
-  Nonce-Ord : Ord Nonce := mkOrd compare;
+deriving instance
+Nullifier-Eq : Eq Nullifier;
 
-  --- Implements the ;Eq; trait for ;Nonce;.
-  instance
-  Nonce-Eq : Eq Nonce := fromOrdToEq;
-end;
+--- Implements the ;FixedSize; trait for ;NullifierKey;.
+instance
+NullifierKey-FixedSize : FixedSize NullifierKey := mkFixedSize 64;
 
-module RandSeedInternal;
-  --- Implements the ;FixedSize; trait for ;RandSeed;.
-  instance
-  RandSeed-FixedSize : FixedSize RandSeed := mkFixedSize 32;
+deriving instance
+NullifierKey-Ord : Ord NullifierKey;
 
-  --- Compares two ;RandSeed; objects.
-  compare (lhs rhs : RandSeed) : Ordering :=
-    Ord.cmp (RandSeed.unRandSeed lhs) (RandSeed.unRandSeed rhs);
-
-  --- Implements the ;Ord; trait for ;RandSeed;.
-  instance
-  RandSeed-Ord : Ord RandSeed := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;RandSeed;.
-  instance
-  RandSeed-Eq : Eq RandSeed := fromOrdToEq;
-end;
-
-module CommitmentInternal;
-  --- Compares two ;Commitment; and returns their ;Ordering;.
-  compare (lhs rhs : Commitment) : Ordering := STILL_MISSING_ANOMA_BUILTIN;
-
-  --- Implements the ;Ord; trait for ;Commitment;.
-  instance
-  Commitment-Ord : Ord Commitment := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Commitment;.
-  instance
-  Commitment-Eq : Eq Commitment := fromOrdToEq;
-end;
-
-module NullifierInternal;
-  --- Compares two ;Nullifier; and returns their ;Ordering;.
-  compare (lhs rhs : Nullifier) : Ordering := STILL_MISSING_ANOMA_BUILTIN;
-
-  --- Implements the ;Ord; trait for ;Nullifier;.
-  instance
-  Nullifier-Ord : Ord Nullifier := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Nullifier;.
-  instance
-  Nullifier-Eq : Eq Nullifier := fromOrdToEq;
-end;
-
-module NullifierKeyInternal;
-  --- Implements the ;FixedSize; trait for ;NullifierKey;.
-  instance
-  NullifierKey-FixedSize : FixedSize NullifierKey := mkFixedSize 64;
-
-  --- Compares two ;NullifierKey; and returns their ;Ordering;.
-  compare (lhs rhs : NullifierKey) : Ordering := STILL_MISSING_ANOMA_BUILTIN;
-
-  --- Implements the ;Ord; trait for ;Nullifier;.
-  instance
-  NullifierKey-Ord : Ord NullifierKey := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Nullifier;.
-  instance
-  NullifierKey-Eq : Eq NullifierKey := fromOrdToEq;
-end;
+deriving instance
+NullifierKey-Eq : Eq NullifierKey;

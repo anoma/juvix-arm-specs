@@ -20,6 +20,12 @@ AnomaOpaque-Ord : Ord AnomaOpaque :=
     cmp := Ord.cmp on anomaEncode;
   };
 
+instance
+AnomaOpaque-Eq : Eq AnomaOpaque :=
+  mkEq@{
+    eq := Eq.eq on anomaEncode;
+  };
+
 --- Encodes a value into a natural number.
 builtin anoma-encode
 axiom anomaEncode

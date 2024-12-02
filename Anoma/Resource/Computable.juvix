@@ -1,7 +1,6 @@
 module Anoma.Resource.Computable;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Delta open using {Delta};
 import Anoma.Resource.Types open using {
   Commitment;
@@ -30,17 +29,11 @@ module KindInternal;
   kind (logicRef : LogicRef) (labelRef : LabelRef) : Kind :=
     STILL_MISSING_ANOMA_BUILTIN;
 
-  --- Compares two ;Kind; objects.
-  compare (lhs rhs : Kind) : Ordering :=
-    Ord.cmp (Kind.unKind lhs) (Kind.unKind rhs);
+  deriving instance
+  Kind-Ord : Ord Kind;
 
-  --- Implements the ;Ord; trait for ;Kind;.
-  instance
-  Kind-Ord : Ord Kind := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Kind;.
-  instance
-  Kind-Eq : Eq Kind := fromOrdToEq;
+  deriving instance
+  Kind-Eq : Eq Kind;
 end;
 
 --- Computes the ;Kind; value of a given ;Resource;.

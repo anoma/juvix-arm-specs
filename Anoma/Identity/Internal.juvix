@@ -1,8 +1,8 @@
 module Anoma.Identity.Internal;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Builtin.ByteArray open using {ByteArray; module ByteArrayInternal};
+import Anoma.Utils open;
 
 --- A fixed-size data type describing an internal identity.
 type InternalIdentity :=
@@ -10,21 +10,11 @@ type InternalIdentity :=
     unInternalIdentity : ByteArray;
   };
 
-module InternalIdentityInternal;
-  --- Compares two ;InternalIdentity; objects.
-  compare (lhs rhs : InternalIdentity) : Ordering :=
-    Ord.cmp
-      (InternalIdentity.unInternalIdentity lhs)
-      (InternalIdentity.unInternalIdentity rhs);
+deriving instance
+InternalIdentity-Ord : Ord InternalIdentity;
 
-  --- Implements the ;Ord; trait for ;InternalIdentity;.
-  instance
-  InternalIdentity-Ord : Ord InternalIdentity := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;InternalIdentity;.
-  instance
-  InternalIdentity-Eq : Eq InternalIdentity := fromOrdToEq;
-end;
+deriving instance
+InternalIdentity-Eq : Eq InternalIdentity;
 
 instance
 InternalIdentity-Show : Show InternalIdentity :=

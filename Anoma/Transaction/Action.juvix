@@ -1,7 +1,6 @@
 module Anoma.Transaction.Action;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Stdlib.Data.Set as Set open using {Set};
 import Anoma.Resource as Resource open using {Resource};
 import Anoma.Generic.ProofRecord open using {ProofRecord};
@@ -25,25 +24,11 @@ type Action :=
 --- Verifies an ;Action; by verifying all proofs in the ;ProofRecord; ;Set;.
 verifyAction (a : Action) : Bool := NOT_REQUIRED;
 
-module ActionInternal;
-  --- Compares two ;Action; objects.
-  compare (lhs rhs : Action) : Ordering :=
-    let
-      prod (a : Action) : _ :=
-        Action.commitments a
-          , Action.nullifiers a
-          , Action.proofRecords a
-          , Action.appData a;
-    in Ord.cmp (prod lhs) (prod rhs);
+deriving instance
+Action-Ord : Ord Action;
 
-  --- Implements the ;Ord; trait for ;Action;.
-  instance
-  Action-Ord : Ord Action := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Action;.
-  instance
-  Action-Eq : Eq Action := fromOrdToEq;
-end;
+deriving instance
+Action-Eq : Eq Action;
 
 --- NOTE: Needed for integration purposes.
 type AnomaAction :=

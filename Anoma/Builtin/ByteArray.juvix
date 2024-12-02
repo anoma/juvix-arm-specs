@@ -26,7 +26,6 @@ module ByteArrayInternal;
          cmp (lhs rhs : ByteArray) : Ordering := Ord.cmp (prod lhs) (prod rhs);
        };
 
-  --- Implements the ;Eq; trait for ;ByteArray;.
   instance
   ByteArray-Eq : Eq ByteArray := fromOrdToEq;
 end;

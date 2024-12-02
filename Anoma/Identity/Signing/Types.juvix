@@ -9,6 +9,7 @@ import Anoma.Builtin.System as SystemBuiltins open;
 type Signature :=
   mkSignature@{
     unSignature : ByteArray;
+
   };
 
 {-# inline: true #-}
@@ -48,6 +49,7 @@ module NonDetached;
   type SignedMessage :=
     mkSignedMessage@{
       unSignedMessage : ByteArray;
+
     };
 
   {-# inline: true #-}

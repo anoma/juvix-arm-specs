@@ -1,7 +1,6 @@
 module Anoma.Transaction.AppData;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Stdlib.Data.Map as Map open using {Map};
 import Anoma.Builtin.ByteArray open using {ByteArray};
 import Anoma.Builtin.System open using {anomaEncode; anomaDecode};
@@ -34,50 +33,23 @@ type AppDataValue :=
 --- A type describing an app data map.
 AppData : Type := Map AppDataKey AppDataValue;
 
-module DeletionCriterionInternal;
-  axiom compare : DeletionCriterion -> DeletionCriterion -> Ordering;
+deriving instance
+DeletionCriterion-Ord : Ord DeletionCriterion;
 
-  --- Implements the ;Ord; trait for ;DeletionCriterion;.
-  instance
-  DeletionCriterion-Ord : Ord DeletionCriterion := mkOrd compare;
+deriving instance
+DeletionCriterion-Eq : Eq DeletionCriterion;
 
-  --- Implements the ;Eq; trait for ;DeletionCriterion;.
-  instance
-  DeletionCriterion-Eq : Eq DeletionCriterion := fromOrdToEq;
-end;
+deriving instance
+AppDataKey-Ord : Ord AppDataKey;
 
---- A module implementing traits for ;AppDataKey;.
-module AppDataKeyInternal;
-  --- Compares two ;AppDataKey;s.
-  compare (lhs rhs : AppDataKey) : Ordering :=
-    Ord.cmp (AppDataKey.unAppDataKey lhs) (AppDataKey.unAppDataKey rhs);
+deriving instance
+AppDataKey-Eq : Eq AppDataKey;
 
-  --- Implements the ;Ord; trait for ;AppDataKey;.
-  instance
-  AppDataKey-Ord : Ord AppDataKey := mkOrd compare;
+deriving instance
+AppDataValue-Ord : Ord AppDataValue;
 
-  --- Implements the ;Eq; trait for ;AppDataKey;.
-  instance
-  AppDataKey-Eq : Eq AppDataKey := fromOrdToEq;
-end;
-
---- A module implementing traits for ;AppDataValue;.
-module AppDataValueInternal;
-  --- Compares two ;AppDataValue;s.
-  compare (lhs rhs : AppDataValue) : Ordering :=
-    let
-      prod (value : AppDataValue) : _ :=
-        AppDataValue.data value, AppDataValue.deletionCriterion value;
-    in Ord.cmp (prod lhs) (prod rhs);
-
-  --- Implements the ;Ord; trait for ;AppDataValue;.
-  instance
-  AppDataValue-Ord : Ord AppDataValue := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;AppDataValue;.
-  instance
-  AppDataValue-Eq : Eq AppDataValue := fromOrdToEq;
-end;
+deriving instance
+AppDataValue-Eq : Eq AppDataValue;
 
 lookupAppData
   {Key Value : Type} (key : Key) (appData : AppData) : Maybe Value :=

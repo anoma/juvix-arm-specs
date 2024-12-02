@@ -3,7 +3,6 @@
 module Anoma.State.CommitmentTree;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Stdlib.Data.Set as Set open using {Set};
 import Anoma.Resource.Types as Resource open using {Commitment};
 import Anoma.Utils open;
@@ -45,16 +44,8 @@ type CommitmentTree :=
     root : (commitment : CommitmentTree) -> Root;
   };
 
-module RootInternal;
-  --- Compares two ;Root;s and returns their ;Ordering;.
-  compare (lhs rhs : Root) : Ordering :=
-    Ord.cmp (Root.unRoot lhs) (Root.unRoot rhs);
+deriving instance
+Root-Ord : Ord Root;
 
-  --- Implements the ;Ord; trait for ;Root;.
-  instance
-  Root-Ord : Ord Root := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Root;.
-  instance
-  Root-Eq : Eq Root := fromOrdToEq;
-end;
+deriving instance
+Root-Eq : Eq Root;
