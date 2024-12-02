@@ -1,7 +1,7 @@
 module Anoma.Transaction.CustomInputs;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 import Stdlib.Data.Map as Map open using {Map};
 import Anoma.Builtin.ByteArray open using {ByteArray};
 import Anoma.Builtin.System open using {anomaEncode; anomaDecode};
@@ -9,48 +9,32 @@ import Anoma.Utils open;
 
 --- A data type encoding the lookup key of custom inputs .
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
-type CustomInputsKey := mkCustomInputsKey@{unCustomInputsKey : Nat};
+type CustomInputsKey :=
+  mkCustomInputsKey@{
+    unCustomInputsKey : Nat;
+  };
 
 --- A data type encoding the lookup value of custom inputs.
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
-type CustomInputsValue := mkCustomInputsValue@{unCustomInputsValue : Nat};
+type CustomInputsValue :=
+  mkCustomInputsValue@{
+    unCustomInputsValue : Nat;
+  };
 
 --- A type describing a map of custom inputs.
 CustomInputs : Type := Map CustomInputsKey CustomInputsValue;
 
---- A module implementing traits for ;CustomInputsKey;.
-module CustomInputsKeyInternal;
-  --- Compares two ;CustomInputsKey;s.
-  compare (lhs rhs : CustomInputsKey) : Ordering :=
-    Ord.cmp
-      (CustomInputsKey.unCustomInputsKey lhs)
-      (CustomInputsKey.unCustomInputsKey rhs);
+deriving instance
+CustomInputsKey-Ord : Ord CustomInputsKey;
 
-  --- Implements the ;Ord; trait for ;CustomInputsKey;.
-  instance
-  CustomInputsKey-Ord : Ord CustomInputsKey := mkOrd compare;
+deriving instance
+CustomInputsKey-Eq : Eq CustomInputsKey;
 
-  --- Implements the ;Eq; trait for ;CustomInputsKey;.
-  instance
-  CustomInputsKey-Eq : Eq CustomInputsKey := fromOrdToEq;
-end;
+deriving instance
+CustomInputsValue-Ord : Ord CustomInputsValue;
 
---- A module implementing traits for ;CustomInputsValue;.
-module CustomInputsValueInternal;
-  --- Compares two ;CustomInputsValue;s.
-  compare (lhs rhs : CustomInputsValue) : Ordering :=
-    Ord.cmp
-      (CustomInputsValue.unCustomInputsValue lhs)
-      (CustomInputsValue.unCustomInputsValue rhs);
-
-  --- Implements the ;Ord; trait for ;CustomInputsValue;.
-  instance
-  CustomInputsValue-Ord : Ord CustomInputsValue := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;CustomInputsValue;.
-  instance
-  CustomInputsValue-Eq : Eq CustomInputsValue := fromOrdToEq;
-end;
+deriving instance
+CustomInputsValue-Eq : Eq CustomInputsValue;
 
 lookupCustomInputs
   {Key Value : Type} (key : Key) (customInputs : CustomInputs) : Maybe Value :=

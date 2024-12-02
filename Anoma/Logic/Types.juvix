@@ -1,7 +1,7 @@
 module Anoma.Logic.Types;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 import Stdlib.Data.Set as Set open using {Set};
 
 import Anoma.Resource.Object open using {Resource};
@@ -11,11 +11,20 @@ import Anoma.Transaction.AppData open using {AppData};
 import Anoma.Transaction.CustomInputs open using {CustomInputs};
 import Anoma.Utils open;
 
-type Proof := mkProof@{unProof : MISSING_DEFINITION};
+type Proof :=
+  mkProof@{
+    unProof : MISSING_DEFINITION;
+  };
 
-type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+type VerifyingKey :=
+  mkVerifyingKey@{
+    unVerifyingKey : MISSING_DEFINITION;
+  };
 
-type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+type ProvingKey :=
+  mkProvingKey@{
+    unProvingKey : MISSING_DEFINITION;
+  };
 
 --- The public inputs (Instance) of the resource logic function proof.
 type Instance :=
@@ -44,84 +53,32 @@ type ProofRecord :=
     instance : Instance;
   };
 
-module ProofInternal;
-  --- Compares two ;Proof; objects.
-  compare (lhs rhs : Proof) : Ordering :=
-    Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+deriving instance
+Proof-Ord : Ord Proof;
 
-  --- Implements the ;Ord; trait for ;Proof;.
-  instance
-  Proof-Ord : Ord Proof := mkOrd compare;
+deriving instance
+Proof-Eq : Eq Proof;
 
-  --- Implements the ;Eq; trait for ;Proof;.
-  instance
-  Proof-Eq : Eq Proof := fromOrdToEq;
-end;
+deriving instance
+VerifyingKey-Ord : Ord VerifyingKey;
 
-module VerifyingKeyInternal;
-  --- Compares two ;VerifyingKey; objects.
-  compare (lhs rhs : VerifyingKey) : Ordering :=
-    Ord.cmp (VerifyingKey.unVerifyingKey lhs) (VerifyingKey.unVerifyingKey rhs);
+deriving instance
+VerifyingKey-Eq : Eq VerifyingKey;
 
-  --- Implements the ;Ord; trait for ;VerifyingKey;.
-  instance
-  VerifyingKey-Ord : Ord VerifyingKey := mkOrd compare;
+deriving instance
+Instance-Ord : Ord Instance;
 
-  --- Implements the ;Eq; trait for ;VerifyingKey;.
-  instance
-  VerifyingKey-Eq : Eq VerifyingKey := fromOrdToEq;
-end;
+deriving instance
+Instance-Eq : Eq Instance;
 
-module InstanceInternal;
-  --- Compares two ;Instance; objects.
-  compare (lhs rhs : Instance) : Ordering :=
-    let
-      prod (i : Instance) : _ :=
-        Instance.tag i
-          , Instance.commitments i
-          , Instance.nullifiers i
-          , Instance.appData i;
-    in Ord.cmp (prod lhs) (prod rhs);
+deriving instance
+Witness-Ord : Ord Witness;
 
-  --- Implements the ;Ord; trait for ;Instance;.
-  instance
-  Instance-Ord : Ord Instance := mkOrd compare;
+deriving instance
+Witness-Eq : Eq Witness;
 
-  --- Implements the ;Eq; trait for ;Instance;.
-  instance
-  Instance-Eq : Eq Instance := fromOrdToEq;
-end;
+deriving instance
+ProofRecord-Ord : Ord ProofRecord;
 
-module WitnessInternal;
-  --- Compares two ;Witness; objects.
-  compare (lhs rhs : Witness) : Ordering :=
-    let
-      prod (w : Witness) : _ :=
-        Witness.created w, Witness.consumed w, Witness.customInputs w;
-    in Ord.cmp (prod lhs) (prod rhs);
-
-  --- Implements the ;Ord; trait for ;Witness;.
-  instance
-  Witness-Ord : Ord Witness := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Witness;.
-  instance
-  Witness-Eq : Eq Witness := fromOrdToEq;
-end;
-
-module ProofRecordInternal;
-  --- Compares two ;ProofRecord; objects.
-  compare (lhs rhs : ProofRecord) : Ordering :=
-    let
-      prod (p : ProofRecord) : _ :=
-        ProofRecord.proof p, ProofRecord.verifyingKey p, ProofRecord.instance p;
-    in Ord.cmp (prod lhs) (prod rhs);
-
-  --- Implements the ;Ord; trait for ;ProofRecord;.
-  instance
-  ProofRecord-Ord : Ord ProofRecord := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;ProofRecord;.
-  instance
-  ProofRecord-Eq : Eq ProofRecord := fromOrdToEq;
-end;
+deriving instance
+ProofRecord-Eq : Eq ProofRecord;

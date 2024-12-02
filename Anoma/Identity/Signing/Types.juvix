@@ -5,7 +5,10 @@ import Anoma.Identity.Internal open;
 import Anoma.Identity.External open;
 import Anoma.Utils open;
 
-type Signature := mkSignature@{unSignature : MISSING_DEFINITION};
+type Signature :=
+  mkSignature@{
+    unSignature : MISSING_DEFINITION;
+  };
 
 {-# inline: true #-}
 verify
@@ -33,7 +36,10 @@ sign
 
 --- TODO Consider deleting the definitions below.
 module NonDetached;
-  type SignedMessage := mkSignedMessage@{unSignedMessage : MISSING_DEFINITION};
+  type SignedMessage :=
+    mkSignedMessage@{
+      unSignedMessage : MISSING_DEFINITION;
+    };
 
   {-# inline: true #-}
   verify

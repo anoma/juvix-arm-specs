@@ -1,7 +1,6 @@
 module Anoma.Resource.Tag;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 
 import Anoma.Resource.Object open using {Resource};
 import Anoma.Resource.Types open using {Commitment; Nullifier};
@@ -11,21 +10,8 @@ type Tag :=
   | Created Commitment
   | Consumed Nullifier;
 
-module TagInternal;
-  --- Compares two ;Tag; objects.
-  --- Lexicographical ordering with `Created _ < Consumed _`.
-  compare (lhs rhs : Tag) : Ordering :=
-    case lhs, rhs of
-      | Created cmLhs, Created cmRhs := Ord.cmp cmLhs cmRhs
-      | Consumed nfLhs, Consumed nfRhs := Ord.cmp nfLhs nfRhs
-      | Created _, Consumed _ := LessThan
-      | Consumed _, Created _ := GreaterThan;
+deriving instance
+Tag-Ord : Ord Tag;
 
-  --- Implements the ;Ord; trait for ;Tag;.
-  instance
-  Tag-Ord : Ord Tag := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Tag;.
-  instance
-  Tag-Eq : Eq Tag := fromOrdToEq;
-end;
+deriving instance
+Tag-Eq : Eq Tag;

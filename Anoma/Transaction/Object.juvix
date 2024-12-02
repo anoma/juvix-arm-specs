@@ -2,7 +2,6 @@ module Anoma.Transaction.Object;
 
 import Stdlib.Prelude open;
 import Stdlib.Data.Set as Set open using {Set};
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Resource.Types as Resource;
 import Anoma.State.CommitmentTree as CommitmentTree;
 import Anoma.Transaction.Action open using {Action};
@@ -49,19 +48,8 @@ commitmentsFromTransaction
 nullifiersFromTransaction
   (transaction : Transaction) : Set Resource.Nullifier := MISSING_ANOMA_BUILTIN;
 
-module TransactionInternal;
-  --- Compares two ;Transaction; objects.
-  compare (lhs rhs : Transaction) : Ordering :=
-    let
-      prod (tx : Transaction) : _ :=
-        Transaction.roots tx, Transaction.actions tx;
-    in Ord.cmp (prod lhs) (prod rhs);
+deriving instance
+Transaction-Ord : Ord Transaction;
 
-  --- Implements the ;Ord; trait for ;Transaction;.
-  instance
-  Transaction-Ord : Ord Transaction := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Transaction;.
-  instance
-  Transaction-Eq : Eq Transaction := fromOrdToEq;
-end;
+deriving instance
+Transaction-Eq : Eq Transaction;

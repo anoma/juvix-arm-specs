@@ -1,22 +1,17 @@
 module Anoma.Identity.Internal;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 import Anoma.Utils open;
 
 --- A fixed-size data type describing an internal identity.
 type InternalIdentity :=
-  mkInternalIdentity@{unInternalIdentity : MISSING_DEFINITION};
+  mkInternalIdentity@{
+    unInternalIdentity : MISSING_DEFINITION;
+  };
 
-module InternalIdentityInternal;
-  --- Compares two ;InternalIdentity; objects.
-  compare (lhs rhs : InternalIdentity) : Ordering := MISSING_ANOMA_BUILTIN;
+deriving instance
+InternalIdentity-Ord : Ord InternalIdentity;
 
-  --- Implements the ;Ord; trait for ;InternalIdentity;.
-  instance
-  InternalIdentity-Ord : Ord InternalIdentity := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;InternalIdentity;.
-  instance
-  InternalIdentity-Eq : Eq InternalIdentity := fromOrdToEq;
-end;
+deriving instance
+InternalIdentity-Eq : Eq InternalIdentity;

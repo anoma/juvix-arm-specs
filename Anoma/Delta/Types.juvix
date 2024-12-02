@@ -1,23 +1,41 @@
 module Anoma.Delta.Types;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 import Anoma.Math open;
 import Anoma.Utils open;
 
 --- A fixed-size data type encoding the additively homomorphic and kind distinct ;Delta;.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;Delta; to be dynamically-sized.
-type Delta := mkDelta@{unDelta : MISSING_DEFINITION};
+type Delta :=
+  mkDelta@{
+    unDelta : MISSING_DEFINITION;
+  };
 
-type Proof := mkProof@{unProof : MISSING_DEFINITION};
+type Proof :=
+  mkProof@{
+    unProof : MISSING_DEFINITION;
+  };
 
-type VerifyingKey := mkVerifyingKey@{unVerifyingKey : MISSING_DEFINITION};
+type VerifyingKey :=
+  mkVerifyingKey@{
+    unVerifyingKey : MISSING_DEFINITION;
+  };
 
-type ProvingKey := mkProvingKey@{unProvingKey : MISSING_DEFINITION};
+type ProvingKey :=
+  mkProvingKey@{
+    unProvingKey : MISSING_DEFINITION;
+  };
 
-type Instance := mkInstance@{unInstance : MISSING_DEFINITION};
+type Instance :=
+  mkInstance@{
+    unInstance : MISSING_DEFINITION;
+  };
 
-type Witness := mkWitness@{unWitness : MISSING_DEFINITION};
+type Witness :=
+  mkWitness@{
+    unWitness : MISSING_DEFINITION;
+  };
 
 type ProofRecord :=
   mkProofRecord@{
@@ -32,89 +50,50 @@ zero : Delta := MISSING_ANOMA_BUILTIN;
 --- Adds two ;Delta; values.
 addDelta (d1 d2 : Delta) : Delta := ANOMA_BACKEND_IMPLEMENTATION;
 
---- Implements the ;AdditivelyHomomorphic; trait for ;Delta;.
 instance
 Delta-AdditivelyHomomorphic : AdditivelyHomomorphic Delta :=
   mkAdditivelyHomomorphic@{
     add (a b : Delta) : Delta := addDelta a b;
   };
 
---- Implements the ;KindDistinct; trait for ;Delta;.
 instance
 Delta-KindDistinct : KindDistinct Delta :=
   mkKindDistinct@{
     add (a b : Delta) : Delta := addDelta a b;
   };
 
-module ProofInternal;
-  --- Compares two ;Proof; objects.
-  compare (lhs rhs : Proof) : Ordering :=
-    Ord.cmp (Proof.unProof lhs) (Proof.unProof rhs);
+deriving instance
+Delta-Ord : Ord Delta;
 
-  --- Implements the ;Ord; trait for ;Proof;.
-  instance
-  Proof-Ord : Ord Proof := mkOrd compare;
+deriving instance
+Delta-Eq : Eq Delta;
 
-  --- Implements the ;Eq; trait for ;Proof;.
-  instance
-  Proof-Eq : Eq Proof := fromOrdToEq;
-end;
+deriving instance
+Proof-Ord : Ord Proof;
 
-module VerifyingKeyInternal;
-  --- Compares two ;VerifyingKey; objects.
-  compare (lhs rhs : VerifyingKey) : Ordering :=
-    Ord.cmp (VerifyingKey.unVerifyingKey lhs) (VerifyingKey.unVerifyingKey rhs);
+deriving instance
+Proof-Eq : Eq Proof;
 
-  --- Implements the ;Ord; trait for ;VerifyingKey;.
-  instance
-  VerifyingKey-Ord : Ord VerifyingKey := mkOrd compare;
+deriving instance
+VerifyingKey-Ord : Ord VerifyingKey;
 
-  --- Implements the ;Eq; trait for ;VerifyingKey;.
-  instance
-  VerifyingKey-Eq : Eq VerifyingKey := fromOrdToEq;
-end;
+deriving instance
+VerifyingKey-Eq : Eq VerifyingKey;
 
-module InstanceInternal;
-  --- Compares two ;Instance; objects.
-  compare (lhs rhs : Instance) : Ordering :=
-    Ord.cmp (Instance.unInstance lhs) (Instance.unInstance rhs);
+deriving instance
+Instance-Ord : Ord Instance;
 
-  --- Implements the ;Ord; trait for ;Instance;.
-  instance
-  Instance-Ord : Ord Instance := mkOrd compare;
+deriving instance
+Instance-Eq : Eq Instance;
 
-  --- Implements the ;Eq; trait for ;Instance;.
-  instance
-  Instance-Eq : Eq Instance := fromOrdToEq;
-end;
+deriving instance
+Witness-Ord : Ord Witness;
 
-module WitnessInternal;
-  --- Compares two ;Witness; objects.
-  compare (lhs rhs : Witness) : Ordering :=
-    Ord.cmp (Witness.unWitness lhs) (Witness.unWitness rhs);
+deriving instance
+Witness-Eq : Eq Witness;
 
-  --- Implements the ;Ord; trait for ;Witness;.
-  instance
-  Witness-Ord : Ord Witness := mkOrd compare;
+deriving instance
+ProofRecord-Ord : Ord ProofRecord;
 
-  --- Implements the ;Eq; trait for ;Witness;.
-  instance
-  Witness-Eq : Eq Witness := fromOrdToEq;
-end;
-
-module ProofRecordInternal;
-  --- Compares two ;ProofRecord; objects.
-  compare (lhs rhs : ProofRecord) : Ordering :=
-    let
-      prod (p : ProofRecord) : _ :=
-        ProofRecord.proof p, ProofRecord.verifyingKey p, ProofRecord.instance p;
-    in Ord.cmp (prod lhs) (prod rhs);
-
-  --- Implements the ;Ord; trait for ;ProofRecord;.
-  instance
-  ProofRecord-Ord : Ord ProofRecord := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;ProofRecord;.
-  instance
-  ProofRecord-Eq : Eq ProofRecord := fromOrdToEq;
-end;
+deriving instance
+ProofRecord-Eq : Eq ProofRecord;

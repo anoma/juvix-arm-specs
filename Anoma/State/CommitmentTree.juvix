@@ -3,16 +3,22 @@
 module Anoma.State.CommitmentTree;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
+
 import Stdlib.Data.Set as Set open using {Set};
 import Anoma.Resource.Types as Resource open using {Commitment};
 import Anoma.Utils open;
 
 --- A state root of the commitment tree.
-type Root := mkRoot@{unRoot : MISSING_DEFINITION};
+type Root :=
+  mkRoot@{
+    unRoot : MISSING_DEFINITION;
+  };
 
 --- A path in the commitment tree.
-type Path := mkPath@{unPath : MISSING_DEFINITION};
+type Path :=
+  mkPath@{
+    unPath : MISSING_DEFINITION;
+  };
 
 --- The interface of the commitment tree.
 positive
@@ -23,30 +29,24 @@ type CommitmentTree :=
     add : (tree : CommitmentTree) -> (commitment : Resource.Commitment) -> Path;
 
     --- Returns the ;Path; of a ;Resource.Commitment; in the ;CommitmentTree;, or nothing if it does not exist.
-    path : (tree : CommitmentTree)
-      -> (commitment : Resource.Commitment)
-      -> Maybe Path;
+    path
+      : (tree : CommitmentTree)
+        -> (commitment : Resource.Commitment)
+        -> Maybe Path;
 
     --- Verifies a ;Path; of a ;Resource.Commitment; in the ;CommitmentTree;.
-    verify : (commitment : Resource.Commitment)
-      -> (path : Path)
-      -> (root : Root)
-      -> Bool;
+    verify
+      : (commitment : Resource.Commitment)
+        -> (path : Path)
+        -> (root : Root)
+        -> Bool;
 
     --- Returns the ;Root; of the ;CommitmentTree;.
     root : (commitment : CommitmentTree) -> Root;
   };
 
-module RootInternal;
-  --- Compares two ;Root;s and returns their ;Ordering;.
-  compare (lhs rhs : Root) : Ordering :=
-    Ord.cmp (Root.unRoot lhs) (Root.unRoot rhs);
+deriving instance
+Root-Ord : Ord Root;
 
-  --- Implements the ;Ord; trait for ;Root;.
-  instance
-  Root-Ord : Ord Root := mkOrd compare;
-
-  --- Implements the ;Eq; trait for ;Root;.
-  instance
-  Root-Eq : Eq Root := fromOrdToEq;
-end;
+deriving instance
+Root-Eq : Eq Root;
