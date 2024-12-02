@@ -6,8 +6,10 @@ import Stdlib.Data.Set as Set open using {Set; union; intersection};
 --- A trait describing additive homomorphicity.
 trait
 type AdditivelyHomomorphic T :=
-  mkAdditivelyHomomorphic@{--- Adds two types implementing the ;AdditivelyHomomorphic; trait.
-  add : (v1 v2 : T) -> T};
+  mkAdditivelyHomomorphic@{
+    --- Adds two types implementing the ;AdditivelyHomomorphic; trait.
+    add : (v1 v2 : T) -> T;
+  };
 
 --- Implements the ;Eq; trait for ;AdditivelyHomomorphic; types.
 Property-AdditivelyHomomorphic
@@ -18,8 +20,10 @@ Property-AdditivelyHomomorphic
 --- A trait describing kind distinctness.
 trait
 type KindDistinct T :=
-  mkKindDistinct@{--- Adds two types implementing the ;KindDistinct; trait.
-  add : (v1 v2 : T) -> T};
+  mkKindDistinct@{
+    --- Adds two types implementing the ;KindDistinct; trait.
+    add : (v1 v2 : T) -> T;
+  };
 
 --- Computes the disjoint union of two ;Set;s.
 disjointUnion {T} {{Ord T}} (s1 s2 : Set T) : Result (Set T) (Set T) :=

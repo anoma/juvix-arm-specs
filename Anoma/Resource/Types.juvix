@@ -10,48 +10,86 @@ import Anoma.Utils open;
 
 --- A fixed-size data type encoding the reference to the resource logic function.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LogicRef; to be dynamically-sized.
-type LogicRef := mkLogicRef@{unLogicRef : AnomaOpaque};
+type LogicRef :=
+  mkLogicRef@{
+    unLogicRef : AnomaOpaque;
+  };
 
 --- A fixed-size data type encoding the reference to the resource label field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;LabelRef; to be dynamically-sized.
-type LabelRef := mkLabelRef@{unLabelRef : AnomaOpaque};
+type LabelRef :=
+  mkLabelRef@{
+    unLabelRef : AnomaOpaque;
+  };
 
 --- A fixed-size data type encoding the reference to the resource value field.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;ValueRef; to be dynamically-sized.
-type ValueRef := mkValueRef@{unValueRef : AnomaOpaque};
+type ValueRef :=
+  mkValueRef@{
+    unValueRef : AnomaOpaque;
+  };
 
 --- A fixed-size data type encoding the quantity of a resource.
-type Quantity := mkQuantity@{unQuantity : Nat};
+type Quantity :=
+  mkQuantity@{
+    unQuantity : Nat;
+  };
 
 --- A fixed-size data type encoding the public commitment to the private nullifier key.
 type NullifierKeyCommitment :=
-  mkNullifierKeyCommitment@{unNullifierKeyCommitment : ByteArray};
+  mkNullifierKeyCommitment@{
+    unNullifierKeyCommitment : ByteArray;
+  };
 
 --- A fixed-size data type encoding a number to be used once ensuring that the resource commitment is unique.
 --- NOTE: This should be a number having an at most negligible chance of repeating is sufficient, e.g., a pseudo-random number.
-type Nonce := mkNonce@{unNonce : ByteArray};
+type Nonce :=
+  mkNonce@{
+    unNonce : ByteArray;
+  };
 
 --- A fixed-size data type encoding a randomness seed.
 --- NOTE: This seed provides pseudo randomness and cannot be expected to provide true randomness.
-type RandSeed := mkRandSeed@{unRandSeed : ByteArray};
+type RandSeed :=
+  mkRandSeed@{
+    unRandSeed : ByteArray;
+  };
 
 --- The resource label type.
-type Label := mkLabel@{unLabel : Nat};
+type Label :=
+  mkLabel@{
+    unLabel : Nat;
+  };
 
 --- The resource value type.
-type Value := mkValue@{unValue : Nat};
+type Value :=
+  mkValue@{
+    unValue : Nat;
+  };
 
 --- The resource kind type.
-type Kind := mkKind@{unKind : Nat};
+type Kind :=
+  mkKind@{
+    unKind : Nat;
+  };
 
 --- The resource commitment type.
-type Commitment := mkCommitment@{unCommitment : ByteArray};
+type Commitment :=
+  mkCommitment@{
+    unCommitment : ByteArray;
+  };
 
 --- The resource nullifier type.
-type Nullifier := mkNullifier@{unNullifier : ByteArray};
+type Nullifier :=
+  mkNullifier@{
+    unNullifier : ByteArray;
+  };
 
 --- The nullifier key type describing a secret required to compute the ;Nullifier; of a resource
-type NullifierKey := mkNullifierKey@{unNullifierKey : ByteArray};
+type NullifierKey :=
+  mkNullifierKey@{
+    unNullifierKey : ByteArray;
+  };
 
 module LogicRefInternal;
   --- Compares two ;LogicRef; objects.

@@ -17,11 +17,12 @@ trait
 type ResourceMachine :=
   mkResourceMachine@{
     --- Creates a ;Transaction;.
-    create : (roots : Set CommitmentTree.Root)
-      -> (actions : Set Action)
-      -> (delta : Delta)
-      -> (deltaProof : Delta.ProofRecord)
-      -> Transaction;
+    create
+      : (roots : Set CommitmentTree.Root)
+        -> (actions : Set Action)
+        -> (delta : Delta)
+        -> (deltaProof : Delta.ProofRecord)
+        -> Transaction;
 
     --- Composes two ;Transaction;s with the transa
     compose : (tx1 tx2 : Transaction) -> Transaction;

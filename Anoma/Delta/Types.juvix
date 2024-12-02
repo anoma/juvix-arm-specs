@@ -8,17 +8,35 @@ import Anoma.Builtin.System open;
 
 --- A fixed-size data type encoding the additively homomorphic and kind distinct ;Delta;.
 --- NOTE: For the private testnet, the requirement can be relaxed by allowing ;Delta; to be dynamically-sized.
-type Delta := mkDelta@{unDelta : AnomaOpaque};
+type Delta :=
+  mkDelta@{
+    unDelta : AnomaOpaque;
+  };
 
-type Proof := mkProof@{unProof : AnomaOpaque};
+type Proof :=
+  mkProof@{
+    unProof : AnomaOpaque;
+  };
 
-type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
+type VerifyingKey :=
+  mkVerifyingKey@{
+    unVerifyingKey : UNUSED;
+  };
 
-type ProvingKey := mkProvingKey@{unProvingKey : UNUSED};
+type ProvingKey :=
+  mkProvingKey@{
+    unProvingKey : UNUSED;
+  };
 
-type Instance := mkInstance@{unInstance : UNUSED};
+type Instance :=
+  mkInstance@{
+    unInstance : UNUSED;
+  };
 
-type Witness := mkWitness@{unWitness : UNUSED};
+type Witness :=
+  mkWitness@{
+    unWitness : UNUSED;
+  };
 
 type ProofRecord :=
   mkProofRecord@{

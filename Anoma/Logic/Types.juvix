@@ -12,11 +12,20 @@ import Anoma.Transaction.CustomInputs open using {CustomInputs};
 import Anoma.Utils open;
 import Anoma.Builtin.System open;
 
-type Proof := mkProof@{unProof : AnomaOpaque};
+type Proof :=
+  mkProof@{
+    unProof : AnomaOpaque;
+  };
 
-type VerifyingKey := mkVerifyingKey@{unVerifyingKey : UNUSED};
+type VerifyingKey :=
+  mkVerifyingKey@{
+    unVerifyingKey : UNUSED;
+  };
 
-type ProvingKey := mkProvingKey@{unProvingKey : Resource};
+type ProvingKey :=
+  mkProvingKey@{
+    unProvingKey : Resource;
+  };
 
 --- The public inputs (Instance) of the resource logic function proof.
 type Instance :=

@@ -18,7 +18,10 @@ type DeletionCriterion :=
 
 --- A data type encoding the lookup key of application.
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.
-type AppDataKey := mkAppDataKey@{unAppDataKey : Nat};
+type AppDataKey :=
+  mkAppDataKey@{
+    unAppDataKey : Nat;
+  };
 
 --- A data type encoding the lookup value of application data.
 --- TODO Add an equivalent to `anomaEncode` and `anomaDecode` to be able to change this to ;ByteArray;.

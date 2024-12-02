@@ -5,7 +5,10 @@ import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Builtin.ByteArray open using {ByteArray; module ByteArrayInternal};
 
 --- A fixed-size data type describing an external identity.
-type ExternalIdentity := mkExternalIdentity@{unExternalIdentity : ByteArray};
+type ExternalIdentity :=
+  mkExternalIdentity@{
+    unExternalIdentity : ByteArray;
+  };
 
 module ExternalIdentityInternal;
   --- Compares two ;ExternalIdentity; objects.
