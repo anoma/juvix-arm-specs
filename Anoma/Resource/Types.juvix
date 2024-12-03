@@ -1,7 +1,6 @@
 module Anoma.Resource.Types;
 
 import Stdlib.Prelude open;
-import Stdlib.Trait.Ord.Eq open using {fromOrdToEq};
 import Anoma.Builtin.ByteArray open using {ByteArray};
 import Anoma.Builtin.System open using {anomaEncode; AnomaOpaque};
 import Anoma.Primitives.FixedSize open;
